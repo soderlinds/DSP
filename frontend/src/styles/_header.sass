@@ -1,3 +1,5 @@
+@import './variables'
+    
 .header
   padding: 15px
   text-align: center 
@@ -18,14 +20,16 @@
 
       a
         font-family: 'druk'
-        font-size: 2em
+        font-size: 2rem
         text-decoration: none
         color: #8d8d8d
         font-weight: bold
-        transition: color 0.3s ease
+        transition: color 0.3s ease, text-shadow 0.3s ease
 
-        &:hover
-          color: #49ff76
+        &:hover 
+          color: $accentcolor_green
+          text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.7)
 
         &.active
-          color: #49ff76
+          color: $accentcolor_green
+          text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.7)

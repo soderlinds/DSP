@@ -7,10 +7,10 @@ const Header = () => {
     <header className="header">
       <nav className="nav">
         <ul>
-          <li><NavLink to="/" activeclassname="active">Home</NavLink></li>
-          <li><NavLink to="/earn-tokens" activeclassname="active">Earn tokens</NavLink></li>
-          <li><NavLink to="/ai" activeclassname="active">AI dialogues: co-creating live art</NavLink></li>
-          <li><NavLink to="/merch" activeclassname="active">Merch</NavLink></li>
+          <li><NavLink to="/" activeclassname="active">HOME</NavLink></li>
+          <li><NavLink to="/earn-tokens" activeclassname="active">EARN TOKENS</NavLink></li>
+          <li><NavLink to="/ai" activeclassname="active">AI DIALOGUES: co-creating live art</NavLink></li>
+          <li><NavLink to="/merch" activeclassname="active">MERCH</NavLink></li>
           <li><NavLink to="/sdv" activeclassname="active">SDVLOYALTYTOKEN</NavLink></li>
         </ul>
       </nav>
