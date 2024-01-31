@@ -1,5 +1,5 @@
 const SDVToken = artifacts.require("SDVToken");
 
-module.exports = function (deployer) {
-  deployer.deploy(SDVToken);
+module.exports = async function (deployer) {
+  await deployer.deploy(SDVToken);
 };

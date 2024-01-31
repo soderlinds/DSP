@@ -11,6 +11,7 @@ const Header = () => {
           <li><NavLink to="/earn-tokens" activeclassname="active">EARN TOKENS</NavLink></li>
           <li><NavLink to="/ai" activeclassname="active">AI DIALOGUES: co-creating live art</NavLink></li>
           <li><NavLink to="/merch" activeclassname="active">MERCH</NavLink></li>
+          <li><NavLink to="/rewards" activeclassname="active">REWARDS</NavLink></li>
           <li><NavLink to="/sdv" activeclassname="active">SDVLOYALTYTOKEN</NavLink></li>
         </ul>
       </nav>

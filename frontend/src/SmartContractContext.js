@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import Web3 from 'web3';
 import { contractABI, contractAddress } from './contractConfig';
+import { nftContractABI, nftContractAddress } from './nftContractConfig';
 
 const SmartContractContext = createContext();
 
@@ -15,6 +16,7 @@ export const SmartContractProvider = ({ children }) => {
 
   const web3 = new Web3(window.ethereum);
   const contract = new web3.eth.Contract(contractABI, contractAddress);
+  const nftContract = new web3.eth.Contract(nftContractABI, nftContractAddress);
 
   useEffect(() => {
     const loadWeb3 = async () => {
@@ -54,40 +56,60 @@ export const SmartContractProvider = ({ children }) => {
   };
 
   const registerUser = async (email) => {
-        try {
-          await contract.methods.registerUser(email).send({ from: account, gas: 300000 });
-        } catch (error) {
-          console.error('Error registering user:', error);
-        }
-      };
-    
-      const airdropTokens = async (users, amounts) => {
-        try {
-          await contract.methods.airdropTokens(users, amounts).send({ from: account, gas: 300000 });
-        } catch (error) {
-          console.error('Error airdropping tokens:', error);
-        }
-      };
-      
-    
-      const buyMerch = async (amount) => {
-        try {
-          await contract.methods.purchaseMerchandise(amount).send({ from: account, gas: 300000 });
-        } catch (error) {
-          console.error('Error purchasing merchandise:', error);
-        }
-      };
-    
-      const contributeToPerformance = async (amount) => {
-        try {
-          await contract.methods.contributeToPerformance(amount).send({ from: account, gas: 300000 });
-        } catch (error) {
-          console.error('Error contributing to artwork:', error);
-        }
-      };
+    try {
+      await contract.methods.registerUser(email).send({ from: account, gas: 300000 });
+    } catch (error) {
+      console.error('Error registering user:', error);
+    }
+  };
+
+  const airdropTokens = async (users, amounts) => {
+    try {
+      await contract.methods.airdropTokens(users, amounts).send({ from: account, gas: 300000 });
+    } catch (error) {
+      console.error('Error airdropping tokens:', error);
+    }
+  };
+  
+
+  const buyMerch = async (amount) => {
+    try {
+      await contract.methods.purchaseMerchandise(amount).send({ from: account, gas: 300000 });
+    } catch (error) {
+      console.error('Error purchasing merchandise:', error);
+    }
+  };
+
+  const contributeToPerformance = async (amount) => {
+    try {
+      await contract.methods.contributeToPerformance(amount).send({ from: account, gas: 300000 });
+    } catch (error) {
+      console.error('Error contributing to artwork:', error);
+    }
+  };
+
+  const mintNFT = async (tokenId) => {
+    try {
+      await nftContract.methods.mint(tokenId).send({ from: account, gas: 300000 });
+    } catch (error) {
+      console.error('Error minting NFT:', error);
+    }
+  };
+
+  const purchaseNFT = async (tokenId) => {
+    try {
+        const transactionData = { from: account, gas: 300000 };
+        await nftContract.methods.purchaseNFT(tokenId).send(transactionData);
+    } catch (error) {
+        console.error('Error purchasing NFT:', error);
+        throw error; 
+    }
+};
+
   return (
-    <SmartContractContext.Provider value={{ active, account, tokenBalance, earnTokens, registerUser, buyMerch, contributeToPerformance }}>
+    <SmartContractContext.Provider value={{ active, account, tokenBalance, earnTokens, registerUser, airdropTokens, buyMerch, contributeToPerformance, mintNFT, purchaseNFT, nftContract }}>
       {children}
     </SmartContractContext.Provider>
   );
 };
+
