@@ -102,7 +102,7 @@ const Rewards = () => {
           <div key={nft.id} className="nft-card">
             <img src={nft.image} alt={`NFT ${nft.id}`} />
             <p>{`Discount on tickets: ${nft.metadata.attributes[0].value}`}</p>
-            <button onClick={() => handlePurchaseNFT(nft.id)}>Buy NFT</button>
+            <button onClick={() => handlePurchaseNFT(nft.id)}>Claim NFT</button>
           </div>
         ))}
         </div>
