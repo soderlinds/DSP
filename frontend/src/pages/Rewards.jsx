@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useSmartContract } from '../SmartContractContext';
-import '../styles/_rewards.sass'; 
+import '../styles/_rewards.sass';
 
 const Rewards = () => {
-  const { nftContract, purchaseNFT, mintNFT, tokenBalance } = useSmartContract();
+  const { nftContract, purchaseNFT, mintNFT, tokenBalance, approveTokenSpending, web3 } = useSmartContract();
   const [nfts, setNFTs] = useState([]);
   const [tokenIdInput, setTokenIdInput] = useState('');
+  const [priceInput, setPriceInput] = useState('');
 
   useEffect(() => {
     const fetchNFTs = async () => {
@@ -21,9 +22,11 @@ const Rewards = () => {
       const nftData = [];
       const mintedTokens = await nftContract.methods.getAllMintedNFTs().call();
 
-      for (const tokenId of mintedTokens) {
-        const tokenURI = `metadata/${tokenId}.json`; 
-        const imageURI = `images/${tokenId}.png`;    
+      for (const tokenIdBN of mintedTokens) {
+        const tokenId = Number(tokenIdBN);
+
+        const tokenURI = `metadata/${tokenId}.json`;
+        const imageURI = `images/${tokenId}.png`;
 
         const metadataResponse = await fetch(process.env.PUBLIC_URL + tokenURI);
         const metadata = await metadataResponse.json();
@@ -32,10 +35,13 @@ const Rewards = () => {
         const imageData = await imageResponse.blob();
         const imageUrl = URL.createObjectURL(imageData);
 
+        const ticketPrice = Number(await nftContract.methods.getTicketPrice(tokenId).call());
+
         nftData.push({
           id: tokenId,
           image: imageUrl,
           metadata: metadata,
+          ticketPrice: ticketPrice,
         });
       }
 
@@ -50,20 +56,28 @@ const Rewards = () => {
 
   const handlePurchaseNFT = async (tokenId) => {
     try {
-        await purchaseNFT(tokenId); 
-        const updatedNFTData = await fetchNFTData();
-        setNFTs(updatedNFTData);
-    } catch (error) {
-        console.error('Error purchasing NFT:', error);
-    }
-};
+      const ticketPrice = await nftContract.methods.getTicketPrice(tokenId).call();
+      
+      const approvalAmount = ticketPrice; 
+      await approveTokenSpending(approvalAmount);
 
+      await purchaseNFT(tokenId);
+  
+      const updatedNFTData = await fetchNFTData();
+      setNFTs(updatedNFTData);
+    } catch (error) {
+      console.error('Error purchasing NFT:', error);
+    }
+  };
+  
   const handleMintNFT = async () => {
     try {
       const tokenId = Number(tokenIdInput);
-      if (!isNaN(tokenId)) {
-        await mintNFT(tokenId);
-        console.log(`Successfully minted NFT with ID ${tokenId}`);
+      const price = Number(priceInput);
+
+      if (!isNaN(tokenId) && !isNaN(price)) {
+        await mintNFT(tokenId, price);
+        console.log(`Successfully minted NFT with ID ${tokenId} and price ${price}`);
 
         console.log('Fetching updated NFT data...');
         const updatedNFTData = await fetchNFTData();
@@ -71,8 +85,9 @@ const Rewards = () => {
 
         setNFTs(updatedNFTData);
         setTokenIdInput('');
+        setPriceInput('');
       } else {
-        console.error('Invalid token ID');
+        console.error('Invalid token ID or price');
       }
     } catch (error) {
       console.error('Error minting NFT:', error);
@@ -80,7 +95,7 @@ const Rewards = () => {
   };
 
   return (
-    <div>
+    <div className="rewards-wrapper">
       <h2>NFT Rewards Page</h2>
       <p>Your Token Balance: {tokenBalance}</p>
       <div>
@@ -93,18 +108,27 @@ const Rewards = () => {
             onChange={(e) => setTokenIdInput(e.target.value)}
           />
         </label>
+        <label>
+          Enter Ticket Price:
+          <input
+            type="text"
+            value={priceInput}
+            onChange={(e) => setPriceInput(e.target.value)}
+          />
+        </label>
         <button onClick={handleMintNFT}>Mint NFT</button>
       </div>
       <div>
-      <h3>Purchase NFT</h3>
-      <div className="purchase-nfts">
-        {nfts.map((nft) => (
-          <div key={nft.id} className="nft-card">
-            <img src={nft.image} alt={`NFT ${nft.id}`} />
-            <p>{`Discount on tickets: ${nft.metadata.attributes[0].value}`}</p>
-            <button onClick={() => handlePurchaseNFT(nft.id)}>Claim NFT</button>
-          </div>
-        ))}
+        <h3>Purchase NFT</h3>
+        <div className="purchase-nfts">
+          {nfts.map((nft) => (
+            <div key={nft.id} className="nft-card">
+              <img src={nft.image} alt={`NFT ${nft.id}`} />
+              <p>{`Discount on tickets: ${nft.metadata.attributes[0].value}`}</p>
+              <p>{`Ticket Price: ${nft.ticketPrice}`}</p>
+              <button onClick={() => handlePurchaseNFT(nft.id)}>Claim NFT</button>
+            </div>
+          ))}
         </div>
       </div>
     </div>

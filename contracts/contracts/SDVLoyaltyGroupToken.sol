@@ -18,6 +18,7 @@ contract SDVToken is ERC20, Ownable {
     event MerchandisePurchased(address indexed user, uint256 amount);
     event TokensEarned(address indexed user, uint256 amount);
     event ContributionMade(address indexed user, uint256 amount);
+    event TokensApproved(address indexed owner, address indexed spender, uint256 amount);
 
     constructor() ERC20("SDVToken", "SDV") {
         _mint(msg.sender, 1000000 * 10**decimals());
@@ -69,8 +70,13 @@ contract SDVToken is ERC20, Ownable {
         require(members[msg.sender].registered, "User not registered");
         require(members[msg.sender].tokens >= _amount, "Insufficient funds");
 
-
         _burn(msg.sender, _amount);
         emit ContributionMade(msg.sender, _amount);
+    }
+
+    function approve(address spender, uint256 amount) public override returns (bool) {
+        _approve(_msgSender(), spender, amount);
+        emit Approval(_msgSender(), spender, amount);
+        return true;
     }
 }

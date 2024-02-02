@@ -70,7 +70,6 @@ export const SmartContractProvider = ({ children }) => {
       console.error('Error airdropping tokens:', error);
     }
   };
-  
 
   const buyMerch = async (amount) => {
     try {
@@ -88,9 +87,9 @@ export const SmartContractProvider = ({ children }) => {
     }
   };
 
-  const mintNFT = async (tokenId) => {
+  const mintNFT = async (tokenId, ticketPrice) => {
     try {
-      await nftContract.methods.mint(tokenId).send({ from: account, gas: 300000 });
+      await nftContract.methods.mint(tokenId, ticketPrice).send({ from: account, gas: 300000 });
     } catch (error) {
       console.error('Error minting NFT:', error);
     }
@@ -98,18 +97,45 @@ export const SmartContractProvider = ({ children }) => {
 
   const purchaseNFT = async (tokenId) => {
     try {
-        const transactionData = { from: account, gas: 300000 };
-        await nftContract.methods.purchaseNFT(tokenId).send(transactionData);
+      const transactionData = { from: account, gas: 300000 };
+      await nftContract.methods.purchaseNFT(tokenId).send(transactionData);
     } catch (error) {
-        console.error('Error purchasing NFT:', error);
-        throw error; 
+      console.error('Error purchasing NFT:', error);
+      throw error;
     }
-};
+  };
+
+  const approveTokenSpending = async (amount) => {
+    try {
+      const amountString = amount.toString();
+
+      await contract.methods.approve(nftContractAddress, amountString).send({ from: account });
+  
+      console.log(`Successfully approved spending ${amountString} tokens for the NFT contract`);
+    } catch (error) {
+      console.error('Error approving token spending:', error);
+      throw error;
+    }
+  };
 
   return (
-    <SmartContractContext.Provider value={{ active, account, tokenBalance, earnTokens, registerUser, airdropTokens, buyMerch, contributeToPerformance, mintNFT, purchaseNFT, nftContract }}>
+    <SmartContractContext.Provider
+      value={{
+        active,
+        account,
+        tokenBalance,
+        earnTokens,
+        registerUser,
+        airdropTokens,
+        buyMerch,
+        contributeToPerformance,
+        mintNFT,
+        purchaseNFT,
+        approveTokenSpending,
+        nftContract,
+      }}
+    >
       {children}
     </SmartContractContext.Provider>
   );
 };
-
