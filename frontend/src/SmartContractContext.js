@@ -87,9 +87,9 @@ export const SmartContractProvider = ({ children }) => {
     }
   };
 
-  const mintNFT = async (tokenId, ticketPrice) => {
+  const mintNFT = async (tokenId, nftPrice) => {
     try {
-      await nftContract.methods.mint(tokenId, ticketPrice).send({ from: account, gas: 300000 });
+      await nftContract.methods.mint(tokenId, nftPrice).send({ from: account, gas: 300000 });
     } catch (error) {
       console.error('Error minting NFT:', error);
     }

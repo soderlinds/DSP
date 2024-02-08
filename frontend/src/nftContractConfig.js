@@ -221,6 +221,26 @@ export const nftContractABI = [
     "constant": true
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "nftPrice",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
     "inputs": [],
     "name": "owner",
     "outputs": [
@@ -367,26 +387,6 @@ export const nftContractABI = [
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "ticketPrice",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
-  },
-  {
-    "inputs": [
-      {
         "internalType": "address",
         "name": "from",
         "type": "address"
@@ -442,7 +442,7 @@ export const nftContractABI = [
       },
       {
         "internalType": "uint256",
-        "name": "_ticketPrice",
+        "name": "_nftPrice",
         "type": "uint256"
       }
     ],
@@ -472,7 +472,7 @@ export const nftContractABI = [
         "type": "uint256"
       }
     ],
-    "name": "getTicketPrice",
+    "name": "getNFTPrice",
     "outputs": [
       {
         "internalType": "uint256",
@@ -493,11 +493,11 @@ export const nftContractABI = [
       },
       {
         "internalType": "uint256",
-        "name": "newTicketPrice",
+        "name": "newNFTPrice",
         "type": "uint256"
       }
     ],
-    "name": "setTicketPrice",
+    "name": "setNFTPrice",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -538,4 +538,4 @@ export const nftContractABI = [
   }
 ];
     
-export const nftContractAddress = '0x427417eDAe584AAF2aE8cFA31e1f1f1299aBeeE9';
+export const nftContractAddress = '0x81Efaef232CCd231Cb5Bc4CD480A6341Ec4Df6a3';

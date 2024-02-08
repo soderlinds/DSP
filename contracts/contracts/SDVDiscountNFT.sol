@@ -13,7 +13,7 @@ contract SDVDiscountNFT is ERC721URIStorage, Ownable {
     string private _baseTokenURI;
 
     uint256[] private mintedTokens;
-    mapping(uint256 => uint256) public ticketPrice;
+    mapping(uint256 => uint256) public nftPrice;
 
     constructor(address _SDVToken, string memory baseTokenURI) ERC721("SDVNFT", "SDVN") {
         SDVToken = IERC20(_SDVToken);
@@ -24,13 +24,13 @@ contract SDVDiscountNFT is ERC721URIStorage, Ownable {
         _baseTokenURI = baseTokenURI;
     }
 
-    function mint(uint256 tokenId, uint256 _ticketPrice) external onlyOwner {
+    function mint(uint256 tokenId, uint256 _nftPrice) external onlyOwner {
         require(!_exists(tokenId), "Token ID already exists");
 
         _safeMint(owner(), tokenId);
         mintedTokens.push(tokenId);
 
-        setTicketPrice(tokenId, _ticketPrice);
+        setNFTPrice(tokenId, _nftPrice);
 
         _setTokenURI(tokenId, string(abi.encodePacked(_baseTokenURI, tokenId.toString(), ".json")));
     }
@@ -38,21 +38,21 @@ contract SDVDiscountNFT is ERC721URIStorage, Ownable {
     function purchaseNFT(uint256 tokenId) external {
         require(_exists(tokenId), "Token ID does not exist");
 
-        uint256 price = getTicketPrice(tokenId);
+        uint256 price = getNFTPrice(tokenId);
 
         SDVToken.transferFrom(msg.sender, owner(), price);
 
         _transfer(owner(), msg.sender, tokenId);
     }
 
-    function getTicketPrice(uint256 tokenId) public view returns (uint256) {
+    function getNFTPrice(uint256 tokenId) public view returns (uint256) {
         require(_exists(tokenId), "Token ID does not exist");
-        return ticketPrice[tokenId];
+        return nftPrice[tokenId];
     }
 
-    function setTicketPrice(uint256 tokenId, uint256 newTicketPrice) public onlyOwner {
+    function setNFTPrice(uint256 tokenId, uint256 newNFTPrice) public onlyOwner {
         require(_exists(tokenId), "Token ID does not exist");
-        ticketPrice[tokenId] = newTicketPrice;
+        nftPrice[tokenId] = newNFTPrice;
     }
 
     function tokenURI(uint256 tokenId) public view override(ERC721URIStorage) returns (string memory) {

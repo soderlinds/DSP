@@ -35,13 +35,13 @@ const Rewards = () => {
         const imageData = await imageResponse.blob();
         const imageUrl = URL.createObjectURL(imageData);
 
-        const ticketPrice = Number(await nftContract.methods.getTicketPrice(tokenId).call());
+        const nftPrice = Number(await nftContract.methods.getNFTPrice(tokenId).call());
 
         nftData.push({
           id: tokenId,
           image: imageUrl,
           metadata: metadata,
-          ticketPrice: ticketPrice,
+          nftPrice: nftPrice,
         });
       }
 
@@ -56,9 +56,9 @@ const Rewards = () => {
 
   const handlePurchaseNFT = async (tokenId) => {
     try {
-      const ticketPrice = await nftContract.methods.getTicketPrice(tokenId).call();
+      const nftPrice = await nftContract.methods.getNFTPrice(tokenId).call();
       
-      const approvalAmount = ticketPrice; 
+      const approvalAmount = nftPrice; 
       await approveTokenSpending(approvalAmount);
 
       await purchaseNFT(tokenId);
@@ -109,7 +109,7 @@ const Rewards = () => {
           />
         </label>
         <label>
-          Enter Ticket Price:
+          Enter Price:
           <input
             type="text"
             value={priceInput}
@@ -125,7 +125,7 @@ const Rewards = () => {
             <div key={nft.id} className="nft-card">
               <img src={nft.image} alt={`NFT ${nft.id}`} />
               <p>{`Discount on tickets: ${nft.metadata.attributes[0].value}`}</p>
-              <p>{`Ticket Price: ${nft.ticketPrice}`}</p>
+              <p>{`Price: ${nft.nftPrice}`}</p>
               <button onClick={() => handlePurchaseNFT(nft.id)}>Claim NFT</button>
             </div>
           ))}

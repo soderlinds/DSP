@@ -13,6 +13,7 @@ const Header = () => {
           <li><NavLink to="/merch" activeclassname="active">MERCH</NavLink></li>
           <li><NavLink to="/rewards" activeclassname="active">REWARDS</NavLink></li>
           <li><NavLink to="/sdv" activeclassname="active">SDVLOYALTYTOKEN</NavLink></li>
+          <li><NavLink to="/mywallet" activeclassname="active">MY WALLET</NavLink></li>
         </ul>
       </nav>
     </header>
