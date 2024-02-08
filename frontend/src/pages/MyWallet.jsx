@@ -52,7 +52,7 @@ function MyWallet() {
         {ownedNFTData.map((nft) => (
           <div key={nft.id} className="nft-card">
             <img src={nft.image} alt={`NFT ${nft.id}`} />
-            <p>{`Discount on tickets: ${nft.metadata.attributes[0].value}`}</p>
+            <p className="nft-text">{`Discount on tickets: ${nft.metadata.attributes[0].value}`}</p>
           </div>
         ))}
       </div>
