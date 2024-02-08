@@ -8,6 +8,8 @@ const Rewards = () => {
   const [tokenIdInput, setTokenIdInput] = useState('');
   const [priceInput, setPriceInput] = useState('');
 
+  const contractOwnerAddress = "0x964d70403c038f1f9c73adcfa6066dd626b882c5";
+
   useEffect(() => {
     const fetchNFTs = async () => {
       const nftData = await fetchNFTData();
@@ -94,10 +96,11 @@ const Rewards = () => {
     }
   };
 
+  const unclaimedNFTs = nfts.filter(nft => nft.owner === null || contractOwnerAddress );
+
   return (
     <div className="rewards-wrapper">
       <h2>NFT Rewards Page</h2>
-      <p>Your Token Balance: {tokenBalance}</p>
       <div>
         <h3>Mint NFT</h3>
         <label>
@@ -121,10 +124,10 @@ const Rewards = () => {
       <div>
         <h3>Purchase NFT</h3>
         <div className="purchase-nfts">
-          {nfts.map((nft) => (
+          {unclaimedNFTs.map((nft) => (
             <div key={nft.id} className="nft-card">
               <img src={nft.image} alt={`NFT ${nft.id}`} />
-              <p>{`Discount on tickets: ${nft.metadata.attributes[0].value}`}</p>
+              <p className="discount-text">{`Discount on tickets: ${nft.metadata.attributes[0].value}`}</p>
               <p>{`Price: ${nft.nftPrice}`}</p>
               <button onClick={() => handlePurchaseNFT(nft.id)}>Claim NFT</button>
             </div>

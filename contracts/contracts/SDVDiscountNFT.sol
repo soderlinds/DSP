@@ -63,4 +63,19 @@ contract SDVDiscountNFT is ERC721URIStorage, Ownable {
     function getAllMintedNFTs() external view returns (uint256[] memory) {
         return mintedTokens;
     }
+
+    function getOwnedNFTs(address user) external view returns (uint256[] memory) {
+    uint256[] memory ownedTokens = new uint256[](balanceOf(user));
+    uint256 tokenCount = 0;
+
+    for (uint256 i = 0; i < mintedTokens.length; i++) {
+        uint256 tokenId = mintedTokens[i];
+        if (_exists(tokenId) && ownerOf(tokenId) == user) {
+            ownedTokens[tokenCount] = tokenId;
+            tokenCount++;
+        }
+    }
+
+    return ownedTokens;
+    }
 }

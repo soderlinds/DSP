@@ -535,7 +535,27 @@ export const nftContractABI = [
     "stateMutability": "view",
     "type": "function",
     "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "getOwnedNFTs",
+    "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
   }
 ];
     
-export const nftContractAddress = '0x81Efaef232CCd231Cb5Bc4CD480A6341Ec4Df6a3';
+export const nftContractAddress = '0xE5E867cf59955e6bCCab7C0F17070f546C77c027';

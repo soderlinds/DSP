@@ -13,6 +13,7 @@ export const SmartContractProvider = ({ children }) => {
   const [active, setActive] = useState(false);
   const [account, setAccount] = useState('');
   const [tokenBalance, setTokenBalance] = useState(0);
+  const [ownedNFTs, setOwnedNFTs] = useState([]);
 
   const web3 = new Web3(window.ethereum);
   const contract = new web3.eth.Contract(contractABI, contractAddress);
@@ -45,6 +46,21 @@ export const SmartContractProvider = ({ children }) => {
     };
 
     fetchBalances();
+  }, [account]);
+
+  useEffect(() => {
+    const fetchOwnedNFTs = async () => {
+      try {
+        if (account) {
+          const ownedTokens = await nftContract.methods.getOwnedNFTs(account).call();
+          setOwnedNFTs(ownedTokens);
+        }
+      } catch (error) {
+        console.error('Error fetching owned NFTs:', error);
+      }
+    };
+
+    fetchOwnedNFTs();
   }, [account]);
 
   const earnTokens = async (amount) => {
@@ -132,7 +148,9 @@ export const SmartContractProvider = ({ children }) => {
         mintNFT,
         purchaseNFT,
         approveTokenSpending,
+        ownedNFTs,
         nftContract,
+        web3,
       }}
     >
       {children}
