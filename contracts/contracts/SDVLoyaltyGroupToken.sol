@@ -8,6 +8,7 @@ contract SDVToken is ERC20, Ownable {
     struct Member {
         string email;
         uint256 tokens;
+        uint256 points;
         bool registered;
     }
 
@@ -16,9 +17,9 @@ contract SDVToken is ERC20, Ownable {
     event UserRegistered(address indexed user, string email);
     event TokensAirdropped(address indexed user, uint256 amount);
     event MerchandisePurchased(address indexed user, uint256 amount);
-    event TokensEarned(address indexed user, uint256 amount);
-    event ContributionMade(address indexed user, uint256 amount);
     event TokensApproved(address indexed owner, address indexed spender, uint256 amount);
+    event PointsEarned(address indexed user, uint256 amount);
+    event PointsExchanged(address indexed user, uint256 points, uint256 tokens);
 
     constructor() ERC20("SDVToken", "SDV") {
         _mint(msg.sender, 1000000 * 10**decimals());
@@ -57,21 +58,24 @@ contract SDVToken is ERC20, Ownable {
         emit MerchandisePurchased(msg.sender, _amount);
     }
 
-    function earnTokens(uint256 _amount) external {
+    function earnPoints(uint256 _amount) external {
         require(members[msg.sender].registered, "User not registered");
+        members[msg.sender].points += _amount;
 
-        _mint(msg.sender, _amount);
-        members[msg.sender].tokens += _amount;
-
-        emit TokensEarned(msg.sender, _amount);
+        emit PointsEarned(msg.sender, _amount);
     }
 
-    function contributeToPerformance(uint256 _amount) external {
+    function exchangePointsForTokens(uint256 _pointsToExchange) external {
         require(members[msg.sender].registered, "User not registered");
-        require(members[msg.sender].tokens >= _amount, "Insufficient funds");
+        require(members[msg.sender].points >= _pointsToExchange, "Insufficient points");
 
-        _burn(msg.sender, _amount);
-        emit ContributionMade(msg.sender, _amount);
+        uint256 tokenAmount = _pointsToExchange;
+        _mint(msg.sender, tokenAmount);
+        members[msg.sender].tokens += tokenAmount;
+        members[msg.sender].points -= _pointsToExchange;
+
+        emit Transfer(address(0), msg.sender, tokenAmount);
+        emit PointsExchanged(msg.sender, _pointsToExchange, tokenAmount);
     }
 
     function approve(address spender, uint256 amount) public override returns (bool) {
@@ -80,4 +84,7 @@ contract SDVToken is ERC20, Ownable {
         return true;
     }
 
+    function getPointsBalance(address user) external view returns (uint256) {
+        return members[user].points;
+    }
 }

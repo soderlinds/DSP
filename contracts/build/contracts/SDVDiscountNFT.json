@@ -24662,12 +24662,12 @@
         }
       },
       "links": {},
-      "address": "0xE5E867cf59955e6bCCab7C0F17070f546C77c027",
-      "transactionHash": "0xfd0f2aa97d9486912f82ea6a3154211907f95dffde700471776f647a9ada898a"
+      "address": "0xFa6AeCb713fE1d42452E28B10b467675A3995ded",
+      "transactionHash": "0x6257c8902b4ef85a6156d7bf7012485f9938415c9a7480e226f6324f27914bc3"
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2024-02-08T14:41:56.560Z",
+  "updatedAt": "2024-02-12T09:57:53.981Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

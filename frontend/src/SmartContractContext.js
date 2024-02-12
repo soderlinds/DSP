@@ -13,6 +13,7 @@ export const SmartContractProvider = ({ children }) => {
   const [active, setActive] = useState(false);
   const [account, setAccount] = useState('');
   const [tokenBalance, setTokenBalance] = useState(0);
+  const [pointsBalance, setPointsBalance] = useState(0); 
   const [ownedNFTs, setOwnedNFTs] = useState([]);
 
   const web3 = new Web3(window.ethereum);
@@ -47,6 +48,40 @@ export const SmartContractProvider = ({ children }) => {
 
     fetchBalances();
   }, [account]);
+
+  useEffect(() => {
+    const fetchPointsBalance = async () => {
+      try {
+        if (account) {
+          const points = await contract.methods.getPointsBalance(account).call();
+          setPointsBalance(points.toString());
+        }
+      } catch (error) {
+        console.error('Error fetching points balance:', error);
+      }
+    };
+
+    fetchPointsBalance();
+  }, [account]);
+
+
+  
+  const earnPoints = async (amount) => {
+    try {
+      await contract.methods.earnPoints(amount).send({ from: account, gas: 300000 });
+    } catch (error) {
+      console.error('Error earning points:', error);
+    }
+  };
+
+  const exchangePointsForTokens = async (amount) => {
+    try {
+      await contract.methods.exchangePointsForTokens(amount).send({ from: account, gas: 300000 });
+    } catch (error) {
+      console.error('Error exchanging points for tokens:', error);
+    }
+  };
+
 
   useEffect(() => {
     const fetchOwnedNFTs = async () => {
@@ -140,6 +175,7 @@ export const SmartContractProvider = ({ children }) => {
         active,
         account,
         tokenBalance,
+        pointsBalance,
         earnTokens,
         registerUser,
         airdropTokens,
@@ -151,6 +187,8 @@ export const SmartContractProvider = ({ children }) => {
         ownedNFTs,
         nftContract,
         web3,
+        earnPoints,
+        exchangePointsForTokens,
       }}
     >
       {children}

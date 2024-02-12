@@ -3,8 +3,9 @@ import { useSmartContract } from '../SmartContractContext';
 import '../styles/_mywallet.sass';
 
 function MyWallet() {
-  const { active, account, tokenBalance, ownedNFTs, nftContract } = useSmartContract();
+  const { active, account, tokenBalance, ownedNFTs, nftContract, earnTokens, pointsBalance, exchangePointsForTokens } = useSmartContract();
   const [ownedNFTData, setOwnedNFTData] = useState([]);
+  const [pointsToExchange, setPointsToExchange] = useState(0);
 
   useEffect(() => {
     const fetchOwnedNFTData = async () => {
@@ -39,6 +40,15 @@ function MyWallet() {
     fetchOwnedNFTData();
   }, [ownedNFTs, nftContract]);
 
+  const handleExchange = async () => {
+    try {
+      await exchangePointsForTokens(pointsToExchange);
+      // You can add any additional logic here, such as updating UI or displaying a confirmation message
+    } catch (error) {
+      console.error('Error exchanging points for tokens:', error);
+    }
+  };
+
   return (
     <div className="container">
       <h2>My Wallet</h2>
@@ -46,7 +56,7 @@ function MyWallet() {
 
       <p>Account: {account}</p>
       <p>Token Balance: {tokenBalance}</p>
-
+      <p>Points Balance: {pointsBalance}</p> 
       <h3>Owned NFTs</h3>
       <div className="owned-nfts">
         {ownedNFTData.map((nft) => (
@@ -55,6 +65,10 @@ function MyWallet() {
             <p className="nft-text">{`Discount on tickets: ${nft.metadata.attributes[0].value}`}</p>
           </div>
         ))}
+      </div>
+      <div>
+        <input type="number" value={pointsToExchange} onChange={(e) => setPointsToExchange(e.target.value)} />
+        <button onClick={handleExchange}>Exchange Points for Tokens</button>
       </div>
     </div>
   );

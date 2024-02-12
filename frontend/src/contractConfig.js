@@ -45,25 +45,6 @@ export const contractABI = [
         "type": "uint256"
       }
     ],
-    "name": "ContributionMade",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
     "name": "MerchandisePurchased",
     "type": "event"
   },
@@ -84,6 +65,50 @@ export const contractABI = [
       }
     ],
     "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "PointsEarned",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "points",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "tokens",
+        "type": "uint256"
+      }
+    ],
+    "name": "PointsExchanged",
     "type": "event"
   },
   {
@@ -128,25 +153,6 @@ export const contractABI = [
       }
     ],
     "name": "TokensApproved",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "TokensEarned",
     "type": "event"
   },
   {
@@ -318,6 +324,11 @@ export const contractABI = [
       {
         "internalType": "uint256",
         "name": "tokens",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "points",
         "type": "uint256"
       },
       {
@@ -511,7 +522,7 @@ export const contractABI = [
         "type": "uint256"
       }
     ],
-    "name": "earnTokens",
+    "name": "earnPoints",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -520,11 +531,11 @@ export const contractABI = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_amount",
+        "name": "_pointsToExchange",
         "type": "uint256"
       }
     ],
-    "name": "contributeToPerformance",
+    "name": "exchangePointsForTokens",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -552,7 +563,27 @@ export const contractABI = [
     ],
     "stateMutability": "nonpayable",
     "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "getPointsBalance",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
   }
 ];
   
-export const contractAddress = '0x1A6a2F4cbb51dF760bD2130bbc3554BF699f088B';
+export const contractAddress = '0xeF09A54156b73B150b0500CF45DF9A2DBe42726C';
