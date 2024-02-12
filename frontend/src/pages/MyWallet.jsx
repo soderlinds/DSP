@@ -43,7 +43,6 @@ function MyWallet() {
   const handleExchange = async () => {
     try {
       await exchangePointsForTokens(pointsToExchange);
-      // You can add any additional logic here, such as updating UI or displaying a confirmation message
     } catch (error) {
       console.error('Error exchanging points for tokens:', error);
     }
