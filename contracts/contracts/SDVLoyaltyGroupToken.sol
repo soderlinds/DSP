@@ -5,15 +5,20 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract SDVToken is ERC20, Ownable {
+    enum Status { Normal, Silver, Gold }
+    
     struct Member {
         string email;
         uint256 tokens;
         uint256 points;
+        Status status;
         bool registered;
     }
-
+    
     mapping(address => Member) public members;
+    address[] public registeredUsers;
 
+    event StatusUpdated(address indexed user, Status status);
     event UserRegistered(address indexed user, string email);
     event TokensAirdropped(address indexed user, uint256 amount);
     event MerchandisePurchased(address indexed user, uint256 amount);
@@ -31,8 +36,44 @@ contract SDVToken is ERC20, Ownable {
 
         members[msg.sender].email = _email;
         members[msg.sender].registered = true;
+        registeredUsers.push(msg.sender);
+
+        _updateStatus(msg.sender);
 
         emit UserRegistered(msg.sender, _email);
+        emit StatusUpdated(msg.sender, members[msg.sender].status);
+    }
+
+    function _updateStatus(address _user) internal {
+        uint256 tokenBalance = balanceOf(_user);
+
+        if (tokenBalance >= 5000 * 10**decimals()) {
+            members[_user].status = Status.Gold;
+        } else if (tokenBalance >= 2000 * 10**decimals()) {
+            members[_user].status = Status.Silver;
+        } else {
+            members[_user].status = Status.Normal;
+        }
+
+        emit StatusUpdated(_user, members[_user].status);
+    }
+
+    function getStatus(address _user) external view returns (Status) {
+        return members[_user].status;
+    }
+
+    function getAllUsers() external view returns (address[] memory, Status[] memory) {
+        uint256 userCount = registeredUsers.length;
+        address[] memory users = new address[](userCount);
+        Status[] memory statuses = new Status[](userCount);
+
+        for (uint256 i = 0; i < userCount; i++) {
+            address user = registeredUsers[i];
+            users[i] = user;
+            statuses[i] = members[user].status;
+        }
+
+        return (users, statuses);
     }
 
     function airdropTokens(address[] memory _users, uint256[] memory _amounts) external onlyOwner {

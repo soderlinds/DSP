@@ -3,7 +3,7 @@ import { useSmartContract } from '../SmartContractContext';
 import '../styles/_mywallet.sass';
 
 function MyWallet() {
-  const { active, account, tokenBalance, ownedNFTs, nftContract, earnTokens, pointsBalance, exchangePointsForTokens } = useSmartContract();
+  const { active, account, tokenBalance, ownedNFTs, nftContract, pointsBalance, exchangePointsForTokens } = useSmartContract();
   const [ownedNFTData, setOwnedNFTData] = useState([]);
   const [pointsToExchange, setPointsToExchange] = useState(0);
 
@@ -51,9 +51,6 @@ function MyWallet() {
   return (
     <div className="container">
       <h2>My Wallet</h2>
-      <p>Status: {active ? 'Connected' : 'Not Connected'}</p>
-
-      <p>Account: {account}</p>
       <p>Token Balance: {tokenBalance}</p>
       <p>Points Balance: {pointsBalance}</p> 
       <h3>Owned NFTs</h3>

@@ -15,6 +15,7 @@ export const SmartContractProvider = ({ children }) => {
   const [tokenBalance, setTokenBalance] = useState(0);
   const [pointsBalance, setPointsBalance] = useState(0); 
   const [ownedNFTs, setOwnedNFTs] = useState([]);
+  const [userStatuses, setUserStatuses] = useState({}); 
 
   const web3 = new Web3(window.ethereum);
   const contract = new web3.eth.Contract(contractABI, contractAddress);
@@ -39,13 +40,14 @@ export const SmartContractProvider = ({ children }) => {
       try {
         if (account) {
           const balance = await contract.methods.balanceOf(account).call();
-          setTokenBalance(balance.toString());
+          setTokenBalance(Number(balance));
+          console.log(balance);
         }
       } catch (error) {
         console.error('Error fetching balances:', error);
       }
     };
-
+    
     fetchBalances();
   }, [account]);
 
@@ -97,6 +99,51 @@ export const SmartContractProvider = ({ children }) => {
 
     fetchOwnedNFTs();
   }, [account]);
+
+
+  useEffect(() => {
+    const fetchUserStatuses = async () => {
+      try {
+        if (account) {
+          const allUsers = await contract.methods.getAllUsers().call();
+          const userStatuses = {};
+    
+          for (const user of allUsers[0]) {
+            const status = await contract.methods.getStatus(user).call();
+            userStatuses[user] = Number(status); 
+          }
+    
+          console.log('Fetched User Statuses:', userStatuses);
+    
+          setUserStatuses(userStatuses);
+        }
+      } catch (error) {
+        console.error('Error fetching user statuses:', error);
+      }
+    };
+    
+  
+    fetchUserStatuses();
+  }, [account]);
+
+  const fetchUsers = async () => {
+    try {
+      if (account) {
+        const allUsers = await contract.methods.getAllUsers().call();
+        const usersWithStatus = [];
+  
+        for (const user of allUsers[0]) {
+          const status = await contract.methods.getStatus(user).call();
+          usersWithStatus.push({ user, status: Number(status) });
+        }
+  
+        return usersWithStatus;
+      }
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
+  };
+  
 
   const earnTokens = async (amount) => {
     try {
@@ -176,7 +223,6 @@ export const SmartContractProvider = ({ children }) => {
         account,
         tokenBalance,
         pointsBalance,
-        earnTokens,
         registerUser,
         airdropTokens,
         buyMerch,
@@ -189,6 +235,7 @@ export const SmartContractProvider = ({ children }) => {
         web3,
         earnPoints,
         exchangePointsForTokens,
+        fetchUsers,
       }}
     >
       {children}

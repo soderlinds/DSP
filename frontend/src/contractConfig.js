@@ -122,6 +122,25 @@ export const contractABI = [
       },
       {
         "indexed": false,
+        "internalType": "enum SDVToken.Status",
+        "name": "status",
+        "type": "uint8"
+      }
+    ],
+    "name": "StatusUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "indexed": false,
         "internalType": "uint256",
         "name": "amount",
         "type": "uint256"
@@ -332,6 +351,11 @@ export const contractABI = [
         "type": "uint256"
       },
       {
+        "internalType": "enum SDVToken.Status",
+        "name": "status",
+        "type": "uint8"
+      },
+      {
         "internalType": "bool",
         "name": "registered",
         "type": "bool"
@@ -358,6 +382,26 @@ export const contractABI = [
   {
     "inputs": [],
     "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "registeredUsers",
     "outputs": [
       {
         "internalType": "address",
@@ -486,6 +530,45 @@ export const contractABI = [
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      }
+    ],
+    "name": "getStatus",
+    "outputs": [
+      {
+        "internalType": "enum SDVToken.Status",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [],
+    "name": "getAllUsers",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      },
+      {
+        "internalType": "enum SDVToken.Status[]",
+        "name": "",
+        "type": "uint8[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address[]",
         "name": "_users",
         "type": "address[]"
@@ -586,4 +669,4 @@ export const contractABI = [
   }
 ];
   
-export const contractAddress = '0xeF09A54156b73B150b0500CF45DF9A2DBe42726C';
+export const contractAddress = '0x0D2a90186e5E444F7fE2700c0f002AcD02DEf6D2';
