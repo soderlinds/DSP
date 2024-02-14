@@ -3,9 +3,8 @@ import { useSmartContract } from '../SmartContractContext';
 import '../styles/_mywallet.sass';
 
 function MyWallet() {
-  const { active, account, tokenBalance, ownedNFTs, nftContract, pointsBalance, exchangePointsForTokens } = useSmartContract();
+  const { active, account, tokenBalance, ownedNFTs, pointsBalance } = useSmartContract();
   const [ownedNFTData, setOwnedNFTData] = useState([]);
-  const [pointsToExchange, setPointsToExchange] = useState(0);
 
   useEffect(() => {
     const fetchOwnedNFTData = async () => {
@@ -22,15 +21,14 @@ function MyWallet() {
           const imageData = await imageResponse.blob();
           const imageUrl = URL.createObjectURL(imageData);
 
-          const nftPrice = Number(await nftContract.methods.getNFTPrice(tokenId).call());
-
+     
           nftData.push({
             id: tokenId,
-            image: imageUrl,
             metadata: metadata,
-            nftPrice: nftPrice,
+            image: imageUrl
           });
         }
+
         setOwnedNFTData(nftData);
       } catch (error) {
         console.error('Error fetching owned NFT data:', error);
@@ -38,33 +36,21 @@ function MyWallet() {
     };
 
     fetchOwnedNFTData();
-  }, [ownedNFTs, nftContract]);
-
-  const handleExchange = async () => {
-    try {
-      await exchangePointsForTokens(pointsToExchange);
-    } catch (error) {
-      console.error('Error exchanging points for tokens:', error);
-    }
-  };
+  }, [ownedNFTs]); 
 
   return (
     <div className="container">
       <h2>My Wallet</h2>
       <p>Token Balance: {tokenBalance}</p>
-      <p>Points Balance: {pointsBalance}</p> 
+      <p>Points Balance: {pointsBalance}</p>
       <h3>Owned NFTs</h3>
       <div className="owned-nfts">
         {ownedNFTData.map((nft) => (
           <div key={nft.id} className="nft-card">
             <img src={nft.image} alt={`NFT ${nft.id}`} />
-            <p className="nft-text">{`Discount on tickets: ${nft.metadata.attributes[0].value}`}</p>
+            <p>{nft.metadata.name}</p>
           </div>
         ))}
-      </div>
-      <div>
-        <input type="number" value={pointsToExchange} onChange={(e) => setPointsToExchange(e.target.value)} />
-        <button onClick={handleExchange}>Exchange Points for Tokens</button>
       </div>
     </div>
   );

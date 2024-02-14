@@ -7,6 +7,7 @@ import AI from './pages/AI';
 import Rewards from './pages/Rewards';
 import SDV from './pages/SDV';
 import MyWallet from './pages/MyWallet';
+import Admin from './pages/Admin';
 import "./styles/_app.sass";
 import Header from './components/Header';
 import { SmartContractProvider } from './SmartContractContext';
@@ -24,6 +25,7 @@ function App() {
           <Route path="/rewards" element={<Rewards />} />
           <Route path="/sdv" element={<SDV />} />
           <Route path="/mywallet" element={<MyWallet />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
       </Router>
     </SmartContractProvider>
