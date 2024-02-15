@@ -114,7 +114,7 @@ const Admin = () => {
          <button onClick={handleMintNFT}>Mint NFT</button>
        </div>
       <div>
-     <h3>Create NFT</h3>
+     <h3>Mint performance NFT</h3>
         <input type="text" value={artistAddress} onChange={(e) => setArtistAddress(e.target.value)} placeholder="Artist Address" />
          <button onClick={handleCreateNFT}>Create NFT</button>
     </div>
