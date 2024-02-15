@@ -649,4 +649,4 @@ export const nft1155ContractABI = [
     }
   ];
       
-  export const nft1155ContractAddress = '0x0fdFaf539F5247400cA0a376Ad3e5876E222A82F';
+  export const nft1155ContractAddress = '0x922cf50062EE0818ff4b47aE59CE975e7e53f915';

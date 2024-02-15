@@ -41,7 +41,7 @@ function Home() {
       <p>Account: {account}</p>
       <p>Token Balance: {tokenBalance}</p>
       <p>Status: {currentUserStatus !== null ? currentUserStatus : 'Loading...'}</p>
-      <button onClick={() => registerUser('example@email.com')}>Register</button>
+      {currentUserStatus === null && <button onClick={() => registerUser('example@email.com')}>Register</button>}
       <div>
         <h4>Users:</h4>
         <ul>

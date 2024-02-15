@@ -3,16 +3,12 @@ import { useSmartContract } from '../SmartContractContext';
 import '../styles/_earntokens.sass'; 
 
 function EarnTokens() {
-  const { active, account, tokenBalance, earnPoints, pointsBalance } = useSmartContract();
+  const { earnPoints } = useSmartContract();
 
   return (
     <div>
       <h2>Earn tokens</h2>
       <div className="container">
-        <p>Status: {active ? 'Connected' : 'Not Connected'}</p>
-        <p>Account: {account}</p>
-        <p>Token Balance: {tokenBalance}</p>
-        <p>Points Balance: {pointsBalance}</p> 
         <p className="earntokens-header">Receive SDV's by doing any of the following ↓</p>
         <div className="earn-item" onClick={() => earnPoints(100)}>
           <span>Online review of a Saloranta & de Vylder production</span>
