@@ -666,7 +666,21 @@ export const contractABI = [
     "stateMutability": "view",
     "type": "function",
     "constant": true
+  },
+  {
+    "inputs": [],
+    "name": "getCommonPoolBalance",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
   }
 ];
   
-export const contractAddress = '0x2Bb8440Fd4414566f86aDE3F80bF4A600E29F19a';
+export const contractAddress = '0xfd7365eaBdfe97bec16a50dB0cc890f0C431C352';

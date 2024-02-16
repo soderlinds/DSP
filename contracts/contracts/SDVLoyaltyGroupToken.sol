@@ -111,13 +111,21 @@ contract SDVToken is ERC20, Ownable {
         require(members[msg.sender].points >= _pointsToExchange, "Insufficient points");
 
         uint256 tokenAmount = _pointsToExchange;
-        _mint(msg.sender, tokenAmount);
-        members[msg.sender].tokens += tokenAmount;
+        uint256 poolAmount = tokenAmount * 2 / 100; 
+        uint256 userTokenAmount = tokenAmount - poolAmount;
+
+    
+        _mint(msg.sender, userTokenAmount);
+        members[msg.sender].tokens += userTokenAmount;
         members[msg.sender].points -= _pointsToExchange;
 
-        emit Transfer(address(0), msg.sender, tokenAmount);
+  
+        _mint(address(this), poolAmount);
+
+        emit Transfer(address(0), msg.sender, userTokenAmount);
+        emit Transfer(address(0), address(this), poolAmount);
         emit PointsExchanged(msg.sender, _pointsToExchange, tokenAmount);
-    }
+}
 
     function approve(address spender, uint256 amount) public override returns (bool) {
         _approve(_msgSender(), spender, amount);
@@ -128,4 +136,8 @@ contract SDVToken is ERC20, Ownable {
     function getPointsBalance(address user) external view returns (uint256) {
         return members[user].points;
     }
+
+    function getCommonPoolBalance() external view returns (uint256) {
+    return balanceOf(address(this));
+}
 }

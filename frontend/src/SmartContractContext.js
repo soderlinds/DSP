@@ -16,6 +16,7 @@ export const SmartContractProvider = ({ children }) => {
   const [pointsBalance, setPointsBalance] = useState(0); 
   const [ownedNFTs, setOwnedNFTs] = useState([]);
   const [userStatuses, setUserStatuses] = useState({}); 
+  const [commonPoolBalance, setCommonPoolBalance] = useState(0);
 
   const web3 = new Web3(window.ethereum);
   const contract = new web3.eth.Contract(contractABI, contractAddress);
@@ -67,7 +68,18 @@ export const SmartContractProvider = ({ children }) => {
     fetchPointsBalance();
   }, [account]);
 
+  useEffect(() => {
+    const fetchCommonPoolBalance = async () => {
+      try {
+        const commonPoolBalance = await contract.methods.getCommonPoolBalance().call();
+        setCommonPoolBalance(Number(commonPoolBalance));
+      } catch (error) {
+        console.error('Error fetching common pool balance:', error);
+      }
+    };
 
+    fetchCommonPoolBalance();
+  }, []);
   
   const earnPoints = async (amount) => {
     try {
@@ -279,6 +291,7 @@ export const SmartContractProvider = ({ children }) => {
         fractionalizeNFT,
         airdropNFTShares,
         nft1155Contract,
+        commonPoolBalance,
       }}
     >
       {children}
