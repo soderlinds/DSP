@@ -1,0 +1,46 @@
+@import './variables'
+
+.rewards-wrapper
+  margin: 0 auto
+  width: 60rem
+
+.purchase-nfts 
+  display: flex
+  flex-wrap: wrap
+
+.nft-card
+  max-width: 10rem
+  display: flex
+  flex-direction: column
+  border: 2px solid #ffffff
+  border-radius: 12px
+  overflow: hidden
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1)
+  background-color: #fff
+  margin: 16px
+  transition: transform 0.3s ease-in-out
+
+  img
+    max-width: 100%
+    border-radius: 8px
+    margin-bottom: 8px
+
+  .discount-text
+    font-size: 12px
+    margin-bottom: -7px
+    margin-left: 5px
+
+  .nft-text
+    font-size: 12px
+
+  button
+    background-color: $dark-blue
+    color: #fff
+    padding: 8px 16px
+    border: none
+    border-radius: 4px
+    cursor: pointer
+    font-size: 14px
+
+    &:hover
+      background-color: $dark-blue
