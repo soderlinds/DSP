@@ -116,7 +116,7 @@
         1305
       ],
       "IERC165": [
-        3598
+        3470
       ]
     },
     "id": 1306,
@@ -140,7 +140,7 @@
         "id": 1267,
         "nodeType": "ImportDirective",
         "scope": 1306,
-        "sourceUnit": 3599,
+        "sourceUnit": 3471,
         "src": "58:47:3",
         "symbolAliases": [],
         "unitAlias": ""
@@ -153,7 +153,7 @@
               "id": 1269,
               "name": "IERC165",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 3598,
+              "referencedDeclaration": 3470,
               "src": "172:7:3"
             },
             "id": 1270,
@@ -162,7 +162,7 @@
           }
         ],
         "contractDependencies": [
-          3598
+          3470
         ],
         "contractKind": "interface",
         "documentation": {
@@ -175,7 +175,7 @@
         "id": 1305,
         "linearizedBaseContracts": [
           1305,
-          3598
+          3470
         ],
         "name": "IERC1155Receiver",
         "nodeType": "ContractDefinition",
@@ -595,7 +595,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.16",
-  "updatedAt": "2024-02-15T09:45:58.937Z",
+  "updatedAt": "2024-02-22T13:10:05.850Z",
   "devdoc": {
     "kind": "dev",
     "methods": {

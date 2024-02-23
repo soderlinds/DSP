@@ -1,8 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import Web3 from 'web3';
 import { contractABI, contractAddress } from './contractConfig';
-import { nftContractABI, nftContractAddress } from './nftContractConfig';
-import { nft1155ContractABI, nft1155ContractAddress } from './nft1155ContractConfig';
+import { membershipContractABI, membershipContractAddress } from './membershipContractConfig';
+import { discountNFTContractABI, discountNFTContractAddress } from './discountNFTContractConfig';
+import { artworkNFTContractABI, artworkNFTContractAddress } from './artworkNFTContractConfig';
+
 const SmartContractContext = createContext();
 
 export const useSmartContract = () => {
@@ -13,15 +15,10 @@ export const SmartContractProvider = ({ children }) => {
   const [active, setActive] = useState(false);
   const [account, setAccount] = useState('');
   const [tokenBalance, setTokenBalance] = useState(0);
-  const [pointsBalance, setPointsBalance] = useState(0); 
-  const [ownedNFTs, setOwnedNFTs] = useState([]);
-  const [userStatuses, setUserStatuses] = useState({}); 
+  const [pointsBalance, setPointsBalance] = useState(0);
   const [commonPoolBalance, setCommonPoolBalance] = useState(0);
+  const [userNFTs, setUserNFTs] = useState('');
 
-  const web3 = new Web3(window.ethereum);
-  const contract = new web3.eth.Contract(contractABI, contractAddress);
-  const nftContract = new web3.eth.Contract(nftContractABI, nftContractAddress);
-  const nft1155Contract = new web3.eth.Contract(nft1155ContractABI, nft1155ContractAddress);
 
   useEffect(() => {
     const loadWeb3 = async () => {
@@ -37,42 +34,78 @@ export const SmartContractProvider = ({ children }) => {
     loadWeb3();
   }, []);
 
+  const web3 = new Web3(window.ethereum);
+  const contract = new web3.eth.Contract(contractABI, contractAddress);
+  const membershipContract = new web3.eth.Contract(membershipContractABI, membershipContractAddress);
+  const discountNFTContract = new web3.eth.Contract(discountNFTContractABI, discountNFTContractAddress);
+  const artworkNFTContract = new web3.eth.Contract(artworkNFTContractABI, artworkNFTContractAddress);
+
+  // Membership
+  const mintMembershipToken = async (metadataURI) => {
+    try {
+      await membershipContract.methods.mint(metadataURI).send({ from: account });
+      console.log("Membership token minted successfully!");
+    } catch (error) {
+      console.error("Error minting membership token:", error);
+    }
+  };
+  
+  const checkMembership = async () => {
+    try {
+      const isMember = await membershipContract.methods.isMember(account).call();
+      console.log("Is member:", isMember);
+    } catch (error) {
+      console.error("Error checking membership:", error);
+    }
+  };
+
+  const getUserNFTs = async () => {
+    try {
+        const userNFTIdsBig = await membershipContract.methods.getUserNFTs(account).call();
+        const userNFTIds = userNFTIdsBig.map(id => id.toString()); // Convert each BigInt to string
+        setUserNFTs(userNFTIds);
+        console.log("User's NFT:", userNFTIds);
+        return userNFTIds; // Return the converted array
+    } catch (error) {
+        console.error("Error fetching user's NFT:", error);
+        return []; // Return an empty array in case of error
+    }
+};
+
+const getUserNFTMetadataURI = async (nftId) => {
+  try {
+    const metadataURI = await membershipContract.methods.getTokenMetadataURI(nftId).call();
+    return metadataURI;
+  } catch (error) {
+    console.error('Error fetching user NFT metadata URI:', error);
+    return '';
+  }
+};
+
+  // SDV Token
   useEffect(() => {
     const fetchBalances = async () => {
       try {
         if (account) {
           const balance = await contract.methods.balanceOf(account).call();
           setTokenBalance(Number(balance));
-          console.log(balance);
+          console.log("Token balance:", balance);
         }
       } catch (error) {
-        console.error('Error fetching balances:', error);
+        console.error('Error fetching token balance:', error);
       }
     };
-    
+
     fetchBalances();
   }, [account]);
 
-  useEffect(() => {
-    const fetchPointsBalance = async () => {
-      try {
-        if (account) {
-          const points = await contract.methods.getPointsBalance(account).call();
-          setPointsBalance(points.toString());
-        }
-      } catch (error) {
-        console.error('Error fetching points balance:', error);
-      }
-    };
-
-    fetchPointsBalance();
-  }, [account]);
-
+ 
   useEffect(() => {
     const fetchCommonPoolBalance = async () => {
       try {
         const commonPoolBalance = await contract.methods.getCommonPoolBalance().call();
         setCommonPoolBalance(Number(commonPoolBalance));
+        console.log("Common pool balance:", commonPoolBalance);
       } catch (error) {
         console.error('Error fetching common pool balance:', error);
       }
@@ -80,7 +113,7 @@ export const SmartContractProvider = ({ children }) => {
 
     fetchCommonPoolBalance();
   }, []);
-  
+
   const earnPoints = async (amount) => {
     try {
       await contract.methods.earnPoints(amount).send({ from: account, gas: 300000 });
@@ -94,79 +127,6 @@ export const SmartContractProvider = ({ children }) => {
       await contract.methods.exchangePointsForTokens(amount).send({ from: account, gas: 300000 });
     } catch (error) {
       console.error('Error exchanging points for tokens:', error);
-    }
-  };
-
-
-  useEffect(() => {
-    const fetchOwnedNFTs = async () => {
-      try {
-        if (account) {
-          const ownedTokensNFT = await nftContract.methods.getOwnedNFTs(account).call();
-          const ownedTokensNFT1155 = await nft1155Contract.methods.getOwnedNFTs(account).call();
-  
-          const ownedTokens = [...ownedTokensNFT, ...ownedTokensNFT1155];
-          
-          setOwnedNFTs(ownedTokens);
-        }
-      } catch (error) {
-        console.error('Error fetching owned NFTs:', error);
-      }
-    };
-  
-    fetchOwnedNFTs();
-  }, [account]);
-
-
-  useEffect(() => {
-    const fetchUserStatuses = async () => {
-      try {
-        if (account) {
-          const allUsers = await contract.methods.getAllUsers().call();
-          const userStatuses = {};
-    
-          for (const user of allUsers[0]) {
-            const status = await contract.methods.getStatus(user).call();
-            userStatuses[user] = Number(status); 
-          }
-    
-          console.log('Fetched User Statuses:', userStatuses);
-    
-          setUserStatuses(userStatuses);
-        }
-      } catch (error) {
-        console.error('Error fetching user statuses:', error);
-      }
-    };
-    
-  
-    fetchUserStatuses();
-  }, [account]);
-
-  const fetchUsers = async () => {
-    try {
-      if (account) {
-        const allUsers = await contract.methods.getAllUsers().call();
-        const usersWithStatus = [];
-  
-        for (const user of allUsers[0]) {
-          const status = await contract.methods.getStatus(user).call();
-          usersWithStatus.push({ user, status: Number(status) });
-        }
-  
-        return usersWithStatus;
-      }
-    } catch (error) {
-      console.error('Error fetching users:', error);
-    }
-  };
-  
-
-  const registerUser = async (email) => {
-    try {
-      await contract.methods.registerUser(email).send({ from: account, gas: 300000 });
-    } catch (error) {
-      console.error('Error registering user:', error);
     }
   };
 
@@ -194,40 +154,40 @@ export const SmartContractProvider = ({ children }) => {
     }
   };
 
-  const mintNFT = async (tokenId, nftPrice) => {
+
+  //Discount NFT
+
+  const mintDiscountNFT = async (tokenId, nftPrice, initialSupply) => {
     try {
-      await nftContract.methods.mint(tokenId, nftPrice).send({ from: account, gas: 300000 });
+      await discountNFTContract.methods.mint(tokenId, nftPrice, initialSupply).send({ from: account });
+      console.log("Discount NFT minted successfully!");
     } catch (error) {
-      console.error('Error minting NFT:', error);
+      console.error("Error minting discount NFT:", error);
     }
   };
-
-  const purchaseNFT = async (tokenId) => {
-    try {
-      const transactionData = { from: account, gas: 300000 };
-      await nftContract.methods.purchaseNFT(tokenId).send(transactionData);
-    } catch (error) {
-      console.error('Error purchasing NFT:', error);
-      throw error;
-    }
-  };
-
-  const approveTokenSpending = async (amount) => {
-    try {
-      const amountString = amount.toString();
-
-      await contract.methods.approve(nftContractAddress, amountString).send({ from: account });
   
-      console.log(`Successfully approved spending ${amountString} tokens for the NFT contract`);
+  const purchaseDiscountNFTWithPoints = async (tokenId, amount, offchainPoints) => {
+    try {
+      await discountNFTContract.methods.purchaseNFTWithPoints(tokenId, amount, offchainPoints).send({ from: account });
+      console.log("Discount NFT purchased successfully with off-chain points!");
     } catch (error) {
-      console.error('Error approving token spending:', error);
-      throw error;
+      console.error("Error purchasing discount NFT with points:", error);
     }
   };
-
+  
+  const setDiscountNFTPrice = async (tokenId, newNFTPrice) => {
+    try {
+      await discountNFTContract.methods.setNFTPrice(tokenId, newNFTPrice).send({ from: account });
+      console.log("Discount NFT price set successfully!");
+    } catch (error) {
+      console.error("Error setting discount NFT price:", error);
+    }
+  };
+  
+  //Artwork NFT
   const createNFT = async (artist) => {
     try {
-      await nft1155Contract.methods.createNFT(artist).send({ from: account });
+      await artworkNFTContract.methods.createNFT(artist).send({ from: account });
     } catch (error) {
       console.error('Error creating NFT:', error);
     }
@@ -235,7 +195,7 @@ export const SmartContractProvider = ({ children }) => {
 
   const fractionalizeNFT = async (totalShares) => {
     try {
-      await nft1155Contract.methods.fractionalizeNFT(totalShares).send({ from: account });
+      await artworkNFTContract.methods.fractionalizeNFT(totalShares).send({ from: account });
     } catch (error) {
       console.error('Error fractionalizing NFT:', error);
     }
@@ -243,7 +203,7 @@ export const SmartContractProvider = ({ children }) => {
 
   const mint1155NFT = async (to, amount) => {
     try {
-      await nft1155Contract.methods.mint(to, amount).send({ from: account });
+      await artworkNFTContract.methods.mint(to, amount).send({ from: account });
     } catch (error) {
       console.error('Error minting NFT:', error);
     }
@@ -251,7 +211,7 @@ export const SmartContractProvider = ({ children }) => {
 
   const setAttendee = async (attendee) => {
     try {
-      await nft1155Contract.methods.setAttendee(attendee).send({ from: account });
+      await artworkNFTContract.methods.setAttendee(attendee).send({ from: account });
     } catch (error) {
       console.error('Error setting attendee:', error);
     }
@@ -259,38 +219,38 @@ export const SmartContractProvider = ({ children }) => {
 
   const airdropNFTShares = async (participants) => {
     try {
-      await nft1155Contract.methods.airdropNFTShares(participants).send({ from: account });
+      await artworkNFTContract.methods.airdropNFTShares(participants).send({ from: account });
     } catch (error) {
       console.error('Error airdropping NFT shares:', error);
     }
   };
 
+
   return (
     <SmartContractContext.Provider
       value={{
+        mintMembershipToken,
+        checkMembership,
+        getUserNFTs,
+        getUserNFTMetadataURI,
         active,
         account,
         tokenBalance,
         pointsBalance,
-        registerUser,
         airdropTokens,
         buyMerch,
         contributeToPerformance,
-        mintNFT,
-        purchaseNFT,
-        approveTokenSpending,
-        ownedNFTs,
-        nftContract,
+        mintDiscountNFT,
+        setDiscountNFTPrice,
+        purchaseDiscountNFTWithPoints,
+        createNFT,
+        fractionalizeNFT,
+        mint1155NFT,
+        setAttendee,
+        airdropNFTShares,
         web3,
         earnPoints,
         exchangePointsForTokens,
-        fetchUsers,
-        createNFT,
-        setAttendee,
-        mint1155NFT,
-        fractionalizeNFT,
-        airdropNFTShares,
-        nft1155Contract,
         commonPoolBalance,
       }}
     >

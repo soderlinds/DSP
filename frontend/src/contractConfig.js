@@ -79,25 +79,6 @@ export const contractABI = [
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "PointsEarned",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
         "name": "points",
         "type": "uint256"
       },
@@ -109,25 +90,6 @@ export const contractABI = [
       }
     ],
     "name": "PointsExchanged",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "enum SDVToken.Status",
-        "name": "status",
-        "type": "uint8"
-      }
-    ],
-    "name": "StatusUpdated",
     "type": "event"
   },
   {
@@ -200,23 +162,18 @@ export const contractABI = [
     "type": "event"
   },
   {
-    "anonymous": false,
-    "inputs": [
+    "inputs": [],
+    "name": "TOTAL_SUPPLY",
+    "outputs": [
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "email",
-        "type": "string"
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
-    "name": "UserRegistered",
-    "type": "event"
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [
@@ -326,46 +283,6 @@ export const contractABI = [
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "members",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "email",
-        "type": "string"
-      },
-      {
-        "internalType": "uint256",
-        "name": "tokens",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "points",
-        "type": "uint256"
-      },
-      {
-        "internalType": "enum SDVToken.Status",
-        "name": "status",
-        "type": "uint8"
-      },
-      {
-        "internalType": "bool",
-        "name": "registered",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
-  },
-  {
     "inputs": [],
     "name": "name",
     "outputs": [
@@ -382,26 +299,6 @@ export const contractABI = [
   {
     "inputs": [],
     "name": "owner",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "registeredUsers",
     "outputs": [
       {
         "internalType": "address",
@@ -517,58 +414,6 @@ export const contractABI = [
   {
     "inputs": [
       {
-        "internalType": "string",
-        "name": "_email",
-        "type": "string"
-      }
-    ],
-    "name": "registerUser",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-      }
-    ],
-    "name": "getStatus",
-    "outputs": [
-      {
-        "internalType": "enum SDVToken.Status",
-        "name": "",
-        "type": "uint8"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
-  },
-  {
-    "inputs": [],
-    "name": "getAllUsers",
-    "outputs": [
-      {
-        "internalType": "address[]",
-        "name": "",
-        "type": "address[]"
-      },
-      {
-        "internalType": "enum SDVToken.Status[]",
-        "name": "",
-        "type": "uint8[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
-  },
-  {
-    "inputs": [
-      {
         "internalType": "address[]",
         "name": "_users",
         "type": "address[]"
@@ -593,19 +438,6 @@ export const contractABI = [
       }
     ],
     "name": "purchaseMerchandise",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "earnPoints",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -648,26 +480,6 @@ export const contractABI = [
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      }
-    ],
-    "name": "getPointsBalance",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
-  },
-  {
     "inputs": [],
     "name": "getCommonPoolBalance",
     "outputs": [
@@ -683,4 +495,4 @@ export const contractABI = [
   }
 ];
   
-export const contractAddress = '0xfd7365eaBdfe97bec16a50dB0cc890f0C431C352';
+export const contractAddress = '0x28b0E16EEAc49637A42050419481e4AbF05b7128';
