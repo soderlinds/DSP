@@ -1,0 +1,90 @@
+@import './variables'
+    
+.chat-container
+  max-width: 600px
+  margin: 0 auto
+  padding: 20px
+
+.chat
+  margin-bottom: 20px
+  margin-top: 100px
+  text-align: center
+
+.message
+  width: calc(100% - 40px) 
+  background-color: #ffffff
+  padding: 20px
+  border-radius: 20px
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
+  margin-bottom: 70px
+  
+  p
+    margin: 0
+
+  &.user
+    background-color: #ffffff
+    color: black
+
+.question-bubble 
+  margin-right: 150px
+
+
+.answer-bubble 
+  margin-left: 150px
+  
+
+
+.question-bubble, .answer-bubble
+  width: calc(100% - 40px) 
+  background-color: white
+  padding: 20px
+  border-radius: 20px
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
+
+  p
+    margin: 0
+
+.answer-bubble 
+  input 
+    width: calc(100% - 40px)
+    background-color: white
+    padding: 20px
+    border-radius: 20px
+    margin-bottom: 10px
+    border: none
+    outline: none
+
+    &:focus,
+    &:not(:placeholder-shown) 
+      &::parent 
+        border: 2px solid darkgrey
+      
+    
+
+    &::placeholder 
+      color: black
+    
+  
+
+  &::parent 
+    border: 2px solid transparent
+    transition: border-color 0.3s ease
+  
+
+
+button
+  padding: 10px 20px
+  background-color: $accentcolor_green
+  color: white
+  border: none
+  border-radius: 20px
+  font-size: 16px
+  cursor: pointer
+  transition: background-color 0.3s ease
+
+  &:hover
+    background-color: #0056b3
+
+  &:disabled
+    opacity: 0.5
+    cursor: not-allowed

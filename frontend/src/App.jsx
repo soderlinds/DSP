@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Merch from './pages/Merch';
-import EarnTokens from './pages/EarnTokens';
+import EarnPoints from './pages/EarnPoints';
 import AI from './pages/AI';
 import Rewards from './pages/Rewards';
 import SDV from './pages/SDV';
@@ -14,6 +14,16 @@ import Header from './components/Header';
 import { SmartContractProvider } from './SmartContractContext';
 
 function App() {
+ const [userId, setUserId] = useState(() => {
+  const userData = JSON.parse(localStorage.getItem('userData'));
+  return userData ? userData.id : null;
+});
+
+  const setUserIdCallback = (id) => {
+    setUserId(id);
+    localStorage.setItem('userId', id);
+  };
+
   return (
     <SmartContractProvider>
       <Router>
@@ -21,7 +31,10 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/merch" element={<Merch />} />
-          <Route path="/earn-tokens" element={<EarnTokens />} />
+          <Route
+            path="/earn-points"
+            element={<EarnPoints userId={userId} setUserIdCallback={setUserIdCallback} />}
+          />
           <Route path="/ai" element={<AI />} />
           <Route path="/rewards" element={<Rewards />} />
           <Route path="/sdv" element={<SDV />} />

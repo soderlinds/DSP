@@ -495,4 +495,4 @@ export const contractABI = [
   }
 ];
   
-export const contractAddress = '0x28b0E16EEAc49637A42050419481e4AbF05b7128';
+export const contractAddress = '0xc22B98Ed1ec1fA984A1f07c156f25F2E28C94eBd';

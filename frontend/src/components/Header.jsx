@@ -20,7 +20,7 @@ const Header = () => {
         <div className="menu-container">
           <ul className="menu">
             <li><NavLink to="/" activeClassName="active">HOME</NavLink></li>
-            <li><NavLink to="/earn-tokens" activeClassName="active">EARN TOKENS</NavLink></li>
+            <li><NavLink to="/earn-points" activeClassName="active">EARN POINTS</NavLink></li>
             <li><NavLink to="/ai" activeClassName="active">AI DIALOGUES: co-creating live art</NavLink></li>
             <li><NavLink to="/merch" activeClassName="active">MERCH</NavLink></li>
             <li><NavLink to="/rewards" activeClassName="active">REWARDS</NavLink></li>

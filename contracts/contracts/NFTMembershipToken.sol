@@ -1,23 +1,23 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract NFTMembershipToken is ERC721, Ownable {
-    uint256 private nextTokenId;
-    mapping(address => bool) private isMember; 
-    mapping(address => uint256[]) private userNFTs; 
+contract NFTMembershipToken is ERC1155, Ownable {
+    mapping(address => bool) private hasMinted;
     mapping(uint256 => string) private tokenMetadataURIs;
+    uint256 private nextTokenId;
+    mapping(address => uint256[]) private userNFTs;
 
-    constructor() ERC721("NFT Membership Token", "NMT") {}
+    constructor() ERC1155("NFT Membership Token URI") {}
 
     function mint(string memory _metadataURI) external {
-        require(!isMember[msg.sender], "Already a member"); 
-        _safeMint(msg.sender, nextTokenId);
-        userNFTs[msg.sender].push(nextTokenId); 
+        require(!hasMinted[msg.sender], "Already minted");
+        _mint(msg.sender, nextTokenId, 1, "");
         tokenMetadataURIs[nextTokenId] = _metadataURI;
-        isMember[msg.sender] = true; 
+        userNFTs[msg.sender].push(nextTokenId);
+        hasMinted[msg.sender] = true;
         nextTokenId++;
     }
 
@@ -25,8 +25,7 @@ contract NFTMembershipToken is ERC721, Ownable {
         return userNFTs[_user];
     }
 
-    // function getTokenMetadataURI(uint256 _tokenId) external view returns (string memory) {
-    //     require(_exists(_tokenId), "Token does not exist");
-    //     return tokenMetadataURIs[_tokenId];
-    // }
+    function uri(uint256 _id) public view override returns (string memory) {
+        return tokenMetadataURIs[_id];
+    }
 }

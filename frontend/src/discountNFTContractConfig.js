@@ -506,4 +506,4 @@ export const discountNFTContractABI = [
   }
 ];
     
-export const discountNFTContractAddress = '0x5016AEadEE496925642310EA07E3C8A7Cd08535D';
+export const discountNFTContractAddress = '0xD1118FA9C1b045bEe8F4B832D4238dE3acb4f6F2';

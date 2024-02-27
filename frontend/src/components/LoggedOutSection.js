@@ -1,22 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import LoggedInSection from './LoggedInSection';
+import { v4 as uuidv4 } from 'uuid';
+import EarnPoints from '../pages/EarnPoints';
 
-const LoggedOutSection = () => {
+const LoggedOutSection = ({ handleLogin }) => {
   const [registrationFormData, setRegistrationFormData] = useState({ name: '', username: '', email: '', password: '' });
   const [loginFormData, setLoginFormData] = useState({ username: '', password: '' });
   const [loginError, setLoginError] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isWeb2LoggedIn, setIsWeb2LoggedIn] = useState(false);
+  const [userId, setUserId] = useState(null);
+
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('userData'));
-    if (userData && userData.username) {
+    const loggedInStatus = localStorage.getItem('isLoggedIn');
+    
+    if (userData && userData.username && loggedInStatus === 'true') {
       setIsLoggedIn(true);
+      setIsWeb2LoggedIn(true);
+      setUserId(userData.id); 
+    } else {
+      setIsLoggedIn(false);
+      setIsWeb2LoggedIn(false);
     }
+    console.log('LoggedOutSection userId:', userId); 
   }, []);
+  
 
   const handleWeb2Registration = () => {
-    localStorage.setItem('userData', JSON.stringify(registrationFormData));
-    console.log('User registered successfully:', registrationFormData);
+    const userData = {
+      id: uuidv4(),
+      ...registrationFormData
+    };
+    localStorage.setItem('userData', JSON.stringify(userData));
+    console.log('User registered successfully:', userData);
+    setUserId(userData.id);
+    localStorage.setItem('isLoggedIn', 'true');
   };
 
   const handleWeb2Login = () => {
@@ -24,14 +44,19 @@ const LoggedOutSection = () => {
     if (userData && userData.username === loginFormData.username && userData.password === loginFormData.password) {
       console.log('User logged in successfully:', userData);
       setIsLoggedIn(true);
+      setIsWeb2LoggedIn(true);
+      localStorage.setItem('isLoggedIn', 'true');
+      setUserId(userData.id);
     } else {
       setLoginError('Invalid username or password');
     }
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('userData');
     setIsLoggedIn(false);
+    setIsWeb2LoggedIn(false);
+    localStorage.removeItem('isLoggedIn');
+    setUserId(null);
   };
 
   return (
@@ -40,7 +65,7 @@ const LoggedOutSection = () => {
         <>
           <p>Register</p>
           <form onSubmit={(e) => { e.preventDefault(); handleWeb2Registration(); }}>
-          <input
+            <input
               type="text"
               placeholder="Name"
               value={registrationFormData.name}
@@ -67,7 +92,6 @@ const LoggedOutSection = () => {
             <button type="submit">Register with Web2</button>
           </form>
 
-
           <p>Login</p>
           <form onSubmit={(e) => { e.preventDefault(); handleWeb2Login(); }}>
             <input
@@ -85,12 +109,12 @@ const LoggedOutSection = () => {
             <button type="submit">Login</button>
             {loginError && <p>{loginError}</p>}
           </form>
-          </>
+        </>
       ) : (
         <>
-          <LoggedInSection />
+           <LoggedInSection isWeb2={isWeb2LoggedIn} handleLogin={handleLogin} userId={userId} />
           <button onClick={handleLogout}>Logout</button>
-        </> 
+        </>
       )}
     </div>
   );

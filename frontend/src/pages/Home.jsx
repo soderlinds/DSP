@@ -5,12 +5,12 @@ import LoggedOutSection from '../components/LoggedOutSection';
 
 function Home() {
   const { active, account, tokenBalance, getUserNFTs, getUserNFTMetadataURI, mintMembershipToken } = useSmartContract();
-  const [web2FormData, setWeb2FormData] = useState({ name: '', email: '' });
   const [userNFTs, setUserNFTs] = useState([]);
   const [nftImages, setNftImages] = useState([]);
   const [isRegistering, setIsRegistering] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
+  const [isWeb2LoggedIn, setIsWeb2LoggedIn] = useState(false); 
 
   useEffect(() => {
     const fetchUserNFTs = async () => {
@@ -62,28 +62,37 @@ function Home() {
   const handleWeb3Registration = async () => {
     setIsRegistering(true);
     const metadataURI = '/metadata/membership_token_100.json'; // Example metadata URI for testing
-    const imageURI = 'images/100.png'; // Example image URI for testing
-
+  
     try {
-      await mintMembershipToken(metadataURI, imageURI);
-      console.log("Membership token minted successfully!");
+      await mintMembershipToken(metadataURI);
+      console.log("Membership NFT minted successfully!");
     } catch (error) {
-      console.error("Error minting membership token:", error);
+      console.error("Error minting membership NFT:", error);
     } finally {
       setIsRegistering(false);
     }
   };
 
   const handleWeb2Registration = () => {
-    console.log('Registering with Web2:', web2FormData);
+    console.log('Registering with Web2');
   };
 
-  const handleLogin = (credentials) => {
+  const handleLogin = (credentials, isWeb2) => {
     setUsername(credentials.username);
     setIsLoggedIn(true);
+    setIsWeb2LoggedIn(isWeb2);
+    localStorage.setItem('isLoggedIn', 'true'); 
   };
 
-  console.log("Username state:", username);
+  const handleMintNFT = async () => {
+    try {
+      await mintMembershipToken('/metadata/membership_token_100.json');
+      console.log("Membership NFT minted successfully!");
+    } catch (error) {
+      console.error("Error minting membership NFT:", error);
+    }
+  };
+
   return (
     <div className="container">
       <h1>SDV LOYALTY GROUP</h1>
@@ -94,6 +103,7 @@ function Home() {
           tokenBalance={tokenBalance}
           nftImages={nftImages}
           userNFTs={userNFTs}
+          isWeb2={isWeb2LoggedIn} 
         />
       ) : (
         <LoggedOutSection
@@ -101,11 +111,11 @@ function Home() {
           handleLogin={handleLogin}
           handleWeb3Registration={handleWeb3Registration}
           handleWeb2Registration={handleWeb2Registration}
-          web2FormData={web2FormData}
-          setWeb2FormData={setWeb2FormData}
           isRegistering={isRegistering}
         />
       )}
+      <button onClick={handleMintNFT}>Mint NFT</button>
+
     </div>
   );
 }

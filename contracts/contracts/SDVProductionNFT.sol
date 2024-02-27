@@ -3,9 +3,13 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 
-contract SDVPerformanceNFT is ERC1155, Ownable {
-    uint256 public constant MAX_FRACTIONAL_SHARES = 300;
+contract SDVProductionNFT is ERC1155, Ownable {
+    using Strings for uint256;
+
+    uint256 private _totalTokens;
+    uint256 public constant MAX_FRACTIONAL_SHARES = 300; 
 
     struct NFT {
         uint256 totalShares;
@@ -17,23 +21,21 @@ contract SDVPerformanceNFT is ERC1155, Ownable {
     mapping(uint256 => mapping(address => uint256)) public fractionalOwnership;
     mapping(address => bool) public attendees;
 
-    event NFTCreated(uint256 indexed tokenId, address indexed artist);
-    event TokensFractionalized(uint256 indexed tokenId, uint256 totalShares);
-    event TokensMinted(uint256 indexed tokenId, address indexed to, uint256 amount);
-    event NFTSharesAirdropped(uint256 indexed tokenId, address[] participants, uint256[] amounts);
-    
-    constructor() ERC1155("file:///public/metadata/{id}.json") {}
+    constructor() ERC1155("") {}
 
+    function setBaseURI(string memory baseURI) external onlyOwner {
+        _setURI(baseURI);
+    }
 
     function createNFT(address _artist) external onlyOwner returns (uint256 tokenId) {
-        require(nfts[0].totalShares == 0, "NFT has already been created");
+        require(_totalTokens == 0, "NFT has already been created");
         tokenId = 0;
         nfts[tokenId] = NFT(0, 0, _artist);
         emit NFTCreated(tokenId, _artist);
     }
 
     function fractionalizeNFT(uint256 _totalShares) external onlyOwner {
-        require(nfts[0].totalShares == 0, "NFT has already been fractionalized");
+        require(_totalTokens == 0, "NFT has already been fractionalized");
         require(_totalShares <= MAX_FRACTIONAL_SHARES, "Exceeds maximum fractional shares");
 
         nfts[0].totalShares = _totalShares;
@@ -72,7 +74,6 @@ contract SDVPerformanceNFT is ERC1155, Ownable {
         emit NFTSharesAirdropped(0, _participants, new uint256[](_participants.length)); 
     }
 
-
     function getOwnedNFTs(address account) external view returns (uint256[] memory) {
         if (fractionalOwnership[0][account] > 0) {
             uint256[] memory ownedNFTs = new uint256[](1);
@@ -82,4 +83,15 @@ contract SDVPerformanceNFT is ERC1155, Ownable {
             return new uint256[](0);
         }
     }
+
+    function tokenURI(uint256 tokenId) public view returns (string memory) {
+        require(tokenId == 0, "Invalid token ID");
+        require(_totalTokens > 0, "NFT does not exist");
+        revert("Base URI not set");
+    }
+
+    event NFTCreated(uint256 indexed tokenId, address indexed artist);
+    event TokensFractionalized(uint256 indexed tokenId, uint256 totalShares);
+    event TokensMinted(uint256 indexed tokenId, address indexed to, uint256 amount);
+    event NFTSharesAirdropped(uint256 indexed tokenId, address[] participants, uint256[] amounts);
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 const Web2LoggedInSection = ({ username, tokenBalance }) => (
   <div>
     <p>Welcome, {username}</p>
@@ -23,6 +24,7 @@ const Web3LoggedInSection = ({ account, tokenBalance, nftImages }) => (
 );
 
 const LoggedInSection = ({ username, account, tokenBalance, nftImages, isWeb2 }) => {
+  console.log("isWeb2:", isWeb2);
   return (
     <div>
       {isWeb2 ? (

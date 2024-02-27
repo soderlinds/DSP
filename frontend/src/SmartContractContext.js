@@ -41,15 +41,17 @@ export const SmartContractProvider = ({ children }) => {
   const artworkNFTContract = new web3.eth.Contract(artworkNFTContractABI, artworkNFTContractAddress);
 
   // Membership
+  
   const mintMembershipToken = async (metadataURI) => {
     try {
       await membershipContract.methods.mint(metadataURI).send({ from: account });
-      console.log("Membership token minted successfully!");
+
+      await getUserNFTs();
     } catch (error) {
-      console.error("Error minting membership token:", error);
+      console.error("Error minting membership NFT:", error);
     }
   };
-  
+
   const checkMembership = async () => {
     try {
       const isMember = await membershipContract.methods.isMember(account).call();
@@ -58,29 +60,30 @@ export const SmartContractProvider = ({ children }) => {
       console.error("Error checking membership:", error);
     }
   };
-
+  
   const getUserNFTs = async () => {
     try {
-        const userNFTIdsBig = await membershipContract.methods.getUserNFTs(account).call();
-        const userNFTIds = userNFTIdsBig.map(id => id.toString()); // Convert each BigInt to string
-        setUserNFTs(userNFTIds);
-        console.log("User's NFT:", userNFTIds);
-        return userNFTIds; // Return the converted array
+      const userNFTIdsBig = await membershipContract.methods.getUserNFTs(account).call();
+      const userNFTIds = userNFTIdsBig.map(id => id.toString());
+      setUserNFTs(userNFTIds);
+      console.log("User's NFT:", userNFTIds);
+      return userNFTIds; 
     } catch (error) {
-        console.error("Error fetching user's NFT:", error);
-        return []; // Return an empty array in case of error
+      console.error("Error fetching user's NFT:", error);
+      return []; 
     }
-};
+  };
+  
+  const getUserNFTMetadataURI = async (nftId) => {
+    try {
+      const metadataURI = await membershipContract.methods.uri(nftId).call(); 
+      return metadataURI;
+    } catch (error) {
+      console.error('Error fetching user NFT metadata URI:', error);
+      return '';
+    }
+  };
 
-const getUserNFTMetadataURI = async (nftId) => {
-  try {
-    const metadataURI = await membershipContract.methods.getTokenMetadataURI(nftId).call();
-    return metadataURI;
-  } catch (error) {
-    console.error('Error fetching user NFT metadata URI:', error);
-    return '';
-  }
-};
 
   // SDV Token
   useEffect(() => {
