@@ -24,7 +24,7 @@ function EarnPoints({ userId, account }) {
   
   const earnPoints = async () => {
     try {
-      const idToUse = account || userId; // Use account number for Web3 users
+      const idToUse = account || userId; 
       await axios.post(`http://localhost:5000/api/points/${idToUse}`, { amount: 100 }); 
       fetchPointsBalance();
       alert('Points earned successfully!'); 
