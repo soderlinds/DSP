@@ -1,0 +1,47 @@
+@import './variables'
+
+.header 
+  padding: 15px
+  text-align: center
+
+.nav 
+  display: flex
+  justify-content: space-between
+  align-items: center
+
+.menu-container
+  flex-grow: 1
+  display: flex
+  justify-content: center
+
+.menu 
+  list-style: none
+  margin: 0
+  padding: 0
+  display: flex
+  align-items: center
+
+.menu li 
+  margin-left: 7rem
+
+.menu li:last-child 
+  margin-right: 0
+
+.menu li a 
+  font-family: 'druk'
+  font-size: 2rem
+  text-decoration: none
+  color: #8d8d8d
+  font-weight: bold
+
+.menu li a:hover,
+.menu li a.active 
+  color: $accentcolor_green
+  -webkit-text-stroke: 1px #c4c4c4
+  text-stroke: 1px #c4c4c4
+
+.status 
+  margin-left: auto
+  margin-right: 5rem
+
+  

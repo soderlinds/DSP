@@ -1,0 +1,19 @@
+{
+  "name": "Performance NFT #1",
+  "description": "A fractionalized NFT representing ownership or participation in a live performance",
+  "image": "/images/2.png",
+  "attributes": [
+    {
+      "trait_type": "Artist",
+      "value": "Saloranta De Vylder"
+    },
+    {
+      "trait_type": "Event",
+      "value": "Performance"
+    },
+    {
+      "trait_type": "Date",
+      "value": "2024-02-14"
+    }
+  ]
+}
