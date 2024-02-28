@@ -22,3 +22,15 @@ exports.addPoints = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+exports.deductPoints = async (req, res) => {
+  const { userId } = req.params;
+  const { amount } = req.body;
+  try {
+    await pointsService.deductPoints(userId, amount);
+    res.json({ message: 'Points deducted successfully' });
+  } catch (error) {
+    console.error('Error deducting points:', error);
+    res.status(500).json({ message: error.message });
+  }
+};

@@ -1,9 +1,0 @@
-{
-    "name": "My Membership Token",
-    "description": "membership token ",
-    "image": "./images/100.png",
-    "attributes": {
-      "membership_level": "Basic"
-    }
-  }
-  

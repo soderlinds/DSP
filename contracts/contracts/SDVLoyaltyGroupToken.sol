@@ -16,13 +16,6 @@ contract SDVToken is ERC20, Ownable {
         _mint(msg.sender, TOTAL_SUPPLY);
     }
 
-    function _transfer(address sender, address recipient, uint256 amount) internal virtual override {
-        uint256 commonPoolAmount = amount / 10; 
-
-        super._transfer(sender, recipient, amount - commonPoolAmount); 
-        super._transfer(sender, address(this), commonPoolAmount); 
-    }
-
     function airdropTokens(address[] memory _users, uint256[] memory _amounts) external onlyOwner {
         require(_users.length == _amounts.length, "Invalid input lengths");
 
@@ -43,23 +36,8 @@ contract SDVToken is ERC20, Ownable {
 
     function exchangePointsForTokens(uint256 _pointsToExchange) external {
         uint256 tokenAmount = _pointsToExchange / 1000; 
-        uint256 poolAmount = tokenAmount * 10 / 100; 
-        uint256 userTokenAmount = tokenAmount - poolAmount;
-
-        _mint(msg.sender, userTokenAmount);
-
-        _mint(address(this), poolAmount);
+        _mint(msg.sender, tokenAmount);
 
         emit PointsExchanged(msg.sender, _pointsToExchange, tokenAmount);
-    }
-
-    function approve(address spender, uint256 amount) public override returns (bool) {
-        _approve(_msgSender(), spender, amount);
-        emit Approval(_msgSender(), spender, amount);
-        return true;
-    }
-
-    function getCommonPoolBalance() external view returns (uint256) {
-        return balanceOf(address(this));
     }
 }

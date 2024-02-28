@@ -2,7 +2,7 @@
 const NFTMembershipToken = artifacts.require("NFTMembershipToken");
 const SDVDiscountNFT = artifacts.require("SDVDiscountNFT");
 const SDVToken = artifacts.require("SDVToken");
-const SDVPerformanceNFT = artifacts.require("SDVPerformanceNFT");
+const SDVProductionNFT = artifacts.require("SDVProductionNFT");
 
 module.exports = function (deployer) {
   deployer.deploy(NFTMembershipToken);
@@ -12,5 +12,5 @@ module.exports = function (deployer) {
 
   deployer.deploy(SDVToken);
 
-  deployer.deploy(SDVPerformanceNFT);
+  deployer.deploy(SDVProductionNFT);
 };
