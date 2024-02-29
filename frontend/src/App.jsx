@@ -7,6 +7,7 @@ import AI from './pages/AI';
 import Rewards from './pages/Rewards';
 import SDV from './pages/SDV';
 import MyWallet from './pages/MyWallet';
+import ScoreBoard from './pages/ScoreBoard';
 import Admin from './pages/Admin';
 import "./styles/_app.sass";
 import Header from './components/Header';
@@ -29,6 +30,7 @@ function App() {
           <Route path="/ai" element={<AI />} />
           <Route path="/rewards" element={<Rewards />} />
           <Route path="/sdv" element={<SDV />} />
+          <Route path="/scoreboard" element={<ScoreBoard />} />
           <Route path="/mywallet" element={<MyWallet />} />
           <Route path="/admin" element={<Admin />} />
         </Routes>
