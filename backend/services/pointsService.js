@@ -16,3 +16,7 @@ exports.deductPoints = async (userId, amount) => {
     console.log("User has no points to deduct.");
   }
 };
+
+exports.getAllPoints = async () => {
+  return points;
+};

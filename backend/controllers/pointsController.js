@@ -34,3 +34,13 @@ exports.deductPoints = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.getAllPoints = async (req, res) => {
+  try {
+    const allPoints = await pointsService.getAllPoints();
+    res.json(allPoints);
+  } catch (error) {
+    console.error('Error fetching all points:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
