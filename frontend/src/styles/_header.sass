@@ -1,10 +1,9 @@
 @import './variables'
 
-.header 
-  padding: 15px
+.header
   text-align: center
 
-.nav 
+.nav
   display: flex
   justify-content: space-between
   align-items: center
@@ -19,10 +18,12 @@
   margin: 0
   padding: 0
   display: flex
+  justify-content: space-between /* Distribute items evenly */
   align-items: center
 
 .menu li 
-  margin-left: 7rem
+  margin-left: 3rem
+  margin-right: 3rem
 
 .menu li:last-child 
   margin-right: 0
@@ -38,10 +39,4 @@
 .menu li a.active 
   color: $accentcolor_green
   -webkit-text-stroke: 1px #c4c4c4
-  text-stroke: 1px #c4c4c4
-
-.status 
-  margin-left: auto
-  margin-right: 5rem
-
-  
+  text-stroke: 1px

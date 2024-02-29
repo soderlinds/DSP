@@ -14,6 +14,7 @@ import Header from './components/Header';
 import { SmartContractProvider } from './SmartContractContext';
 
 function App() {
+  //Not working, userId stays in ls after logout
   const [userId, setUserId] = useState(() => {
     const userData = JSON.parse(localStorage.getItem('userData'));
     return userData ? userData.id : null;
