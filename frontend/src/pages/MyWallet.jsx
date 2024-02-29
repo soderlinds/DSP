@@ -32,13 +32,13 @@ function MyWallet({ userId }) {
   };
 
   const generateExchangeOptions = (totalPoints) => {
-    const maxExchangeAmount = Math.floor(totalPoints / 1000) * 1000; // Calculate the maximum exchangeable amount
+    const maxExchangeAmount = Math.floor(totalPoints / 1000) * 1000; 
     const options = [];
     for (let i = 1000; i <= maxExchangeAmount; i += 1000) {
       options.push(i);
     }
     setExchangeOptions(options);
-    setSelectedAmount(options[0]); // Select the first option by default
+    setSelectedAmount(options[0]); 
   };
 
   const handleExchange = async () => {
@@ -48,16 +48,13 @@ function MyWallet({ userId }) {
         return;
       }
 
-      // Exchange points for tokens using the smart contract
+  
       await exchangePointsForTokens(selectedAmount / 1000);
 
-      // Deduct points from the backend
       await axios.put(`http://localhost:5000/api/points/${identifier}/deduct`, { amount: selectedAmount });
 
-      // Fetch updated points balance
       await fetchPointsBalance();
 
-      // Reset selected amount
       setSelectedAmount(0);
     } catch (error) {
       console.error('Error exchanging points for tokens:', error);
