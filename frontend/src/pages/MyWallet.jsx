@@ -8,15 +8,15 @@ function MyWallet({ userId }) {
   const [pointsBalance, setPointsBalance] = useState(0);
   const [pointsToExchange, setPointsToExchange] = useState(0);
 
+  const identifier = account || userId;
+
   useEffect(() => {
     fetchPointsBalance();
-  }, [userId]);
-
-  const idToUse = account || userId;
+  }, [account, userId, identifier]);
 
   const fetchPointsBalance = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/points/${idToUse}`);
+      const response = await axios.get(`http://localhost:5000/api/points/${identifier}`);
       const transactions = response.data;
       const totalPointsEarned = transactions.reduce((total, transaction) => total + transaction.amount, 0);
       setPointsBalance(totalPointsEarned);
@@ -28,8 +28,9 @@ function MyWallet({ userId }) {
 
   const handleExchange = async () => {
     try {
-      const tokensToReceive = Math.floor(pointsToExchange / 1000); // Calculate tokens based on points
-      await exchangePointsForTokens(tokensToReceive * 1000); // Exchange only multiples of 1000 points
+      const tokensToReceive = Math.floor(pointsToExchange / 1000); 
+      await exchangePointsForTokens(tokensToReceive * 1000); 
+      await axios.put(`http://localhost:5000/api/points/${identifier}/deduct`, { amount: pointsToExchange });
       await fetchPointsBalance();
       setPointsToExchange(0);
     } catch (error) {
@@ -37,7 +38,6 @@ function MyWallet({ userId }) {
     }
   };
 
-  // Generate options for dropdown menu
   const exchangeOptions = [];
   for (let i = 1; i <= Math.floor(pointsBalance / 1000); i++) {
     exchangeOptions.push(i * 1000);

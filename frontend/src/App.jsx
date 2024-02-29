@@ -11,7 +11,6 @@ import Admin from './pages/Admin';
 import "./styles/_app.sass";
 import Header from './components/Header';
 import { SmartContractProvider } from './SmartContractContext';
-import LoggedOutSection from './components/LoggedOutSection'; 
 
 function App() {
   const [userId, setUserId] = useState(() => {
@@ -21,7 +20,6 @@ function App() {
 
   return (
     <SmartContractProvider>
-    
       <Router>
         <Header />
         <Routes>

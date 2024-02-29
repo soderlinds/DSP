@@ -14,24 +14,22 @@ function EarnPoints({ userId }) {
 
   const fetchPointsBalance = async () => {
     try {
-      if (identifier) {
-        const response = await axios.get(`http://localhost:5000/api/points/${identifier}`);
-        const transactions = response.data;
-        const totalPointsEarned = transactions.reduce((total, transaction) => total + transaction.amount, 0);
-        setPointsBalance(totalPointsEarned);
-        console.log('Points balance updated:', totalPointsEarned);
-      }
+      const response = await axios.get(`http://localhost:5000/api/points/${identifier}`);
+      const transactions = response.data;
+      const totalPointsEarned = transactions.reduce((total, transaction) => total + transaction.amount, 0);
+      setPointsBalance(totalPointsEarned);
+      console.log('Points balance updated:', totalPointsEarned);
     } catch (error) {
       console.error('Error fetching points balance:', error);
     }
   };
   
-  const earnPoints = async () => {
+  const earnPoints = async (amount) => {
     try {
       if (identifier) {
-        await axios.post(`http://localhost:5000/api/points/${identifier}`, { amount: 100 }); 
+        await axios.post(`http://localhost:5000/api/points/${identifier}`, { amount });
         fetchPointsBalance();
-        alert('Points earned successfully!'); 
+        alert('Points earned successfully!');
       }
     } catch (error) {
       console.error('Error earning points:', error);
@@ -39,13 +37,25 @@ function EarnPoints({ userId }) {
   };
   
   console.log('Identifier:', identifier);
-  
+
   return (
     <div>
       <h2>Earn tokens</h2>
       <div className="container">
-        <p>Points balance: {pointsBalance}</p>
-        {identifier && <button onClick={earnPoints}>Earn Points</button>} 
+        {pointsBalance}
+        <p className="earntokens-header">Receive SDV's by doing any of the following ↓</p>
+        <div className="earn-item" onClick={() => {identifier && earnPoints(100)}}>
+          <span>Online review of a Saloranta & de Vylder production</span>
+          <span>100</span>
+        </div>
+        <div className="earn-item" onClick={() => {identifier && earnPoints(100)}}>
+          <span>Post about Saloranta & de Vylder on Instagram</span>
+          <span>100</span>
+        </div>
+        <div className="earn-item" onClick={() => {identifier && earnPoints(400)}}>
+          <span>Intervju Saloranta & de Vylder for a featured article</span>
+          <span>400</span>
+        </div>
       </div>
     </div>
   );
