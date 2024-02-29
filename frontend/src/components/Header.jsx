@@ -24,7 +24,7 @@ const Header = () => {
             <li><NavLink to="/ai" activeClassName="active">AI DIALOGUES: co-creating live art</NavLink></li>
             <li><NavLink to="/market" activeClassName="active">MARKET</NavLink></li>
             <li><NavLink to="/rewards" activeClassName="active">REWARDS</NavLink></li>
-            {isNotAdmin &&<li><NavLink to="/mywallet" activeClassName="active">MY WALLET</NavLink></li>}
+            <li><NavLink to="/mywallet" activeClassName="active">MY WALLET</NavLink></li>
             {isAdmin && <li><NavLink to="/admin" activeClassName="active">ADMIN</NavLink></li>}
           </ul>
         </div>

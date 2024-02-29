@@ -11,25 +11,23 @@ import Admin from './pages/Admin';
 import "./styles/_app.sass";
 import Header from './components/Header';
 import { SmartContractProvider } from './SmartContractContext';
+import LoggedOutSection from './components/LoggedOutSection'; 
 
 function App() {
-//  const [userId, setUserId] = useState(() => {
-//   const userData = JSON.parse(localStorage.getItem('userData'));
-//   return userData ? userData.id : null;
-// });
- //Ordna så userId uppdateras vid utloggning, annars fortsätter vara inloggad. Strukturera upp inloggning/utloggningskomponenter.
+  const [userId, setUserId] = useState(() => {
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    return userData ? userData.id : null;
+  });
 
   return (
     <SmartContractProvider>
+    
       <Router>
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/market" element={<Market />} />
-          <Route
-            path="/earn-points"
-            element={<EarnPoints />} 
-          />
+          <Route path="/earn-points" element={<EarnPoints userId={userId} />} />
           <Route path="/ai" element={<AI />} />
           <Route path="/rewards" element={<Rewards />} />
           <Route path="/sdv" element={<SDV />} />

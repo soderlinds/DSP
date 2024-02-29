@@ -5,9 +5,9 @@ import '../styles/_ai.sass';
 function AI() {
   const { active, account, tokenBalance, contributeToPerformance } = useSmartContract();
   const [questions] = useState([
-    { id: 1, text: 'Beskriv en scen' },
-    { id: 2, text: 'Beskriv ljudet' },
-    { id: 3, text: 'Beskriv rörelserna' }
+    { id: 1, text: 'Describe a scene' },
+    { id: 2, text: 'Describe the sounds' },
+    { id: 3, text: 'Describe the movements' }
   ]);
   const [answers, setAnswers] = useState(Array(questions.length).fill(''));
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
