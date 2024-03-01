@@ -1,65 +1,62 @@
 @import './variables'
-    
-.chat-container
+
+.chat-container 
   max-width: 600px
   margin: 0 auto
   padding: 2rem
 
-.chat
+
+.chat 
   margin-bottom: 2rem
-  margin-top: 10rem
+  margin-top: 5rem
   text-align: center
 
-.message
+
+.conversation 
+  display: flex
+  flex-direction: column
+  align-items: flex-start
+
+
+.message 
   border-radius: 20px
-  width: calc(100% - 40px) 
-  background-color: $white_background
-  padding: 2rem
+  text-align: left
+  max-width: 70%
+  margin-bottom: 1rem
+  padding: 1rem
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
-  margin-bottom: 7rem
-  
-  p
-    margin: 0
-
-  &.user
-    background-color: $white_background
-
-.question-bubble 
-  margin-right: 15rem
-
-.answer-bubble 
-  border-radius: 20px
-  margin-left: 15rem
-
-.question-bubble, .answer-bubble
-  width: calc(100% - 40px) 
   background-color: white
-  padding: 20px
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
 
-  p
-    margin: 0
+
+.message.user 
+  align-self: flex-end
+  background-color: white
+
+
+.message.ai 
+  align-self: flex-start
+  background-color: white
+
 
 .answer-bubble 
-  input 
-    width: calc(100% - 40px)
-    background-color: white
-    padding: 1rem
-    margin-bottom: 1rem
-    border: none
-    outline: none
+  display: flex
+  align-items: center
+  margin-top: 1rem
+  max-width: 70%
+  margin-left: auto
+  margin-right: auto
 
-    &:focus,
-    &:not(:placeholder-shown) 
-      &::parent 
-        border: 2px solid darkgrey
 
-    &::placeholder 
-  
-  &::parent 
-    border: none
-    transition: border-color 0.3s ease
-  
+.answer-bubble input 
+  flex: 1
+  width: calc(100% - 40px)
+  padding: 3rem
+  font-size: 0.9rem
+  margin-bottom: 1rem
+  border: none
+  outline: none
+
+
 .answer-bubble button 
   background-color: $dark_blue
   color: white
@@ -67,9 +64,26 @@
   border-radius: 50%
   width: 2rem
   height: 2rem
-  display: flex
-  justify-content: center
-  align-items: center
+  margin-left: 1rem
   cursor: pointer
   transition: background-color 0.3s ease
 
+
+@keyframes typing 
+  0% 
+    content: ''
+  
+  33% 
+    content: '.'
+  
+  66% 
+    content: '..'
+  
+  100% 
+    content: '...'
+  
+.message.ai.typing::after 
+  display: inline-block
+  content: '...'
+  animation: typing 1s infinite steps(1)
+  margin-left: 5px
