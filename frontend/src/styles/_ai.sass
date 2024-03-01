@@ -11,10 +11,10 @@
   text-align: center
 
 .message
+  border-radius: 20px
   width: calc(100% - 40px) 
-  background-color: #ffffff
+  background-color: $white_background
   padding: 2rem
-  border-radius: 2rem
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
   margin-bottom: 7rem
   
@@ -22,20 +22,19 @@
     margin: 0
 
   &.user
-    background-color: #ffffff
-    color: black
+    background-color: $white_background
 
 .question-bubble 
   margin-right: 15rem
 
 .answer-bubble 
+  border-radius: 20px
   margin-left: 15rem
 
 .question-bubble, .answer-bubble
   width: calc(100% - 40px) 
   background-color: white
   padding: 20px
-  border-radius: 20px
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
 
   p
@@ -45,9 +44,8 @@
   input 
     width: calc(100% - 40px)
     background-color: white
-    padding: 20px
-    border-radius: 20px
-    margin-bottom: 10px
+    padding: 1rem
+    margin-bottom: 1rem
     border: none
     outline: none
 
@@ -57,9 +55,21 @@
         border: 2px solid darkgrey
 
     &::placeholder 
-      color: black
   
   &::parent 
-    border: 2px solid transparent
+    border: none
     transition: border-color 0.3s ease
   
+.answer-bubble button 
+  background-color: $dark_blue
+  color: white
+  border: none
+  border-radius: 50%
+  width: 2rem
+  height: 2rem
+  display: flex
+  justify-content: center
+  align-items: center
+  cursor: pointer
+  transition: background-color 0.3s ease
+

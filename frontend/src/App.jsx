@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Market from './pages/Market';
@@ -14,18 +14,21 @@ import Header from './components/Header';
 import { SmartContractProvider } from './SmartContractContext';
 
 function App() {
-  //Not working, userId stays in ls after logout
   const [userId, setUserId] = useState(() => {
     const userData = JSON.parse(localStorage.getItem('userData'));
     return userData ? userData.id : null;
   });
 
+  const handleLogout = () => {
+    setUserId(null);
+  };
+
   return (
     <SmartContractProvider>
       <Router>
-        <Header />
+        <Header handleLogout={handleLogout} />
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home handleLogout={handleLogout} />} />
           <Route path="/market" element={<Market />} />
           <Route path="/earn-points" element={<EarnPoints userId={userId} />} />
           <Route path="/ai" element={<AI />} />

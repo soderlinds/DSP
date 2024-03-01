@@ -5,6 +5,7 @@ import '../styles/_header.sass';
 import { useSmartContract } from '../SmartContractContext';
 
 
+
 const Header = () => {
   const { active, account } = useSmartContract();
   // const currentUserStatus = useCurrentUserStatus();
@@ -27,6 +28,7 @@ const Header = () => {
             <li><NavLink to="/scoreboard" activeClassName="active">SCOREBOARD</NavLink></li>
             <li><NavLink to="/mywallet" activeClassName="active">"MY COLLECTION"</NavLink></li>
             {isAdmin && <li><NavLink to="/admin" activeClassName="active">ADMIN</NavLink></li>}
+           
           </ul>
         </div>
         {/* <div className={`userStatus status${currentUserStatus}`} /> */}

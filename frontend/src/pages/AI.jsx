@@ -19,32 +19,30 @@ function AI() {
     setAnswers(newAnswers);
   };
 
-  const handleNextQuestion = () => {
+  const handleSendMessage = () => {
+    const newMessages = [...messages];
+    newMessages.push({ text: answers[currentQuestionIndex], fromUser: true });
+    setMessages(newMessages);
+    // API call to backend
+    console.log('Sending message:', answers[currentQuestionIndex]);
+    
     if (currentQuestionIndex < questions.length - 1) {
-      const newMessages = [...messages];
-      newMessages.push({ text: answers[currentQuestionIndex], fromUser: true });
       newMessages.push({ text: questions[currentQuestionIndex + 1].text, fromUser: false });
       setMessages(newMessages);
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     }
   };
 
-  const saveResponses = () => {
-    const newMessages = [...messages];
-    newMessages.push({ text: answers[currentQuestionIndex], fromUser: true });
-    setMessages(newMessages);
-    // API call to backend
-    console.log('Saving responses:', answers);
-  };
-
   return (
     <div className="chat-container">
       <div className="chat">
-        {messages.map((message, index) => (
-          <div key={index} className={`message ${message.fromUser ? 'user' : 'ai'}`}>
-            <p>{message.text}</p>
-          </div>
-        ))}
+        <div className="conversation">
+          {messages.map((message, index) => (
+            <div key={index} className={`message ${message.fromUser ? 'user' : 'ai'}`}>
+              <p>{message.text}</p>
+            </div>
+          ))}
+        </div>
         <div className="answer-bubble">
           <input
             type="text"
@@ -52,14 +50,9 @@ function AI() {
             onChange={handleAnswerChange}
             placeholder="Type your answer..."
           />
+          <button onClick={handleSendMessage}>&#8594;</button>
         </div>
       </div>
-      <button onClick={handleNextQuestion} disabled={currentQuestionIndex === questions.length - 1}>
-        Next
-      </button>
-      {currentQuestionIndex === questions.length - 1 && (
-        <button onClick={saveResponses}>Finish</button>
-      )}
     </div>
   );
 }

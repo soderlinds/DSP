@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import LoggedInSection from './LoggedInSection';
 import PopupScreen from './PopupScreen';
 import { v4 as uuidv4 } from 'uuid';
-import '../styles/_loggedoutsection.sass'; 
+import '../styles/_loggedoutsection.sass';
 
 const LoggedOutSection = ({ handleLogin }) => {
   const [registrationFormData, setRegistrationFormData] = useState({ name: '', username: '', email: '', password: '' });
@@ -17,16 +17,12 @@ const LoggedOutSection = ({ handleLogin }) => {
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('userData'));
     const loggedInStatus = localStorage.getItem('isLoggedIn');
-    
-    if (userData && userData.username && loggedInStatus === 'true') {
+
+    if (userData?.username && loggedInStatus === 'true') {
       setIsLoggedIn(true);
       setIsWeb2LoggedIn(true);
-      setUserId(userData.id); 
-    } else {
-      setIsLoggedIn(false);
-      setIsWeb2LoggedIn(false);
+      setUserId(userData.id);
     }
-    console.log('LoggedOutSection userId:', userId); 
   }, []);
 
   const handleWeb2Registration = () => {
@@ -34,13 +30,12 @@ const LoggedOutSection = ({ handleLogin }) => {
       alert("Please fill out all fields before registering.");
       return;
     }
-  
+
     const userData = {
       id: uuidv4(),
       ...registrationFormData
     };
     localStorage.setItem('userData', JSON.stringify(userData));
-    console.log('User registered successfully:', userData);
     setUserId(userData.id);
     localStorage.setItem('isLoggedIn', 'true');
     setShowPopup(false);
@@ -49,18 +44,16 @@ const LoggedOutSection = ({ handleLogin }) => {
   const handleWeb2Login = () => {
     const userData = JSON.parse(localStorage.getItem('userData'));
     if (userData && userData.username === loginFormData.username && userData.password === loginFormData.password) {
-      console.log('User logged in successfully:', userData);
       setIsLoggedIn(true);
       setIsWeb2LoggedIn(true);
       localStorage.setItem('isLoggedIn', 'true');
       setUserId(userData.id);
-      setShowPopup(false); 
+      setShowPopup(false);
     } else {
       setLoginError('Invalid username or password');
     }
   };
 
-  //Function not working, doesn't connect properly
   // const handleConnectWeb3 = async () => {
   //   try {
   //     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -99,9 +92,9 @@ const LoggedOutSection = ({ handleLogin }) => {
   };
 
   return (
-    <div>
+    <div className="logged-out-section">
       {!isLoggedIn && !showPopup && (
-        <button onClick={() => handleConnectClick('register')}>Connect</button>
+        <button onClick={() => handleConnectClick('register')} className="connect-button">Connect</button>
       )}
 
       {showPopup && <PopupScreen
