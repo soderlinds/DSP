@@ -1,6 +1,5 @@
 import React from 'react';
 
-
 const Web2LoggedInSection = ({ username, tokenBalance }) => (
   <div>
     <p>Welcome, {username}</p>

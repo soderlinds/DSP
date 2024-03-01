@@ -56,7 +56,9 @@ function MyWallet({ userId }) {
             <option key={option} value={option}>{option} Points</option>
           ))}
         </select>
+        <div>
         <button onClick={handleExchange}>Exchange Points for Tokens</button>
+        </div>
       </div>
     </div>
   );

@@ -114,7 +114,9 @@ function Home() {
           isRegistering={isRegistering}
         />
       )}
-      <button onClick={handleMintNFT}>Mint NFT</button>
+      {isLoggedIn && (
+       <button onClick={handleMintNFT}>Mint NFT</button>
+      )}
 
     </div>
   );
