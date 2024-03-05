@@ -21,10 +21,10 @@ const Header = () => {
         <div className="menu-container">
           <ul className="menu">
             <li><NavLink to="/" activeClassName="active">HOME</NavLink></li>
-            <li><NavLink to="/earn-points" activeClassName="active">EARN POINTS</NavLink></li>
+            <li><NavLink to="/earn-points" activeClassName="active">QUESTS</NavLink></li>
             <li><NavLink to="/ai" activeClassName="active">AI</NavLink></li>
             <li><NavLink to="/market" activeClassName="active">MARKET</NavLink></li>
-            <li><NavLink to="/rewards" activeClassName="active">QUESTS</NavLink></li>
+            <li><NavLink to="/rewards" activeClassName="active">NFTs</NavLink></li>
             <li><NavLink to="/scoreboard" activeClassName="active">HIGHSCORE</NavLink></li>
             <li><NavLink to="/mywallet" activeClassName="active">"MY COLLECTION"</NavLink></li>
             {isAdmin && <li><NavLink to="/admin" activeClassName="active">ADMIN</NavLink></li>}
