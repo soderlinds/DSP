@@ -15,7 +15,6 @@ contract SDVToken is ERC20, Ownable {
     constructor() ERC20("SDVToken", "SDV") {
         _mint(msg.sender, TOTAL_SUPPLY);
     }
-
     function airdropTokens(address[] memory _users, uint256[] memory _amounts) external onlyOwner {
         require(_users.length == _amounts.length, "Invalid input lengths");
 

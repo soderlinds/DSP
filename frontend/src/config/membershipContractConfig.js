@@ -35,6 +35,31 @@ export const membershipContractABI = [
       {
         "indexed": true,
         "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "metadataURI",
+        "type": "string"
+      }
+    ],
+    "name": "NFTMinted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
         "name": "previousOwner",
         "type": "address"
       },
@@ -370,26 +395,6 @@ export const membershipContractABI = [
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-      }
-    ],
-    "name": "getUserNFTs",
-    "outputs": [
-      {
-        "internalType": "uint256[]",
-        "name": "",
-        "type": "uint256[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
-  },
-  {
-    "inputs": [
-      {
         "internalType": "uint256",
         "name": "_id",
         "type": "uint256"
@@ -409,4 +414,4 @@ export const membershipContractABI = [
   }
 ];
     
-export const membershipContractAddress = '0x61d8A5346F6a9dC7446589CC27469e93510ea4E4';
+export const membershipContractAddress = '0xBAb22612B1E15026F1EaB5E447c8F96ad18Ed0e3';

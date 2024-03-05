@@ -1081,7 +1081,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.16",
-  "updatedAt": "2024-02-28T15:10:44.891Z",
+  "updatedAt": "2024-03-05T08:23:39.517Z",
   "devdoc": {
     "details": "Interface of the ERC20 standard as defined in the EIP.",
     "events": {

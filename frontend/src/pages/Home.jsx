@@ -4,60 +4,33 @@ import LoggedInSection from '../components/LoggedInSection';
 import LoggedOutSection from '../components/LoggedOutSection';
 
 function Home() {
-  const { active, account, tokenBalance, getUserNFTs, getUserNFTMetadataURI, mintMembershipToken } = useSmartContract();
+  const { active, account, tokenBalance, mintMembershipToken, getUserNFT } = useSmartContract();
   const [userNFTs, setUserNFTs] = useState([]);
-  const [nftImages, setNftImages] = useState([]);
   const [isRegistering, setIsRegistering] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
-  const [isWeb2LoggedIn, setIsWeb2LoggedIn] = useState(false); 
-
-  useEffect(() => {
-    const fetchUserNFTs = async () => {
-      try {
-        if (account) {
-          const userNFTIds = await getUserNFTs();
-          setUserNFTs(userNFTIds.map(id => id.toString()));
-        }
-      } catch (error) {
-        console.error('Error fetching user NFTs:', error);
-      }
-    };
-
-    fetchUserNFTs();
-  }, [account]);
-
-  useEffect(() => {
-    const fetchNFTImages = async () => {
-      try {
-        const imagePromises = userNFTs.map(async (tokenId) => {
-          const metadataURI = await getUserNFTMetadataURI(tokenId);
-          const response = await fetch(metadataURI);
-          const metadata = await response.json();
-          const imageUrl = metadata.image;
-          return imageUrl;
-        });
-
-        Promise.all(imagePromises)
-          .then((imageUrls) => {
-            setNftImages(imageUrls);
-          })
-          .catch((error) => {
-            console.error('Error fetching NFT images:', error);
-          });
-      } catch (error) {
-        console.error('Error fetching NFT images:', error);
-      }
-    };
-
-    fetchNFTImages();
-  }, [userNFTs]);
+  const [isWeb2LoggedIn, setIsWeb2LoggedIn] = useState(false);
 
   useEffect(() => {
     if (active && account) {
       setIsLoggedIn(true);
     }
   }, [active, account]);
+
+  useEffect(() => {
+    const fetchUserNFTs = async () => {
+      try {
+        const nfts = await getUserNFT();
+        setUserNFTs(nfts);
+      } catch (error) {
+        console.error('Error fetching user NFTs:', error);
+      }
+    };
+
+    if (isLoggedIn) {
+      fetchUserNFTs();
+    }
+  }, [isLoggedIn, getUserNFT]);
 
   const handleWeb3Registration = async () => {
     setIsRegistering(true);
@@ -93,6 +66,17 @@ function Home() {
     }
   };
 
+  const renderUserNFT = () => {
+  if (userNFTs.length === 0) {
+    return <p>No NFT found</p>; 
+  }
+
+  return userNFTs.map((nft, index) => (
+    <div key={index}>
+      <img src={nft.metadataURI.image} alt={`NFT ${nft.tokenId}`} />
+    </div>
+  ));
+};
   return (
     <div className="container">
       <h1>SDV LOYALTY GROUP</h1>
@@ -101,8 +85,6 @@ function Home() {
           username={username}
           account={account}
           tokenBalance={tokenBalance}
-          nftImages={nftImages}
-          userNFTs={userNFTs}
           isWeb2={isWeb2LoggedIn} 
         />
       ) : (
@@ -115,9 +97,13 @@ function Home() {
         />
       )}
       {isLoggedIn && (
-       <button onClick={handleMintNFT}>Mint NFT</button>
+        <>
+          <button onClick={handleMintNFT}>Mint NFT</button>
+          <div>
+            {renderUserNFT()}
+          </div>
+        </>
       )}
-
     </div>
   );
 }
