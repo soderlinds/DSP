@@ -40,48 +40,42 @@ export const SmartContractProvider = ({ children }) => {
   const productionNFTContract = new web3.eth.Contract(productionNFTContractABI, productionNFTContractAddress);
 
   // Membership
-  
+
   const mintMembershipToken = async (metadataURI) => {
     try {
       await membershipContract.methods.mint(metadataURI).send({ from: account });
-
-      await getUserNFTs();
     } catch (error) {
       console.error("Error minting membership NFT:", error);
     }
   };
 
-  const checkMembership = async () => {
+  const getUserNFT = async () => {
     try {
-      const isMember = await membershipContract.methods.isMember(account).call();
-      console.log("Is member:", isMember);
-    } catch (error) {
-      console.error("Error checking membership:", error);
-    }
-  };
+      const events = await membershipContract.getPastEvents('NFTMinted', {
+        fromBlock: 0,
+        toBlock: 'latest'
+      });
   
-  const getUserNFTs = async () => {
-    try {
-      const userNFTIdsBig = await membershipContract.methods.getUserNFTs(account).call();
-      const userNFTIds = userNFTIdsBig.map(id => id.toString());
-      setUserNFTs(userNFTIds);
-      console.log("User's NFT:", userNFTIds);
-      return userNFTIds; 
-    } catch (error) {
-      console.error("Error fetching user's NFT:", error);
-      return []; 
-    }
-  };
+        const userNFTs = events.map(event => {
+        const tokenId = event.returnValues.tokenId;
+        const metadataURI = event.returnValues.metadataURI;
+        console.log("Displaying NFT with token ID", tokenId, "and metadata URI", metadataURI);
+        return { tokenId, metadataURI };
+      });
   
-  const getUserNFTMetadataURI = async (nftId) => {
-    try {
-      const metadataURI = await membershipContract.methods.uri(nftId).call(); 
-      return metadataURI;
+      return userNFTs;
     } catch (error) {
-      console.error('Error fetching user NFT metadata URI:', error);
-      return '';
+      console.error("Error fetching NFTs from event logs:", error);
+      return [];
     }
   };
+
+  useEffect(() => {
+    getUserNFT()
+      .then(nfts => setUserNFTs(nfts))
+      .catch(error => console.error('Error fetching user NFTs:', error));
+  }, []);
+  
 
 
   // SDV Token
@@ -211,9 +205,7 @@ export const SmartContractProvider = ({ children }) => {
     <SmartContractContext.Provider
       value={{
         mintMembershipToken,
-        checkMembership,
-        getUserNFTs,
-        getUserNFTMetadataURI,
+        getUserNFT,
         active,
         account,
         tokenBalance,

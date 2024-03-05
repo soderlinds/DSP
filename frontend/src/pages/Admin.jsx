@@ -107,7 +107,7 @@ const Admin = () => {
            />
          </label>
          <label>
-           Enter Price:
+           Enter amount of points needed:
            <input
              type="text"
              value={priceInput}
