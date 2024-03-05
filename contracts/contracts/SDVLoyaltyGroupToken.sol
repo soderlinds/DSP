@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract SDVToken is ERC20, Ownable {
-    uint256 public constant TOTAL_SUPPLY = 1_000_000 * (10 ** 18);
+    uint256 public constant TOTAL_SUPPLY = 100_000;
 
     event TokensAirdropped(address indexed user, uint256 amount);
     event MerchandisePurchased(address indexed user, uint256 amount);
