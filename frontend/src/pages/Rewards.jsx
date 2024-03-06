@@ -16,6 +16,7 @@ const Rewards = ({ userId }) => {
     fetchNFTs();
   }, []);
 
+  //Should be moved - PointsBalance component
   const fetchPointsBalance = async () => {
     try {
       const response = await axios.get(`http://localhost:5000/api/points/${identifier}`);
@@ -108,12 +109,6 @@ const Rewards = ({ userId }) => {
             </div>
           ))}
         </div>
-      </div>
-      <div>
-        <h4>User ID</h4>
-        <p>{userId}</p>
-        <h4>Points Balance</h4>
-        <p>{pointsBalance}</p>
       </div>
     </div>
   );

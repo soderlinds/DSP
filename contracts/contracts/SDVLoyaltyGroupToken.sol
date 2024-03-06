@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.24;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -15,6 +15,7 @@ contract SDVToken is ERC20, Ownable {
     constructor() ERC20("SDVToken", "SDV") {
         _mint(msg.sender, TOTAL_SUPPLY);
     }
+
     function airdropTokens(address[] memory _users, uint256[] memory _amounts) external onlyOwner {
         require(_users.length == _amounts.length, "Invalid input lengths");
 

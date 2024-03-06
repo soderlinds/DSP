@@ -12,6 +12,7 @@ function EarnPoints({ userId }) {
     fetchPointsBalance();
   }, [identifier]); 
 
+//Should be moved - components/pointsBalance
   const fetchPointsBalance = async () => {
     try {
       const response = await axios.get(`http://localhost:5000/api/points/${identifier}`);
@@ -24,6 +25,7 @@ function EarnPoints({ userId }) {
     }
   };
   
+  //Should be moved - apiService
   const earnPoints = async (amount) => {
     try {
       if (identifier) {

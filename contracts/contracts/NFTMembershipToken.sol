@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract NFTMembershipToken is ERC1155, Ownable {
-    uint256 private nextTokenId;
+    uint256 private nextTokenId = 0;
     bool private hasMinted;
 
     event NFTMinted(address indexed owner, uint256 indexed tokenId, string metadataURI);

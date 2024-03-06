@@ -15,7 +15,6 @@ export const SmartContractProvider = ({ children }) => {
   const [active, setActive] = useState(false);
   const [account, setAccount] = useState('');
   const [tokenBalance, setTokenBalance] = useState(0);
-  const [pointsBalance, setPointsBalance] = useState(0);
   const [userNFTs, setUserNFTs] = useState('');
 
 
@@ -148,15 +147,14 @@ export const SmartContractProvider = ({ children }) => {
     }
   };
   
-  const purchaseDiscountNFTWithPoints = async (tokenId, amount, offchainPoints) => {
+  const purchaseDiscountNFTWithPoints = async (tokenId, amount, offchainPoints, price) => {
     try {
-      await discountNFTContract.methods.purchaseNFTWithPoints(tokenId, amount, offchainPoints).send({ from: account });
+      await discountNFTContract.methods.purchaseNFTWithPoints(tokenId, amount, offchainPoints, price).send({ from: account, gas: 300000 });
       console.log("Discount NFT purchased successfully with off-chain points!");
     } catch (error) {
       console.error("Error purchasing discount NFT with points:", error);
     }
   };
-  
   
   
   //Artwork NFT
@@ -209,7 +207,6 @@ export const SmartContractProvider = ({ children }) => {
         active,
         account,
         tokenBalance,
-        pointsBalance,
         airdropTokens,
         buyMerch,
         contributeToPerformance,

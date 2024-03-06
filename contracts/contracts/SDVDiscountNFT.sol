@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 contract SDVDiscountNFT is ERC1155, Ownable {
     using Strings for uint256;
 
-    uint256 private nextTokenId = 1; 
+    uint256 private nextTokenId = 10000; 
 
     event NFTMinted(uint256 indexed tokenId, uint256 price);
     event NFTPurchased(address indexed buyer, uint256 indexed tokenId, uint256 amount, uint256 price);

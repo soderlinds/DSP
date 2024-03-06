@@ -3,16 +3,15 @@ import { useSmartContract } from '../SmartContractContext';
 import '../styles/_admin.sass';
 
 const Admin = () => {
-  const { createNFT, fractionalizeNFT, setAttendee, airdropNFTShares, mintDiscountNFT, nftContract } = useSmartContract();
+  const { createNFT, fractionalizeNFT, setAttendee, airdropNFTShares, mintDiscountNFT } = useSmartContract();
   const [artistAddress, setArtistAddress] = useState('');
   const [totalShares, setTotalShares] = useState(0);
   const [attendeeAddress, setAttendeeAddress] = useState('');
-  const [nfts, setNFTs] = useState([]);
   const [tokenIdInput, setTokenIdInput] = useState('');
   const [priceInput, setPriceInput] = useState('');
   const [initialSupplyInput, setInitialSupplyInput] = useState('');
 
-
+//Production NFT
   const handleCreateNFT = async () => {
     await createNFT(artistAddress);
   };
@@ -29,44 +28,7 @@ const Admin = () => {
     await airdropNFTShares([attendeeAddress]);
   };
 
-  const fetchNFTData = async () => {
-        try {
-          const nftData = [];
-          const mintedTokens = await nftContract.methods.getAllMintedNFTs().call();
-    
-          for (const tokenIdBN of mintedTokens) {
-            const tokenId = Number(tokenIdBN);
-    
-            const tokenURI = `metadata/${tokenId}.json`;
-            const imageURI = `images/${tokenId}.png`;
-    
-            const metadataResponse = await fetch(process.env.PUBLIC_URL + tokenURI);
-            const metadata = await metadataResponse.json();
-    
-            const imageResponse = await fetch(process.env.PUBLIC_URL + imageURI);
-            const imageData = await imageResponse.blob();
-            const imageUrl = URL.createObjectURL(imageData);
-    
-            const nftPrice = Number(await nftContract.methods.getNFTPrice(tokenId).call());
-    
-            nftData.push({
-              id: tokenId,
-              image: imageUrl,
-              metadata: metadata,
-              nftPrice: nftPrice,
-            });
-          }
-    
-          console.log('Fetched NFTs:', nftData);
-    
-          return nftData;
-        } catch (error) {
-          console.error('Error fetching NFT data:', error);
-          return [];
-        }
-      };
-    
-
+  //Discount NFT
       const handleMintNFT = async () => {
         try {
             const tokenId = Number(tokenIdInput);
@@ -76,12 +38,7 @@ const Admin = () => {
             if (!isNaN(tokenId) && !isNaN(price) && !isNaN(supply)) {
                 await mintDiscountNFT(tokenId, supply, price); 
                 console.log(`Successfully minted NFT with ID ${tokenId}, price ${price}, and initial supply ${supply}`);
-    
-                console.log('Fetching updated NFT data...');
-                const updatedNFTData = await fetchNFTData();
-                console.log('Updated NFT Data:', updatedNFTData);
-    
-                setNFTs(updatedNFTData);
+
                 setTokenIdInput('');
                 setInitialSupplyInput('');
                 setPriceInput('');

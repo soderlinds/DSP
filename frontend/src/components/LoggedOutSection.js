@@ -22,6 +22,7 @@ const LoggedOutSection = ({ handleLogin }) => {
       setIsLoggedIn(true);
       setIsWeb2LoggedIn(true);
       setUserId(userData.id);
+      console.log(userId);
     }
   }, []);
 

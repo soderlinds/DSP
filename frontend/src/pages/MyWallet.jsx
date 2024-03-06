@@ -8,12 +8,13 @@ function MyWallet({ userId }) {
   const [pointsBalance, setPointsBalance] = useState(0);
   const [pointsToExchange, setPointsToExchange] = useState(0);
 
-  const identifier = account || userId;
+  const identifier = account ? account : userId; 
 
   useEffect(() => {
     fetchPointsBalance();
-  }, [account, userId, identifier]);
+  }, [identifier]);
 
+  //Should be moved - component PointsBalance
   const fetchPointsBalance = async () => {
     try {
       const response = await axios.get(`http://localhost:5000/api/points/${identifier}`);
@@ -25,7 +26,8 @@ function MyWallet({ userId }) {
       console.error('Error fetching points balance:', error);
     }
   };
-
+  
+//API should be moved - apiService
   const handleExchange = async () => {
     try {
       const tokensToReceive = Math.floor(pointsToExchange / 1000); 
@@ -42,6 +44,8 @@ function MyWallet({ userId }) {
   for (let i = 1; i <= Math.floor(pointsBalance / 1000); i++) {
     exchangeOptions.push(i * 1000);
   }
+
+  console.log('Identifier:', identifier);
 
   return (
     <div className="container">

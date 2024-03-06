@@ -5,7 +5,6 @@ import Market from './pages/Market';
 import EarnPoints from './pages/EarnPoints';
 import AI from './pages/AI';
 import Rewards from './pages/Rewards';
-import SDV from './pages/SDV';
 import MyWallet from './pages/MyWallet';
 import ScoreBoard from './pages/ScoreBoard';
 import Admin from './pages/Admin';
@@ -33,9 +32,8 @@ function App() {
           <Route path="/earn-points" element={<EarnPoints userId={userId} />} />
           <Route path="/ai" element={<AI />} />
           <Route path="/rewards" element={<Rewards />} />
-          <Route path="/sdv" element={<SDV />} />
           <Route path="/scoreboard" element={<ScoreBoard />} />
-          <Route path="/mywallet" element={<MyWallet />} />
+          <Route path="/mywallet" element={<MyWallet userId={userId} />} />
           <Route path="/admin" element={<Admin />} />
         </Routes>
       </Router>
