@@ -40,6 +40,25 @@ export const discountNFTContractABI = [
     "inputs": [
       {
         "indexed": true,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "price",
+        "type": "uint256"
+      }
+    ],
+    "name": "NFTMinted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
         "internalType": "address",
         "name": "previousOwner",
         "type": "address"
@@ -394,7 +413,7 @@ export const discountNFTContractABI = [
       },
       {
         "internalType": "uint256",
-        "name": "_nftPrice",
+        "name": "price",
         "type": "uint256"
       }
     ],
@@ -402,20 +421,6 @@ export const discountNFTContractABI = [
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getAllMintedNFTs",
-    "outputs": [
-      {
-        "internalType": "uint256[]",
-        "name": "",
-        "type": "uint256[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
   },
   {
     "inputs": [
@@ -432,6 +437,11 @@ export const discountNFTContractABI = [
       {
         "internalType": "uint256",
         "name": "offchainPoints",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "price",
         "type": "uint256"
       }
     ],
@@ -459,27 +469,7 @@ export const discountNFTContractABI = [
     "stateMutability": "view",
     "type": "function",
     "constant": true
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      }
-    ],
-    "name": "getNFTPrice",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
   }
 ];
     
-export const discountNFTContractAddress = '0x684428F07a7dFecBe41F3D3502C05Aa55B1FE868';
+export const discountNFTContractAddress = '0x96f5cD1c1631c3E6CaBf1b2AD611e0aC4cb39DBA';

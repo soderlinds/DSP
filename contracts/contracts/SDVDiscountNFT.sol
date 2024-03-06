@@ -8,29 +8,30 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 contract SDVDiscountNFT is ERC1155, Ownable {
     using Strings for uint256;
 
-    mapping(uint256 => bool) private tokenExists;
+    uint256 private nextTokenId = 0; 
 
     event NFTMinted(uint256 indexed tokenId, uint256 price);
+    event NFTPurchased(address indexed buyer, uint256 indexed tokenId, uint256 amount, uint256 price);
 
     constructor(string memory baseTokenURI) ERC1155(baseTokenURI) {}
 
-    function mint(uint256 tokenId, uint256 initialSupply, uint256 price) external onlyOwner {
-        require(!tokenExists[tokenId], "Token ID already exists");
-
+    function mint(uint256 initialSupply, uint256 price) external onlyOwner {
+        uint256 tokenId = nextTokenId++;
         _mint(owner(), tokenId, initialSupply, "");
 
-        tokenExists[tokenId] = true;
         emit NFTMinted(tokenId, price);
     }
 
     function purchaseNFTWithPoints(uint256 tokenId, uint256 amount, uint256 offchainPoints, uint256 price) external {
-        require(tokenExists[tokenId], "Token ID does not exist");
+        require(tokenId < nextTokenId, "Token ID does not exist");
         require(offchainPoints >= price * amount, "Insufficient off-chain points");
         safeTransferFrom(owner(), msg.sender, tokenId, amount, "");
+
+        emit NFTPurchased(msg.sender, tokenId, amount, price);
     }
 
-    function tokenURI(uint256 tokenId) public view returns (string memory) {
-        require(tokenExists[tokenId], "Token ID does not exist");
+    function tokenURI(uint256 tokenId) external view returns (string memory) {
+        require(tokenId < nextTokenId, "Token ID does not exist");
         return string(abi.encodePacked(uri(tokenId), tokenId.toString(), ".json"));
     }
 }
