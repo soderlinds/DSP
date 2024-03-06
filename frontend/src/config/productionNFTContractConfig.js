@@ -649,4 +649,4 @@ export const productionNFTContractABI = [
   }
 ];
       
-  export const productionNFTContractAddress = '0xDCc61221912D7dc352AAE5AA2281fBF49edB167a';
+  export const productionNFTContractAddress = '0x5Bf480675f181e884D7c0051fb16Bc8EBe5dcB87';

@@ -98,30 +98,30 @@ const Admin = () => {
       <h2>Admin Page</h2>
       <div>
        <h3>Mint discount NFT</h3>
-      <label>
+      <div>
           Enter Token ID:
            <input
              type="text"
              value={tokenIdInput}
              onChange={(e) => setTokenIdInput(e.target.value)}
            />
-         </label>
-         <label>
+         </div>
+         <div>
            Enter amount of points needed:
            <input
              type="text"
              value={priceInput}
              onChange={(e) => setPriceInput(e.target.value)}
            />
-         </label>
-         <label>
+         </div>
+         <div>
            Enter Initial Supply:
            <input
              type="text"
              value={initialSupplyInput}
              onChange={(e) => setInitialSupplyInput(e.target.value)}
            />
-         </label>
+         </div>
          <button onClick={handleMintNFT}>Mint NFT</button>
        </div>
       <div>
