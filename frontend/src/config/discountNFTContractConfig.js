@@ -40,6 +40,56 @@ export const discountNFTContractABI = [
     "inputs": [
       {
         "indexed": true,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "price",
+        "type": "uint256"
+      }
+    ],
+    "name": "NFTMinted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "buyer",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "price",
+        "type": "uint256"
+      }
+    ],
+    "name": "NFTPurchased",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
         "internalType": "address",
         "name": "previousOwner",
         "type": "address"
@@ -384,17 +434,12 @@ export const discountNFTContractABI = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
         "name": "initialSupply",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_nftPrice",
+        "name": "price",
         "type": "uint256"
       }
     ],
@@ -402,20 +447,6 @@ export const discountNFTContractABI = [
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getAllMintedNFTs",
-    "outputs": [
-      {
-        "internalType": "uint256[]",
-        "name": "",
-        "type": "uint256[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
   },
   {
     "inputs": [
@@ -432,6 +463,11 @@ export const discountNFTContractABI = [
       {
         "internalType": "uint256",
         "name": "offchainPoints",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "price",
         "type": "uint256"
       }
     ],
@@ -459,27 +495,7 @@ export const discountNFTContractABI = [
     "stateMutability": "view",
     "type": "function",
     "constant": true
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      }
-    ],
-    "name": "getNFTPrice",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
   }
 ];
     
-export const discountNFTContractAddress = '0x684428F07a7dFecBe41F3D3502C05Aa55B1FE868';
+export const discountNFTContractAddress = '0xd4D8e9735c0b6A3FE0f2668b2A606BAc59c8e2B0';
