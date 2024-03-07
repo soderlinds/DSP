@@ -1,7 +1,7 @@
 {
   "contractName": "Context",
   "abi": [],
-  "metadata": "{\"compiler\":{\"version\":\"0.8.0+commit.c7dfd78e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"@openzeppelin/contracts/utils/Context.sol\":\"Context\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/utils/Context.sol\":{\"keccak256\":\"0xf930d2df426bfcfc1f7415be724f04081c96f4fb9ec8d0e3a521c07692dface0\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://fc2bfdea0d2562c76fb3c4cf70a86c6ba25c5a30e8f8515c95aafdf8383f8395\",\"dweb:/ipfs/QmTbFya18786ckJfLYUoWau9jBTKfmWnWm5XSViWvB7PXN\"]}},\"version\":1}",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.24+commit.e11b9ed9\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"@openzeppelin/contracts/utils/Context.sol\":\"Context\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/utils/Context.sol\":{\"keccak256\":\"0xf930d2df426bfcfc1f7415be724f04081c96f4fb9ec8d0e3a521c07692dface0\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://fc2bfdea0d2562c76fb3c4cf70a86c6ba25c5a30e8f8515c95aafdf8383f8395\",\"dweb:/ipfs/QmTbFya18786ckJfLYUoWau9jBTKfmWnWm5XSViWvB7PXN\"]}},\"version\":1}",
   "bytecode": "0x",
   "deployedBytecode": "0x",
   "immutableReferences": {},
@@ -36,6 +36,7 @@
       {
         "abstract": true,
         "baseContracts": [],
+        "canonicalName": "Context",
         "contractDependencies": [],
         "contractKind": "contract",
         "fullyImplemented": true,
@@ -44,6 +45,7 @@
           2218
         ],
         "name": "Context",
+        "nameLocation": "572:7:8",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
@@ -71,6 +73,7 @@
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
+                    "memberLocation": "669:6:8",
                     "memberName": "sender",
                     "nodeType": "MemberAccess",
                     "src": "665:10:8",
@@ -91,6 +94,7 @@
             "kind": "function",
             "modifiers": [],
             "name": "_msgSender",
+            "nameLocation": "595:10:8",
             "nodeType": "FunctionDefinition",
             "parameters": {
               "id": 2198,
@@ -107,6 +111,7 @@
                   "id": 2200,
                   "mutability": "mutable",
                   "name": "",
+                  "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
                   "scope": 2206,
                   "src": "639:7:8",
@@ -180,6 +185,7 @@
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
+                    "memberLocation": "909:4:8",
                     "memberName": "data",
                     "nodeType": "MemberAccess",
                     "src": "905:8:8",
@@ -200,6 +206,7 @@
             "kind": "function",
             "modifiers": [],
             "name": "_msgData",
+            "nameLocation": "697:8:8",
             "nodeType": "FunctionDefinition",
             "parameters": {
               "id": 2207,
@@ -216,6 +223,7 @@
                   "id": 2209,
                   "mutability": "mutable",
                   "name": "",
+                  "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
                   "scope": 2217,
                   "src": "739:14:8",
@@ -248,18 +256,20 @@
           }
         ],
         "scope": 2219,
-        "src": "554:368:8"
+        "src": "554:368:8",
+        "usedErrors": [],
+        "usedEvents": []
       }
     ],
     "src": "33:890:8"
   },
   "compiler": {
     "name": "solc",
-    "version": "0.8.0+commit.c7dfd78e.Emscripten.clang"
+    "version": "0.8.24+commit.e11b9ed9.Emscripten.clang"
   },
   "networks": {},
   "schemaVersion": "3.4.16",
-  "updatedAt": "2024-03-07T09:36:40.808Z",
+  "updatedAt": "2024-03-07T15:16:46.998Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},
