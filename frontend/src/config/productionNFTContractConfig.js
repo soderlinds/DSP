@@ -554,6 +554,19 @@ export const productionNFTContractABI = [
   {
     "inputs": [
       {
+        "internalType": "string",
+        "name": "baseURI",
+        "type": "string"
+      }
+    ],
+    "name": "setBaseURI",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "_artist",
         "type": "address"
@@ -646,7 +659,27 @@ export const productionNFTContractABI = [
     "stateMutability": "view",
     "type": "function",
     "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "tokenURI",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
   }
 ];
       
-  export const productionNFTContractAddress = '0x5Bf480675f181e884D7c0051fb16Bc8EBe5dcB87';
+  export const productionNFTContractAddress = '0x056958CF7dA2C7185832FDc98D43F56aD9F0b1B7';

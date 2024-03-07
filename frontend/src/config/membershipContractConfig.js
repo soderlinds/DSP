@@ -395,6 +395,26 @@ export const membershipContractABI = [
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "_owner",
+        "type": "address"
+      }
+    ],
+    "name": "hasMintedNFT",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "_id",
         "type": "uint256"
@@ -414,4 +434,4 @@ export const membershipContractABI = [
   }
 ];
     
-export const membershipContractAddress = '0x1277765C1404CB991df94AB8e8783975CF74D731';
+export const membershipContractAddress = '0xfb9Dc707758cD4e38F4043735b028066092Ec996';

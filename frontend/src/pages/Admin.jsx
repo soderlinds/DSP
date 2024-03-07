@@ -8,7 +8,7 @@ const Admin = () => {
   const [totalShares, setTotalShares] = useState(0);
   const [attendeeAddress, setAttendeeAddress] = useState('');
   const [tokenIdInput, setTokenIdInput] = useState('');
-  const [priceInput, setPriceInput] = useState('');
+  const [pointsInput, setPointsInput] = useState('');
   const [initialSupplyInput, setInitialSupplyInput] = useState('');
 
 //Production NFT
@@ -29,26 +29,27 @@ const Admin = () => {
   };
 
   //Discount NFT
-      const handleMintNFT = async () => {
-        try {
-            const tokenId = Number(tokenIdInput);
-            const supply = Number(initialSupplyInput); 
-            const price = Number(priceInput);
-    
-            if (!isNaN(tokenId) && !isNaN(price) && !isNaN(supply)) {
-                await mintDiscountNFT(tokenId, supply, price); 
-                console.log(`Successfully minted NFT with ID ${tokenId}, price ${price}, and initial supply ${supply}`);
+  const handleMintNFT = async () => {
+    try {
+        const tokenId = Number(tokenIdInput);
+        const initialSupply = Number(initialSupplyInput); 
+        const offchainPoints = Number(pointsInput);
 
-                setTokenIdInput('');
-                setInitialSupplyInput('');
-                setPriceInput('');
-            } else {
-                console.error('Invalid token ID, price, or supply');
-            }
-        } catch (error) {
-            console.error('Error minting NFT:', error);
+        if (!isNaN(tokenId) && !isNaN(initialSupply) && !isNaN(offchainPoints)) {
+            await mintDiscountNFT(tokenId, initialSupply, offchainPoints); 
+            console.log(`Successfully minted NFT with ID ${tokenId}, points required ${offchainPoints}, and initial supply ${initialSupply}`);
+
+            setTokenIdInput('');
+            setInitialSupplyInput('');
+            setPointsInput('');
+        } else {
+            console.error('Invalid token ID, initial supply, or off-chain points');
         }
-    };
+    } catch (error) {
+        console.error('Error minting NFT:', error);
+    }
+};
+
 
   return (
     <div className="admin-wrapper">
@@ -67,8 +68,8 @@ const Admin = () => {
            Enter amount of points needed:
            <input
              type="text"
-             value={priceInput}
-             onChange={(e) => setPriceInput(e.target.value)}
+             value={pointsInput}
+             onChange={(e) => setPointsInput(e.target.value)}
            />
          </div>
          <div>

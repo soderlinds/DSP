@@ -10,6 +10,7 @@ function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
   const [isWeb2LoggedIn, setIsWeb2LoggedIn] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     if (active && account) {
@@ -24,9 +25,14 @@ function Home() {
         setUserNFTs(nfts);
       } catch (error) {
         console.error('Error fetching user NFTs:', error);
+        setError('Error fetching user NFTs');
       }
     };
-
+  
+    if (localStorage.getItem('isLoggedIn') === 'true') {
+      setIsLoggedIn(true);
+    }
+  
     if (isLoggedIn) {
       fetchUserNFTs();
     }
@@ -39,8 +45,10 @@ function Home() {
     try {
       await mintMembershipToken(metadataURI);
       console.log("Membership NFT minted successfully!");
+      await fetchUserNFTs();
     } catch (error) {
       console.error("Error minting membership NFT:", error);
+      setError('Error minting membership NFT');
     } finally {
       setIsRegistering(false);
     }
@@ -61,22 +69,38 @@ function Home() {
     try {
       await mintMembershipToken('/metadata/membership_token_100.json');
       console.log("Membership NFT minted successfully!");
+      await fetchUserNFTs();
     } catch (error) {
       console.error("Error minting membership NFT:", error);
+      setError('Error minting membership NFT');
     }
   };
 
-  const renderUserNFT = () => {
-  if (userNFTs.length === 0) {
-    return <p>No NFT found</p>; 
-  }
+  const fetchUserNFTs = async () => {
+    try {
+      const nfts = await getUserNFT();
+      setUserNFTs(nfts);
+      setError('');
+    } catch (error) {
+      console.error('Error fetching user NFTs:', error);
+      setError('Error fetching user NFTs');
+    }
+  };
 
-  return userNFTs.map((nft, index) => (
-    <div key={index}>
-      <img src={nft.metadataURI.image} alt={`NFT ${nft.tokenId}`} />
-    </div>
-  ));
-};
+  
+    const renderUserNFT = () => {
+      if (userNFTs.length === 0) {
+        return <p>No NFT found</p>;
+      }
+    
+      return userNFTs.map((nft, index) => (
+        <div key={index}>
+          <img src={nft.metadataURI} alt={`NFT ID ${nft.tokenId}`} />
+        </div>
+      ));
+    };
+    
+
   return (
     <div className="container">
       <h1>SDV LOYALTY GROUP</h1>
@@ -96,6 +120,7 @@ function Home() {
           isRegistering={isRegistering}
         />
       )}
+      {error && <p>Error: {error}</p>}
       {isLoggedIn && (
         <>
           <button onClick={handleMintNFT}>Mint NFT</button>

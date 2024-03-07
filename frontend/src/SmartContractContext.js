@@ -51,11 +51,12 @@ export const SmartContractProvider = ({ children }) => {
   const getUserNFT = async () => {
     try {
       const events = await membershipContract.getPastEvents('NFTMinted', {
+        filter: { owner: account }, 
         fromBlock: 0,
         toBlock: 'latest'
       });
   
-        const userNFTs = events.map(event => {
+      const userNFTs = events.map(event => {
         const tokenId = event.returnValues.tokenId;
         const metadataURI = event.returnValues.metadataURI;
         console.log("Displaying NFT with token ID", tokenId, "and metadata URI", metadataURI);
@@ -68,6 +69,7 @@ export const SmartContractProvider = ({ children }) => {
       return [];
     }
   };
+  
 
   useEffect(() => {
     getUserNFT()
@@ -78,7 +80,7 @@ export const SmartContractProvider = ({ children }) => {
 
 
   // SDV Token
-  useEffect(() => {
+
     const fetchBalances = async () => {
       try {
         if (account) {
@@ -90,9 +92,6 @@ export const SmartContractProvider = ({ children }) => {
         console.error('Error fetching token balance:', error);
       }
     };
-
-    fetchBalances();
-  }, [account]);
 
 
   const earnPoints = async (amount) => {
@@ -138,26 +137,27 @@ export const SmartContractProvider = ({ children }) => {
 
   //Discount NFT
 
-  const mintDiscountNFT = async (tokenId, initialSupply, nftPrice ) => {
+  const mintDiscountNFT = async (tokenId, initialSupply, offchainPoints) => {
     try {
-      await discountNFTContract.methods.mint(tokenId, initialSupply, nftPrice).send({ from: account, gas: 300000  });
+      await discountNFTContract.methods.mint(tokenId, initialSupply, offchainPoints).send({ from: account, gas: 300000 });
       console.log("Discount NFT minted successfully!");
     } catch (error) {
       console.error("Error minting discount NFT:", error);
     }
   };
   
-  const purchaseDiscountNFTWithPoints = async (tokenId, amount, offchainPoints, price) => {
+  const purchaseDiscountNFTWithPoints = async (tokenId, amount) => {
     try {
-      await discountNFTContract.methods.purchaseNFTWithPoints(tokenId, amount, offchainPoints, price).send({ from: account, gas: 300000 });
+      await discountNFTContract.methods.purchaseNFTWithPoints(tokenId, amount).send({ from: account, gas: 300000 });
       console.log("Discount NFT purchased successfully with off-chain points!");
     } catch (error) {
       console.error("Error purchasing discount NFT with points:", error);
     }
-  };
-  
-  
-  //Artwork NFT
+  };  
+   
+
+  //Production NFT
+
   const createNFT = async (artist) => {
     try {
       await productionNFTContract.methods.createNFT(artist).send({ from: account });
@@ -203,6 +203,7 @@ export const SmartContractProvider = ({ children }) => {
     <SmartContractContext.Provider
       value={{
         mintMembershipToken,
+        fetchBalances,
         getUserNFT,
         active,
         account,
