@@ -29,9 +29,9 @@ function Home() {
       }
     };
   
-    if (localStorage.getItem('isLoggedIn') === 'true') {
-      setIsLoggedIn(true);
-    }
+    // if (localStorage.getItem('isLoggedIn') === 'true') {
+    //   setIsLoggedIn(true);
+    // }
   
     if (isLoggedIn) {
       fetchUserNFTs();
@@ -86,7 +86,7 @@ function Home() {
       setError('Error fetching user NFTs');
     }
   };
-
+console.log("account", account);
   
     const renderUserNFT = () => {
       if (userNFTs.length === 0) {

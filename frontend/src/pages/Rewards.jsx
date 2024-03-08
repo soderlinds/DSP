@@ -70,15 +70,14 @@ const Rewards = ({ userId }) => {
   }
 };
 
-const handleExchangeNFT = async (nftId, offchainPoints) => {
+const handleExchangeNFT = async (tokenId, offchainPoints) => {
   try {
     if (pointsBalance < offchainPoints) {
       window.alert('Insufficient off-chain points');
       return;
     }
-    const nftIdNumber = Number(nftId);
     const offchainPointsNumber = Number(offchainPoints);
-    await purchaseDiscountNFTWithPoints(nftIdNumber, 1, offchainPointsNumber);
+    await purchaseDiscountNFTWithPoints(tokenId, 1, offchainPointsNumber);
     const response = await axios.put(`http://localhost:5000/api/points/${identifier}/deduct`, { amount: offchainPointsNumber });
     if (response.status === 200) {
       console.log('Points deducted successfully:', offchainPointsNumber);
@@ -92,6 +91,7 @@ const handleExchangeNFT = async (nftId, offchainPoints) => {
     console.error('Error exchanging points for NFT:', error);
   }
 };
+
 
 
   return (

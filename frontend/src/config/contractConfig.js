@@ -35,25 +35,6 @@ export const contractABI = [
       {
         "indexed": true,
         "internalType": "address",
-        "name": "user",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "MerchandisePurchased",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
         "name": "previousOwner",
         "type": "address"
       },
@@ -109,31 +90,6 @@ export const contractABI = [
       }
     ],
     "name": "TokensAirdropped",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "spender",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "TokensApproved",
     "type": "event"
   },
   {
@@ -457,19 +413,6 @@ export const contractABI = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "purchaseMerchandise",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
         "name": "_pointsToExchange",
         "type": "uint256"
       }
@@ -481,4 +424,4 @@ export const contractABI = [
   }
 ];
   
-export const contractAddress = '0x8B4B9650F2470788768FB6684369B32EeE0a338c';
+export const contractAddress = '0x3f1fB23bbeE7849AFA0F2800B5b294040a17De1C';

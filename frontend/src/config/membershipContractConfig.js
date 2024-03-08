@@ -434,4 +434,4 @@ export const membershipContractABI = [
   }
 ];
     
-export const membershipContractAddress = '0xfb9Dc707758cD4e38F4043735b028066092Ec996';
+export const membershipContractAddress = '0x9b6a65AD602aB76595cC6d0A89373C41c1B60773';

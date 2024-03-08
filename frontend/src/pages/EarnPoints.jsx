@@ -44,7 +44,7 @@ function EarnPoints({ userId }) {
     <div>
       <h2>Earn tokens</h2>
       <div className="container">
-        {pointsBalance}
+        <span>Points balance: </span>{pointsBalance}
         <p className="earntokens-header">Receive SDV's by doing any of the following ↓</p>
         <div className="earn-item" onClick={() => {identifier && earnPoints(100)}}>
           <span>Online review of a Saloranta & de Vylder production</span>

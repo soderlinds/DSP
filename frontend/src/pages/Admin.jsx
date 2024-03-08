@@ -3,11 +3,10 @@ import { useSmartContract } from '../SmartContractContext';
 import '../styles/_admin.sass';
 
 const Admin = () => {
-  const { createNFT, fractionalizeNFT, setAttendee, airdropNFTShares, mintDiscountNFT } = useSmartContract();
+  const { createNFT, fractionalizeNFT, setAttendee, airdropNFTShares, mintDiscountNFT, } = useSmartContract();
   const [artistAddress, setArtistAddress] = useState('');
   const [totalShares, setTotalShares] = useState(0);
   const [attendeeAddress, setAttendeeAddress] = useState('');
-  const [tokenIdInput, setTokenIdInput] = useState('');
   const [pointsInput, setPointsInput] = useState('');
   const [initialSupplyInput, setInitialSupplyInput] = useState('');
 
@@ -29,21 +28,20 @@ const Admin = () => {
   };
 
   //Discount NFT
+
   const handleMintNFT = async () => {
     try {
-        const tokenId = Number(tokenIdInput);
         const initialSupply = Number(initialSupplyInput); 
         const offchainPoints = Number(pointsInput);
 
-        if (!isNaN(tokenId) && !isNaN(initialSupply) && !isNaN(offchainPoints)) {
-            await mintDiscountNFT(tokenId, initialSupply, offchainPoints); 
-            console.log(`Successfully minted NFT with ID ${tokenId}, points required ${offchainPoints}, and initial supply ${initialSupply}`);
+        if (!isNaN(initialSupply) && !isNaN(offchainPoints)) {
+            await mintDiscountNFT(initialSupply, offchainPoints); 
+            console.log(`Successfully minted NFT with points required ${offchainPoints}, and initial supply ${initialSupply}`);
 
-            setTokenIdInput('');
             setInitialSupplyInput('');
             setPointsInput('');
         } else {
-            console.error('Invalid token ID, initial supply, or off-chain points');
+            console.error('Invalid initial supply or off-chain points');
         }
     } catch (error) {
         console.error('Error minting NFT:', error);
@@ -56,14 +54,6 @@ const Admin = () => {
       <h2>Admin Page</h2>
       <div>
        <h3>Mint discount NFT</h3>
-      <div>
-          Enter Token ID:
-           <input
-             type="text"
-             value={tokenIdInput}
-             onChange={(e) => setTokenIdInput(e.target.value)}
-           />
-         </div>
          <div>
            Enter amount of points needed:
            <input

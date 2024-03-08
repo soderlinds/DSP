@@ -1,10 +1,9 @@
 import React from 'react';
 
-const Web2LoggedInSection = ({ username, tokenBalance }) => (
+const Web2LoggedInSection = ({ userId }) => (
   <div>
-    <p>Welcome, {username}</p>
+    <p>Welcome, {userId}</p>
     <p>Logged in (Web2)</p>
-    <p>Your points balance: {tokenBalance}</p>
   </div>
 );
 
@@ -27,7 +26,7 @@ const LoggedInSection = ({ username, account, tokenBalance, nftImages, isWeb2 })
   return (
     <div>
       {isWeb2 ? (
-        <Web2LoggedInSection username={username} tokenBalance={tokenBalance} />
+        <Web2LoggedInSection username={username}/>
       ) : (
         <Web3LoggedInSection account={account} tokenBalance={tokenBalance} nftImages={nftImages} />
       )}

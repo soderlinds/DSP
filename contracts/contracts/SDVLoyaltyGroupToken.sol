@@ -8,8 +8,6 @@ contract SDVToken is ERC20, Ownable {
     uint256 public constant TOTAL_SUPPLY = 100_000;
 
     event TokensAirdropped(address indexed user, uint256 amount);
-    event MerchandisePurchased(address indexed user, uint256 amount);
-    event TokensApproved(address indexed owner, address indexed spender, uint256 amount);
     event PointsExchanged(address indexed user, uint256 points, uint256 tokens);
 
     constructor() ERC20("SDVToken", "SDV") {
@@ -21,17 +19,8 @@ contract SDVToken is ERC20, Ownable {
 
         for (uint256 i = 0; i < _users.length; i++) {
             _transfer(owner(), _users[i], _amounts[i]);
-
             emit TokensAirdropped(_users[i], _amounts[i]);
         }
-    }
-
-    function purchaseMerchandise(uint256 _amount) external {
-        require(balanceOf(msg.sender) >= _amount, "Insufficient funds");
-
-        _transfer(msg.sender, owner(), _amount);
-
-        emit MerchandisePurchased(msg.sender, _amount);
     }
 
     function exchangePointsForTokens(uint256 _pointsToExchange) external {

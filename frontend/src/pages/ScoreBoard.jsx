@@ -52,7 +52,7 @@ function ScoreBoard() {
       <div className="scoreboard-users">
         {scoreboardData.map((user, index) => (
           <div key={index} className="scoreboard-user">
-            <div className="user-rank">{index + 1}</div>
+            <div className="user-rank">#{index + 1}</div>
             <div className="user-info">
               <div className="user-id">{user.userId}</div>
               <div className="user-points">{user.points}</div>

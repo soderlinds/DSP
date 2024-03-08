@@ -22,7 +22,7 @@ function MyWallet({ userId }) {
     try {
       const nftData = [];
       const mintedTokens = await discountNFTContract.getPastEvents('NFTPurchased', {
-        filter: { buyer: identifier }, 
+        filter: { buyer: account }, 
         fromBlock: 0,
         toBlock: 'latest'
       });

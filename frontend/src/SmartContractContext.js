@@ -18,8 +18,8 @@ export const SmartContractProvider = ({ children }) => {
   const [userNFTs, setUserNFTs] = useState('');
 
 
-  useEffect(() => {
-    const loadWeb3 = async () => {
+
+    const connectWeb3 = async () => {
       try {
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
         setActive(true);
@@ -28,9 +28,10 @@ export const SmartContractProvider = ({ children }) => {
         console.error('Error loading MetaMask:', error);
       }
     };
+    
 
-    loadWeb3();
-  }, []);
+    
+
 
   const web3 = new Web3(window.ethereum);
   const contract = new web3.eth.Contract(contractABI, contractAddress);
@@ -137,14 +138,15 @@ export const SmartContractProvider = ({ children }) => {
 
   //Discount NFT
 
-  const mintDiscountNFT = async (tokenId, initialSupply, offchainPoints) => {
+  const mintDiscountNFT = async (initialSupply, offchainPoints) => {
     try {
-      await discountNFTContract.methods.mint(tokenId, initialSupply, offchainPoints).send({ from: account, gas: 300000 });
-      console.log("Discount NFT minted successfully!");
+        await discountNFTContract.methods.mint(initialSupply, offchainPoints).send({ from: account, gas: 300000 });
+        console.log("Discount NFT minted successfully!");
     } catch (error) {
-      console.error("Error minting discount NFT:", error);
+        console.error("Error minting discount NFT:", error);
     }
-  };
+};
+
   
   const purchaseDiscountNFTWithPoints = async (tokenId, amount) => {
     try {
@@ -202,6 +204,7 @@ export const SmartContractProvider = ({ children }) => {
   return (
     <SmartContractContext.Provider
       value={{
+        connectWeb3,
         mintMembershipToken,
         fetchBalances,
         getUserNFT,

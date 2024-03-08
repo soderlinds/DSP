@@ -4,6 +4,7 @@ exports.getPointsByUserId = async (req, res) => {
   const { userId } = req.params;
   try {
     const userPoints = await pointsService.getPointsByUserId(userId);
+
     res.json(userPoints);
   } catch (error) {
     console.error('Error fetching points:', error);

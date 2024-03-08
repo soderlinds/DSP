@@ -3,7 +3,7 @@ export const discountNFTContractABI = [
     "inputs": [
       {
         "internalType": "string",
-        "name": "baseTokenURI",
+        "name": "_baseURI",
         "type": "string"
       }
     ],
@@ -248,6 +248,20 @@ export const discountNFTContractABI = [
     "constant": true
   },
   {
+    "inputs": [],
+    "name": "baseURI",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -464,11 +478,6 @@ export const discountNFTContractABI = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
         "name": "initialSupply",
         "type": "uint256"
       },
@@ -523,4 +532,4 @@ export const discountNFTContractABI = [
   }
 ];
     
-export const discountNFTContractAddress = '0x418E920eb0f33026f49eeE0685e66CFDDaDB6484';
+export const discountNFTContractAddress = '0xd78bAeb39538c7371faD8a9A02fEF6c033cfAdC9';
