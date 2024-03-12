@@ -4,6 +4,7 @@ import Web2LoggedInScreen from '../components/Web2LoggedInScreen';
 import Web3LoggedInScreen from '../components/Web3LoggedInScreen';
 import { useWeb2Register, useWeb2Login, useWeb2Auth } from '../context/Web2AuthContext';
 import { useSmartContract } from '../SmartContractContext'; 
+import '../styles/_home.sass';
 
 const Homepage = () => {
   const [showPopup, setShowPopup] = useState(false);
@@ -33,6 +34,7 @@ const Homepage = () => {
   return (
     <div className="container">
       <h1>SDV LOYALTY GROUP</h1>
+      <div className="button-wrapper">
       {!isLoggedInWeb2 && !showPopup && !isWeb3Active && ( 
         <button onClick={() => handleConnectClick('connect')} className="connect-button">Connect</button>
       )}
@@ -51,6 +53,7 @@ const Homepage = () => {
       {isWeb3Active && (
         <Web3LoggedInScreen /> 
       )}
+      </div>
     </div>
   );
 };

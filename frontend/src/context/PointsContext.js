@@ -21,15 +21,28 @@ export const PointsProvider = ({ children }) => {
     };
   
     const deductPoints = (userId, amount) => {
-      const updatedPoints = points.map((point) => {
-        if (point.userId === userId) {
-          return { ...point, amount: point.amount - amount };
+        const userPoints = points.find((point) => point.userId === userId);
+        if (!userPoints) {
+          console.error('User not found');
+          return;
         }
-        return point;
-      });
-      setPoints(updatedPoints);
-      updateLocalStorage(updatedPoints);
-    };
+      
+        if (userPoints.amount < amount) {
+          console.error('Insufficient points');
+          return;
+        }
+      
+        const updatedPoints = points.map((point) => {
+          if (point.userId === userId) {
+            return { ...point, amount: point.amount - amount };
+          }
+          return point;
+        });
+      
+        setPoints(updatedPoints);
+        updateLocalStorage(updatedPoints);
+      };
+      
   
     const getAllPoints = () => {
       return points;

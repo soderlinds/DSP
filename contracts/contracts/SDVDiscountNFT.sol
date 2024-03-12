@@ -45,7 +45,7 @@ contract SDVDiscountNFT is ERC1155, Ownable {
         _mint(msg.sender, tokenId, amount, ""); // had safeTransferFrom here before, but could not have anyone else but owner claim the NFT then
     }
 
-    function uri(uint256 tokenId) external view override returns (string memory) {
+    function uri(uint256 tokenId) public view override returns (string memory) {
         require(tokenId < nextTokenId, "Token ID does not exist");
         return string(abi.encodePacked(baseURI, tokenId.toString(), ".json"));
     }

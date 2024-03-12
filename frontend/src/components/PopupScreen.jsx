@@ -87,7 +87,9 @@ const PopupScreen = ({ handlePopupClose }) => {
                 value={registrationFormData.password}
                 onChange={(e) => setRegistrationFormData({ ...registrationFormData, password: e.target.value })}
               />
+              <div>
               <button type="submit">Register with Web2</button>
+              </div>
             </form>
           </div>
           <div className="login-section">
@@ -105,7 +107,9 @@ const PopupScreen = ({ handlePopupClose }) => {
                 value={loginFormData.password}
                 onChange={(e) => setLoginFormData({ ...loginFormData, password: e.target.value })}
               />
+              <div>
               <button type="submit">Login</button>
+              </div>
             </form>
           </div>
         </div>

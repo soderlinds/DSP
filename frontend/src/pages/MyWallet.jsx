@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { usePoints } from '../context/PointsContext'; 
 import { useSmartContract } from '../SmartContractContext';
-import { useWeb2Auth } from '../context/Web2AuthContext'; // Import useWeb2Auth hook
+import { useWeb2Auth } from '../context/Web2AuthContext'; 
 import '../styles/_mywallet.sass';
 
 function MyWallet() {
   const { account, tokenBalance, exchangePointsForTokens, fetchBalances, discountNFTContract } = useSmartContract();
   const { points, deductPoints, addPoints } = usePoints(); 
-  const { userId } = useWeb2Auth(); // Get userId from context
+  const { userId } = useWeb2Auth(); 
   const [pointsBalance, setPointsBalance] = useState(0);
   const [NFTs, setNFTs] = useState([]);
   const [pointsToExchange, setPointsToExchange] = useState(0);
@@ -22,11 +22,45 @@ function MyWallet() {
 
   const fetchNFTs = async () => {
     try {
-      // Fetch NFT data
+      const nftData = [];
+      const mintedTokens = await discountNFTContract.getPastEvents('NFTPurchased', {
+        filter: { buyer: account }, 
+        fromBlock: 0,
+        toBlock: 'latest'
+      });
+  
+      for (const event of mintedTokens) {
+        const tokenURI = `metadata/${event.returnValues.tokenId}.json`;
+        const imageURI = `images/${event.returnValues.tokenId}.png`;
+  
+        const metadataResponse = await fetch(process.env.PUBLIC_URL + tokenURI);
+        const metadata = await metadataResponse.json();
+  
+        const imageResponse = await fetch(process.env.PUBLIC_URL + imageURI);
+        const imageData = await imageResponse.blob();
+        const imageUrl = URL.createObjectURL(imageData);
+  
+        const tokenId = Number(event.returnValues.tokenId);
+        const offchainPoints = Number(event.returnValues.offchainPoints);
+        const initialSupply = Number(event.returnValues.initialSupply);
+  
+        nftData.push({
+          id: tokenId,
+          image: imageUrl,
+          metadata: metadata,
+          amount: initialSupply,
+          offchainPoints: offchainPoints,
+        });
+      }
+  
+      console.log('Fetched NFTs:', nftData);
+  
+      setNFTs(nftData);
     } catch (error) {
       console.error('Error fetching NFT data:', error);
     }
   };
+  
 
   const fetchPointsBalance = async () => {
     try {
@@ -42,6 +76,7 @@ function MyWallet() {
   const handleExchange = async () => {
     try {
       const tokensToReceive = Math.floor(pointsToExchange / 1000); 
+      await deductPoints(identifier, pointsToExchange); 
       await exchangePointsForTokens(tokensToReceive * 1000); 
       await fetchPointsBalance();
       await fetchBalances();
@@ -50,6 +85,7 @@ function MyWallet() {
       console.error('Error exchanging points for tokens:', error);
     }
   };
+  
   
 
   const exchangeOptions = [];
