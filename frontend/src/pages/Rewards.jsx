@@ -17,7 +17,7 @@ const Rewards = ({ userId }) => {
 
   const fetchPointsBalance = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/points/${identifier}`);
+      const response = await axios.get(`https://us-central1-sdvserver.cloudfunctions.net/getPointsByUserId/${identifier}`);
       const transactions = response.data;
       const totalPointsEarned = transactions.reduce((total, transaction) => total + transaction.amount, 0);
       setPointsBalance(totalPointsEarned);
@@ -78,7 +78,7 @@ const handleExchangeNFT = async (tokenId, offchainPoints) => {
     }
     const offchainPointsNumber = Number(offchainPoints);
     await purchaseDiscountNFTWithPoints(tokenId, 1, offchainPointsNumber);
-    const response = await axios.put(`http://localhost:5000/api/points/${identifier}/deduct`, { amount: offchainPointsNumber });
+    const response = await axios.put(`https://eur3-sdvserver.cloudfunctions.net/api/points//${identifier}/deduct`, { amount: offchainPointsNumber });
     if (response.status === 200) {
       console.log('Points deducted successfully:', offchainPointsNumber);
       await fetchPointsBalance(); 

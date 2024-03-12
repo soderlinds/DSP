@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { usePoints } from '../context/PointsContext'; 
 import { useSmartContract } from '../SmartContractContext';
+import { useWeb2Auth } from '../context/Web2AuthContext'; // Import useWeb2Auth hook
 import '../styles/_mywallet.sass';
 
-function MyWallet({ userId }) {
+function MyWallet() {
   const { account, tokenBalance, exchangePointsForTokens, fetchBalances, discountNFTContract } = useSmartContract();
+  const { points, deductPoints, addPoints } = usePoints(); 
+  const { userId } = useWeb2Auth(); // Get userId from context
   const [pointsBalance, setPointsBalance] = useState(0);
   const [NFTs, setNFTs] = useState([]);
   const [pointsToExchange, setPointsToExchange] = useState(0);
 
-  const identifier = account ? account : userId; 
+  const identifier = account ? account : userId;
 
   useEffect(() => {
     fetchPointsBalance();
@@ -17,68 +20,29 @@ function MyWallet({ userId }) {
     fetchNFTs();
   }, [identifier]);
 
-
   const fetchNFTs = async () => {
     try {
-      const nftData = [];
-      const mintedTokens = await discountNFTContract.getPastEvents('NFTPurchased', {
-        filter: { buyer: account }, 
-        fromBlock: 0,
-        toBlock: 'latest'
-      });
-  
-      for (const event of mintedTokens) {
-        const tokenURI = `metadata/${event.returnValues.tokenId}.json`;
-        const imageURI = `images/${event.returnValues.tokenId}.png`;
-  
-        const metadataResponse = await fetch(process.env.PUBLIC_URL + tokenURI);
-        const metadata = await metadataResponse.json();
-  
-        const imageResponse = await fetch(process.env.PUBLIC_URL + imageURI);
-        const imageData = await imageResponse.blob();
-        const imageUrl = URL.createObjectURL(imageData);
-  
-        const tokenId = Number(event.returnValues.tokenId);
-        const offchainPoints = Number(event.returnValues.offchainPoints);
-        const initialSupply = Number(event.returnValues.initialSupply);
-  
-        nftData.push({
-          id: tokenId,
-          image: imageUrl,
-          metadata: metadata,
-          amount: initialSupply,
-          offchainPoints: offchainPoints,
-        });
-      }
-  
-      console.log('Fetched NFTs:', nftData);
-  
-      setNFTs(nftData);
+      // Fetch NFT data
     } catch (error) {
       console.error('Error fetching NFT data:', error);
     }
   };
-  
-  
-  //Should be moved - component PointsBalance
+
   const fetchPointsBalance = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/points/${identifier}`);
-      const transactions = response.data;
-      const totalPointsEarned = transactions.reduce((total, transaction) => total + transaction.amount, 0);
+      const userPoints = points.filter(point => point.userId === identifier);
+      const totalPointsEarned = userPoints.reduce((total, point) => total + point.amount, 0);
       setPointsBalance(totalPointsEarned);
       console.log('Points balance updated:', totalPointsEarned);
     } catch (error) {
       console.error('Error fetching points balance:', error);
     }
   };
-  
-//API should be moved - apiService
+
   const handleExchange = async () => {
     try {
       const tokensToReceive = Math.floor(pointsToExchange / 1000); 
       await exchangePointsForTokens(tokensToReceive * 1000); 
-      await axios.put(`http://localhost:5000/api/points/${identifier}/deduct`, { amount: pointsToExchange });
       await fetchPointsBalance();
       await fetchBalances();
       setPointsToExchange(0);
@@ -86,6 +50,7 @@ function MyWallet({ userId }) {
       console.error('Error exchanging points for tokens:', error);
     }
   };
+  
 
   const exchangeOptions = [];
   for (let i = 1; i <= Math.floor(pointsBalance / 1000); i++) {

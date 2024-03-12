@@ -10,34 +10,32 @@ import ScoreBoard from './pages/ScoreBoard';
 import Admin from './pages/Admin';
 import "./styles/_app.sass";
 import Header from './components/Header';
+import { PointsProvider } from './context/PointsContext';
 import { SmartContractProvider } from './SmartContractContext';
+import { Web2AuthProvider } from './context/Web2AuthContext';
 
 function App() {
-  const [userId, setUserId] = useState(() => {
-    const userData = JSON.parse(localStorage.getItem('userData'));
-    return userData ? userData.id : null;
-  });
-
-  const handleLogout = () => {
-    setUserId(null);
-  };
-
+ 
   return (
-    <SmartContractProvider>
-      <Router>
-        <Header handleLogout={handleLogout} />
-        <Routes>
-          <Route path="/" element={<Home handleLogout={handleLogout} />} />
-          <Route path="/market" element={<Market />} />
-          <Route path="/earn-points" element={<EarnPoints userId={userId} />} />
-          <Route path="/ai" element={<AI />} />
-          <Route path="/rewards" element={<Rewards />} />
-          <Route path="/scoreboard" element={<ScoreBoard />} />
-          <Route path="/mywallet" element={<MyWallet userId={userId} />} />
-          <Route path="/admin" element={<Admin />} />
-        </Routes>
-      </Router>
-    </SmartContractProvider>
+    <PointsProvider>
+      <Web2AuthProvider>
+      <SmartContractProvider>
+          <Router>
+            <Header />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/market" element={<Market />} />
+              <Route path="/earn-points" element={<EarnPoints />} />
+              <Route path="/ai" element={<AI />} />
+              <Route path="/rewards" element={<Rewards />} />
+              <Route path="/scoreboard" element={<ScoreBoard />} />
+              <Route path="/mywallet" element={<MyWallet />} />
+              <Route path="/admin" element={<Admin />} />
+            </Routes>
+          </Router>
+      </SmartContractProvider>
+      </Web2AuthProvider>
+    </PointsProvider>
   );
 }
 

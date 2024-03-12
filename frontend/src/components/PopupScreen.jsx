@@ -1,20 +1,24 @@
-import React, { useEffect, useRef } from 'react';
+// PopupScreen.jsx
 
-import '../styles/_loggedoutsection.sass'; 
+import React, { useEffect, useRef, useState } from 'react';
+import { useWeb2Register, useWeb2Login, useWeb2Auth } from '../context/Web2AuthContext';
+import '../styles/_popupscreen.sass'; 
 
-const PopupScreen = ({ 
-  handlePopupAction, 
-  handlePopupClose, 
-  registrationFormData, 
-  setRegistrationFormData, 
-  loginFormData, 
-  setLoginFormData, 
-  loginError, 
-  handleWeb2Registration, 
-  handleWeb2Login,
-  handleConnectWeb3
-}) => {
+const PopupScreen = ({ handlePopupClose }) => {
+  const { isLoggedInWeb2 } = useWeb2Auth();
+  const register = useWeb2Register();
+  const login = useWeb2Login();
   const popupRef = useRef(null);
+  const [registrationFormData, setRegistrationFormData] = useState({
+    name: '',
+    username: '',
+    email: '',
+    password: ''
+  });
+  const [loginFormData, setLoginFormData] = useState({
+    username: '',
+    password: ''
+  });
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -30,14 +34,35 @@ const PopupScreen = ({
     };
   }, [handlePopupClose]);
 
+  const handleWeb2Registration = (e) => {
+    e.preventDefault();
+    register(registrationFormData);
+  };
+
+  const handleWeb2Login = (e) => {
+    e.preventDefault();
+    console.log("Submitting login form");
+    const loginSuccess = login(loginFormData); 
+    if (loginSuccess) {
+      handlePopupClose(); 
+    }
+  };
+  
+
+  const handleClosePopup = () => {
+    if (isLoggedInWeb2) {
+      handlePopupClose();
+    }
+  };
+
   return (
     <div className="popup-overlay">
       <div className="popup-content" ref={popupRef}>
-        <span className="close" onClick={handlePopupClose}>&times;</span>
+        <span className="close" onClick={handleClosePopup}>&times;</span>
         <div className="popup-body">
           <div className="register-section">
             <h4>Register</h4>
-            <form onSubmit={(e) => { e.preventDefault(); handleWeb2Registration(); }}>
+            <form onSubmit={handleWeb2Registration}>
               <input
                 type="text"
                 placeholder="Name"
@@ -62,14 +87,12 @@ const PopupScreen = ({
                 value={registrationFormData.password}
                 onChange={(e) => setRegistrationFormData({ ...registrationFormData, password: e.target.value })}
               />
-              <div>
               <button type="submit">Register with Web2</button>
-              </div>
             </form>
           </div>
           <div className="login-section">
             <h4>Login</h4>
-            <form onSubmit={(e) => { e.preventDefault(); handleWeb2Login(); }}>
+            <form onSubmit={handleWeb2Login}>
               <input
                 type="text"
                 placeholder="Username"
@@ -82,18 +105,9 @@ const PopupScreen = ({
                 value={loginFormData.password}
                 onChange={(e) => setLoginFormData({ ...loginFormData, password: e.target.value })}
               />
-              <div>
               <button type="submit">Login</button>
-              </div>
-              {loginError && <p>{loginError}</p>}
             </form>
           </div>
-          <div className="web3-section">
-            <button onClick={handleConnectWeb3}>Connect with Web3</button>
-          </div>
-        </div>
-        <div className="popup-footer">
-          <button onClick={handlePopupAction}>Close</button>
         </div>
       </div>
     </div>
