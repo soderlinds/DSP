@@ -1,4 +1,3 @@
-// migrations/1_deploy_contracts.js
 const NFTMembershipToken = artifacts.require("NFTMembershipToken");
 const SDVDiscountNFT = artifacts.require("SDVDiscountNFT");
 const SDVToken = artifacts.require("SDVToken");

@@ -1,19 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { usePoints } from '../context/PointsContext';
+import { useSmartContract } from '../SmartContractContext';
 import '../styles/_scoreboard.sass';
 
-function ScoreBoard() {
+function ScoreBoard({ userId }) {
+  const { getAllPoints } = usePoints();
+  const { account } = useSmartContract();
   const [scoreboardData, setScoreboardData] = useState([]);
 
   useEffect(() => {
     fetchScoreboardData();
-  }, []);
+  }, [account, userId]); 
+
+  const identifier = account || userId;
 
   const fetchScoreboardData = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/points');
-      const users = getUsers(response.data);
-      const sortedUsers = sortUsersByPoints(users);
+      const allPoints = getAllPoints();
+      const users = getUsers(allPoints);
+      const sortedUsers = sortUsers(users);
       const nonZeroUsers = filterZeroPointsUsers(sortedUsers);
       setScoreboardData(nonZeroUsers);
     } catch (error) {
@@ -29,7 +34,6 @@ function ScoreBoard() {
       if (!usersMap.has(userId)) {
         usersMap.set(userId, { userId, points });
       } else {
-
         const existingUser = usersMap.get(userId);
         existingUser.points += points;
         usersMap.set(userId, existingUser);
@@ -38,7 +42,7 @@ function ScoreBoard() {
     return Array.from(usersMap.values());
   };
 
-  const sortUsersByPoints = (users) => {
+  const sortUsers = (users) => {
     return users.sort((a, b) => b.points - a.points);
   };
 

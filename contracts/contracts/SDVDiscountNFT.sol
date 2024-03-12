@@ -9,10 +9,10 @@ contract SDVDiscountNFT is ERC1155, Ownable {
     using Strings for uint256;
 
     struct NFT {
-        uint256 initialSupply; 
-        uint256 offchainPoints;
-        uint256 remainingAmount;
-    }
+        uint256 initialSupply; //change to smaller uint?
+        uint256 offchainPoints; //change to smaller uint?
+        uint256 remainingAmount; //change to smaller uint?
+    } 
 
     mapping(uint256 => NFT) public nfts;
 
@@ -23,8 +23,8 @@ contract SDVDiscountNFT is ERC1155, Ownable {
 
     string public baseURI; 
 
-    constructor(string memory _baseURI) ERC1155("") {
-        baseURI = _baseURI;
+    constructor(string memory _baseURI) ERC1155("") { //Should I just have string public baseURI = "";  instead?
+        baseURI = _baseURI; 
     }
 
     function mint(uint256 initialSupply, uint256 offchainPoints) external onlyOwner {
@@ -35,18 +35,17 @@ contract SDVDiscountNFT is ERC1155, Ownable {
     }
 
     function purchaseNFTWithPoints(uint256 tokenId, uint256 amount) external {
-    require(tokenId < nextTokenId, "Token ID does not exist");
-    require(amount <= nfts[tokenId].remainingAmount, "Exceeds remaining amount");
-    require(amount > 0, "Invalid amount");
+        require(tokenId < nextTokenId, "Token ID does not exist");
+        require(amount <= nfts[tokenId].remainingAmount, "Exceeds remaining amount");
+        require(amount > 0, "Invalid amount");
 
-    emit NFTPurchased(msg.sender, tokenId, amount);
+        emit NFTPurchased(msg.sender, tokenId, amount);
 
-    nfts[tokenId].remainingAmount -= amount;
-    _mint(msg.sender, tokenId, amount, ""); //had safeTransferFrom here before, but could not have anyone else but owner claim the NFT
+        nfts[tokenId].remainingAmount -= amount;
+        _mint(msg.sender, tokenId, amount, ""); // had safeTransferFrom here before, but could not have anyone else but owner claim the NFT then
     }
 
-
-    function tokenURI(uint256 tokenId) external view returns (string memory) {
+    function uri(uint256 tokenId) public view override returns (string memory) {
         require(tokenId < nextTokenId, "Token ID does not exist");
         return string(abi.encodePacked(baseURI, tokenId.toString(), ".json"));
     }

@@ -1,136 +1,61 @@
 import React, { useState, useEffect } from 'react';
-import { useSmartContract } from '../SmartContractContext';
-import LoggedInSection from '../components/LoggedInSection';
-import LoggedOutSection from '../components/LoggedOutSection';
+import PopupScreen from '../components/PopupScreen';
+import Web2LoggedInScreen from '../components/Web2LoggedInScreen';
+import Web3LoggedInScreen from '../components/Web3LoggedInScreen';
+import { useWeb2Register, useWeb2Login, useWeb2Auth } from '../context/Web2AuthContext';
+import { useSmartContract } from '../SmartContractContext'; 
+import '../styles/_home.sass';
 
-function Home() {
-  const { active, account, tokenBalance, mintMembershipToken, getUserNFT } = useSmartContract();
-  const [userNFTs, setUserNFTs] = useState([]);
-  const [isRegistering, setIsRegistering] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [username, setUsername] = useState('');
-  const [isWeb2LoggedIn, setIsWeb2LoggedIn] = useState(false);
-  const [error, setError] = useState('');
+const Homepage = () => {
+  const [showPopup, setShowPopup] = useState(false);
+  const [selectedAction, setSelectedAction] = useState(null);
+  const register = useWeb2Register();
+  const login = useWeb2Login();
+  const { isLoggedInWeb2, userId, username } = useWeb2Auth();
+  const { active: isWeb3Active } = useSmartContract(); 
 
-  useEffect(() => {
-    if (active && account) {
-      setIsLoggedIn(true);
-    }
-  }, [active, account]);
-
-  useEffect(() => {
-    const fetchUserNFTs = async () => {
-      try {
-        const nfts = await getUserNFT();
-        setUserNFTs(nfts);
-      } catch (error) {
-        console.error('Error fetching user NFTs:', error);
-        setError('Error fetching user NFTs');
-      }
-    };
-  
-    // if (localStorage.getItem('isLoggedIn') === 'true') {
-    //   setIsLoggedIn(true);
-    // }
-  
-    if (isLoggedIn) {
-      fetchUserNFTs();
-    }
-  }, [isLoggedIn, getUserNFT]);
-
-  const handleWeb3Registration = async () => {
-    setIsRegistering(true);
-    const metadataURI = '/metadata/membership_token_100.json'; // Example metadata URI for testing
-  
-    try {
-      await mintMembershipToken(metadataURI);
-      console.log("Membership NFT minted successfully!");
-      await fetchUserNFTs();
-    } catch (error) {
-      console.error("Error minting membership NFT:", error);
-      setError('Error minting membership NFT');
-    } finally {
-      setIsRegistering(false);
-    }
+  const handleConnectClick = (action) => {
+    setSelectedAction(action);
+    setShowPopup(true);
   };
 
-  const handleWeb2Registration = () => {
-    console.log('Registering with Web2');
+  const handlePopupClose = () => {
+    setShowPopup(false);
   };
 
-  const handleLogin = (credentials, isWeb2) => {
-    setUsername(credentials.username);
-    setIsLoggedIn(true);
-    setIsWeb2LoggedIn(isWeb2);
-    localStorage.setItem('isLoggedIn', 'true'); 
-  };
-
-  const handleMintNFT = async () => {
-    try {
-      await mintMembershipToken('/metadata/membership_token_100.json');
-      console.log("Membership NFT minted successfully!");
-      await fetchUserNFTs();
-    } catch (error) {
-      console.error("Error minting membership NFT:", error);
-      setError('Error minting membership NFT');
+  const handlePopupAction = () => {
+    if (selectedAction === 'register') {
+      register();
+    } else if (selectedAction === 'login') {
+      login();
     }
   };
-
-  const fetchUserNFTs = async () => {
-    try {
-      const nfts = await getUserNFT();
-      setUserNFTs(nfts);
-      setError('');
-    } catch (error) {
-      console.error('Error fetching user NFTs:', error);
-      setError('Error fetching user NFTs');
-    }
-  };
-console.log("account", account);
-  
-    const renderUserNFT = () => {
-      if (userNFTs.length === 0) {
-        return <p>No NFT found</p>;
-      }
-    
-      return userNFTs.map((nft, index) => (
-        <div key={index}>
-          <img src={nft.metadataURI} alt={`NFT ID ${nft.tokenId}`} />
-        </div>
-      ));
-    };
-    
 
   return (
     <div className="container">
       <h1>SDV LOYALTY GROUP</h1>
-      {isLoggedIn ? (
-        <LoggedInSection
-          username={username}
-          account={account}
-          tokenBalance={tokenBalance}
-          isWeb2={isWeb2LoggedIn} 
-        />
-      ) : (
-        <LoggedOutSection
-          active={active}
-          handleLogin={handleLogin}
-          handleWeb3Registration={handleWeb3Registration}
-          handleWeb2Registration={handleWeb2Registration}
-          isRegistering={isRegistering}
+      <div className="button-wrapper">
+      {!isLoggedInWeb2 && !showPopup && !isWeb3Active && ( 
+        <button onClick={() => handleConnectClick('connect')} className="connect-button">Connect</button>
+      )}
+
+      {showPopup && (
+        <PopupScreen
+          handlePopupClose={handlePopupClose}
+          handlePopupAction={handlePopupAction}
         />
       )}
-      {error && <p>Error: {error}</p>}
-      {isLoggedIn && (
-        <>
-          <button onClick={handleMintNFT}>Mint NFT</button>
-          <div>
-            {renderUserNFT()}
-          </div>
-        </>
+
+      {isLoggedInWeb2 && !isWeb3Active && ( 
+        <Web2LoggedInScreen userId={userId} username={username} /> 
       )}
+
+      {isWeb3Active && (
+        <Web3LoggedInScreen /> 
+      )}
+      </div>
     </div>
   );
-}
+};
 
-export default Home;
+export default Homepage;

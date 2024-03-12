@@ -1,22 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { usePoints } from '../context/PointsContext'; 
 import { useSmartContract } from '../SmartContractContext';
+import { useWeb2Auth } from '../context/Web2AuthContext'; 
 import '../styles/_mywallet.sass';
 
-function MyWallet({ userId }) {
+function MyWallet() {
   const { account, tokenBalance, exchangePointsForTokens, fetchBalances, discountNFTContract } = useSmartContract();
+  const { points, deductPoints, addPoints } = usePoints(); 
+  const { userId } = useWeb2Auth(); 
   const [pointsBalance, setPointsBalance] = useState(0);
   const [NFTs, setNFTs] = useState([]);
   const [pointsToExchange, setPointsToExchange] = useState(0);
 
-  const identifier = account ? account : userId; 
+  const identifier = account ? account : userId;
 
   useEffect(() => {
     fetchPointsBalance();
     fetchBalances();
     fetchNFTs();
   }, [identifier]);
-
 
   const fetchNFTs = async () => {
     try {
@@ -59,26 +61,23 @@ function MyWallet({ userId }) {
     }
   };
   
-  
-  //Should be moved - component PointsBalance
+
   const fetchPointsBalance = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/points/${identifier}`);
-      const transactions = response.data;
-      const totalPointsEarned = transactions.reduce((total, transaction) => total + transaction.amount, 0);
+      const userPoints = points.filter(point => point.userId === identifier);
+      const totalPointsEarned = userPoints.reduce((total, point) => total + point.amount, 0);
       setPointsBalance(totalPointsEarned);
       console.log('Points balance updated:', totalPointsEarned);
     } catch (error) {
       console.error('Error fetching points balance:', error);
     }
   };
-  
-//API should be moved - apiService
+
   const handleExchange = async () => {
     try {
       const tokensToReceive = Math.floor(pointsToExchange / 1000); 
+      await deductPoints(identifier, pointsToExchange); 
       await exchangePointsForTokens(tokensToReceive * 1000); 
-      await axios.put(`http://localhost:5000/api/points/${identifier}/deduct`, { amount: pointsToExchange });
       await fetchPointsBalance();
       await fetchBalances();
       setPointsToExchange(0);
@@ -86,6 +85,8 @@ function MyWallet({ userId }) {
       console.error('Error exchanging points for tokens:', error);
     }
   };
+  
+  
 
   const exchangeOptions = [];
   for (let i = 1; i <= Math.floor(pointsBalance / 1000); i++) {

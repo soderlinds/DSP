@@ -8,6 +8,7 @@ contract SDVToken is ERC20, Ownable {
     uint256 public constant TOTAL_SUPPLY = 100_000;
 
     event TokensAirdropped(address indexed user, uint256 amount);
+
     event PointsExchanged(address indexed user, uint256 points, uint256 tokens);
 
     constructor() ERC20("SDVToken", "SDV") {

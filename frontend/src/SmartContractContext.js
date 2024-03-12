@@ -16,21 +16,22 @@ export const SmartContractProvider = ({ children }) => {
   const [account, setAccount] = useState('');
   const [tokenBalance, setTokenBalance] = useState(0);
   const [userNFTs, setUserNFTs] = useState('');
+  
+  const connectWeb3 = async () => {
+    try {
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      setActive(true);
+      setAccount(accounts[0]);
+    } catch (error) {
+      console.error('Error loading MetaMask:', error);
+    }
+  };
 
-
-
-    const connectWeb3 = async () => {
-      try {
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        setActive(true);
-        setAccount(accounts[0]);
-      } catch (error) {
-        console.error('Error loading MetaMask:', error);
-      }
-    };
-    
-
-    
+  useEffect(() => {
+    if (window.ethereum) {
+      connectWeb3();
+    }
+  }, []);
 
 
   const web3 = new Web3(window.ethereum);

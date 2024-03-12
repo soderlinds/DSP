@@ -1,31 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { usePoints } from '../context/PointsContext'; 
 import { useSmartContract } from '../SmartContractContext';
 import '../styles/_rewards.sass';
 
 const Rewards = ({ userId }) => {
   const { account, discountNFTContract, purchaseDiscountNFTWithPoints } = useSmartContract();
-  const [pointsBalance, setPointsBalance] = useState(0);
+  const { points, deductPoints } = usePoints();
   const [nfts, setNFTs] = useState([]);
+  const [pointsBalance, setPointsBalance] = useState(0); 
 
   const identifier = account || userId;
 
   useEffect(() => {
-    fetchPointsBalance();
     fetchNFTs();
   }, []);
 
-  const fetchPointsBalance = async () => {
-    try {
-      const response = await axios.get(`http://localhost:5000/api/points/${identifier}`);
-      const transactions = response.data;
-      const totalPointsEarned = transactions.reduce((total, transaction) => total + transaction.amount, 0);
-      setPointsBalance(totalPointsEarned);
-      console.log('Points balance updated:', totalPointsEarned);
-    } catch (error) {
-      console.error('Error fetching points balance:', error);
-    }
-  };
+  useEffect(() => {
+    const totalPointsEarned = points
+      .filter(point => point.userId === identifier)
+      .reduce((total, point) => total + point.amount, 0);
+    setPointsBalance(totalPointsEarned);
+    console.log(totalPointsEarned);
+  }, [points, identifier]); 
 
   const fetchNFTs = async () => {
   try {
@@ -70,29 +66,16 @@ const Rewards = ({ userId }) => {
   }
 };
 
+
 const handleExchangeNFT = async (tokenId, offchainPoints) => {
   try {
-    if (pointsBalance < offchainPoints) {
-      window.alert('Insufficient off-chain points');
-      return;
-    }
-    const offchainPointsNumber = Number(offchainPoints);
-    await purchaseDiscountNFTWithPoints(tokenId, 1, offchainPointsNumber);
-    const response = await axios.put(`http://localhost:5000/api/points/${identifier}/deduct`, { amount: offchainPointsNumber });
-    if (response.status === 200) {
-      console.log('Points deducted successfully:', offchainPointsNumber);
-      await fetchPointsBalance(); 
-      await fetchNFTs(); 
-    } else {
-      console.error('Failed to deduct points:', offchainPointsNumber);
-      return;
-    }
+    await deductPoints(identifier, offchainPoints);
+    await purchaseDiscountNFTWithPoints(tokenId, 1, offchainPoints);
+    await fetchNFTs();
   } catch (error) {
     console.error('Error exchanging points for NFT:', error);
   }
 };
-
-
 
   return (
     <div className="rewards-wrapper">
