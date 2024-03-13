@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { usePoints } from '../context/PointsContext'; 
 import { useSmartContract } from '../SmartContractContext'; 
 import { useWeb2Auth } from '../context/Web2AuthContext'; 
-import '../styles/_earntokens.sass'; 
+import '../styles/_quests.sass'; 
 
 function EarnPoints() {
   const { account } = useSmartContract();
@@ -22,15 +22,13 @@ function EarnPoints() {
     addPoints(identifier, amount);
     setPointsBalance(prevBalance => prevBalance + amount); 
     alert(`You earned ${amount} points successfully!`);
-    console.log(`You earned ${amount} points successfully!`);
   };
   
   console.log('Identifier:', identifier);
 
   return (
-    <div>
-      <h2>Earn tokens</h2>
-      <div className="container">
+    <div className="wrapper">
+      <div>
         <span>Points balance: </span>{pointsBalance}
         <p className="earntokens-header">Receive SDV's by doing any of the following ↓</p>
         <div className="earn-item" onClick={() => {identifier && earnPoints(100)}}>

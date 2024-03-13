@@ -1,5 +1,3 @@
-// PopupScreen.jsx
-
 import React, { useEffect, useRef, useState } from 'react';
 import { useWeb2Register, useWeb2Login, useWeb2Auth } from '../context/Web2AuthContext';
 import '../styles/_popupscreen.sass'; 
@@ -109,6 +107,9 @@ const PopupScreen = ({ handlePopupClose }) => {
               />
               <div>
               <button type="submit">Login</button>
+              </div>
+              <div>
+              <button>Connect with web3</button> 
               </div>
             </form>
           </div>

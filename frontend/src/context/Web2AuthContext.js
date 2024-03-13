@@ -1,3 +1,4 @@
+//Context used during testing, implement backend later
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -12,10 +13,11 @@ export const Web2AuthProvider = ({ children }) => {
   useEffect(() => {
     const storedUsersData = JSON.parse(localStorage.getItem('usersData'));
     if (storedUsersData) {
-      const currentUser = storedUsersData.find(user => user.id === userId);
-      if (currentUser) {
-        setUserData(currentUser);
-        setUsername(currentUser.username);
+      const loggedInUser = storedUsersData.find(user => user.isLoggedIn);
+      if (loggedInUser) {
+        setUserData(loggedInUser);
+        setUserId(loggedInUser.id);
+        setUsername(loggedInUser.username);
         setIsLoggedInWeb2(true);
       }
     }
@@ -23,12 +25,12 @@ export const Web2AuthProvider = ({ children }) => {
 
   const register = (userData) => {
     const newUserId = uuidv4();
-    const userDataWithId = { ...userData, id: newUserId };
+    const userDataWithId = { ...userData, id: newUserId, isLoggedIn: true };
     const storedUsersData = JSON.parse(localStorage.getItem('usersData')) || [];
-    const updatedUsersData = [...storedUsersData, userDataWithId];
+    const updatedUsersData = [...storedUsersData.filter(user => !user.isLoggedIn), userDataWithId];
     setUserData(userDataWithId);
     setUserId(newUserId);
-    setUsername(userData.username); 
+    setUsername(userData.username);
     setIsLoggedInWeb2(true);
     localStorage.setItem('usersData', JSON.stringify(updatedUsersData));
   };
@@ -38,10 +40,12 @@ export const Web2AuthProvider = ({ children }) => {
     if (storedUsersData) {
       const currentUser = storedUsersData.find(user => user.username === loginData.username && user.password === loginData.password);
       if (currentUser) {
+        currentUser.isLoggedIn = true;
         setUserData(currentUser);
         setUserId(currentUser.id);
-        setUsername(currentUser.username); 
+        setUsername(currentUser.username);
         setIsLoggedInWeb2(true);
+        localStorage.setItem('usersData', JSON.stringify(storedUsersData));
         return true;
       }
     }
@@ -49,11 +53,20 @@ export const Web2AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
+    const storedUsersData = JSON.parse(localStorage.getItem('usersData')) || [];
+    const updatedUsersData = storedUsersData.map(user => {
+      if (user.id === userId) {
+        return { ...user, isLoggedIn: false };
+      }
+      return user;
+    });
+    localStorage.setItem('usersData', JSON.stringify(updatedUsersData));
     setUserData(null);
     setUserId(null);
-    setUsername(null); 
+    setUsername(null);
     setIsLoggedInWeb2(false);
   };
+  
 
   return (
     <Web2AuthContext.Provider value={{ userData, isLoggedInWeb2, userId, username, register, login, logout }}>

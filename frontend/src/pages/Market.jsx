@@ -6,8 +6,7 @@ function Merch() {
 
   return (
     <div>
-      <h2>Market</h2>
-      <div className="container">
+      <div className="wrapper">
       <p>Status: {active ? 'Connected' : 'Not Connected'}</p>
       <p>Account: {account}</p>
       <p>Token Balance: {tokenBalance}</p>

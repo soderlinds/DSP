@@ -28,7 +28,6 @@ const Admin = () => {
   };
 
   //Discount NFT
-
   const handleMintNFT = async () => {
     try {
         const initialSupply = Number(initialSupplyInput); 

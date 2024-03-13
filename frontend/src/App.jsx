@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Market from './pages/Market';
-import EarnPoints from './pages/EarnPoints';
+import Quests from './pages/Quests';
 import AI from './pages/AI';
 import Rewards from './pages/Rewards';
 import MyWallet from './pages/MyWallet';
@@ -25,7 +25,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/market" element={<Market />} />
-              <Route path="/earn-points" element={<EarnPoints />} />
+              <Route path="/quests" element={<Quests />} />
               <Route path="/ai" element={<AI />} />
               <Route path="/rewards" element={<Rewards />} />
               <Route path="/scoreboard" element={<ScoreBoard />} />
