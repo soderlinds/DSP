@@ -96,8 +96,7 @@ function MyWallet() {
   console.log('Identifier:', identifier);
 
   return (
-    <div className="container">
-      <h2>My Wallet</h2>
+    <div className="wrapper">
       {userId && <p>User ID: {identifier}</p>}
       <p>Token Balance: {tokenBalance}</p>
       <p>Points Balance: {pointsBalance}</p>

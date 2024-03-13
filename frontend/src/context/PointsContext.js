@@ -1,3 +1,4 @@
+//Context used during testing, implement backend later
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 const PointsContext = createContext();

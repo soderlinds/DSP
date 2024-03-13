@@ -31,6 +31,8 @@ const Homepage = () => {
     }
   };
 
+  console.log(userId);
+
   return (
     <div className="container">
       <h1>SDV LOYALTY GROUP</h1>

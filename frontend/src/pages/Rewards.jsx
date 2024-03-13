@@ -80,7 +80,6 @@ const handleExchangeNFT = async (tokenId, offchainPoints) => {
   return (
     <div className="rewards-wrapper">
       <div>
-        <h2>NFTs</h2>
         <div className="purchase-nfts">
           {nfts.map((nft) => (
             <div key={nft.id} className="nft-card">

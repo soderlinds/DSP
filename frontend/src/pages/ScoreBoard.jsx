@@ -52,7 +52,7 @@ function ScoreBoard({ userId }) {
 
   return (
     <div className="scoreboard">
-      <h2>Scoreboard</h2>
+      <h3>Scoreboard</h3>
       <div className="scoreboard-users">
         {scoreboardData.map((user, index) => (
           <div key={index} className="scoreboard-user">
