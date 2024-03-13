@@ -23,3 +23,4 @@ contract NFTMembershipToken is ERC1155, Ownable {
         return string(abi.encodePacked(super.uri(0), _id));
     }
 }
+
