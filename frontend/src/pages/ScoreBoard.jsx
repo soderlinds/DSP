@@ -16,7 +16,6 @@ function ScoreBoard() {
     fetchScoreboardData();
   }, [account, userId]); 
   
-
   const identifier = account || userId;
 
   console.log(identifier);
@@ -59,7 +58,9 @@ function ScoreBoard() {
 
   return (
     <div className="scoreboard">
-       <div className="user-points">Your points: {pointsBalance}</div>
+      {identifier && ( 
+        <div className="user-points">Your points: {pointsBalance}</div>
+      )}
       <h3>Scoreboard</h3>
       <div className="scoreboard-users">
         {scoreboardData.map((user, index) => (
