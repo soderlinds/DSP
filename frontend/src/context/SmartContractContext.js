@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import Web3 from 'web3';
-import { contractABI, contractAddress } from './config/contractConfig';
-import { membershipContractABI, membershipContractAddress } from './config//membershipContractConfig';
-import { discountNFTContractABI, discountNFTContractAddress } from './config/discountNFTContractConfig';
-import { productionNFTContractABI, productionNFTContractAddress } from './config/productionNFTContractConfig';
+import { contractABI, contractAddress } from '../config/contractConfig';
+import { membershipContractABI, membershipContractAddress } from '../config//membershipContractConfig';
+import { discountNFTContractABI, discountNFTContractAddress } from '../config/discountNFTContractConfig';
+import { productionNFTContractABI, productionNFTContractAddress } from '../config/productionNFTContractConfig';
 
 const SmartContractContext = createContext();
 
@@ -29,10 +29,29 @@ export const SmartContractProvider = ({ children }) => {
 
   useEffect(() => {
     if (window.ethereum) {
-      connectWeb3();
+      const accounts = window.ethereum.selectedAddress;
+      if (accounts) {
+        setActive(true);
+        setAccount(accounts);
+      }
     }
   }, []);
 
+  const logoutWeb3 = async () => {
+    try {
+      if (window.ethereum && window.ethereum.isMetaMask) {
+        await window.ethereum.request({ method: 'wallet_requestPermissions', params: [{ eth_accounts: {} }] });
+        await window.ethereum.request({ method: 'eth_logout' }); 
+        setActive(false);
+        setAccount('');
+      } else {
+        console.error('MetaMask is not installed or not detected.');
+      }
+    } catch (error) {
+      console.error('Error logging out from MetaMask:', error);
+    }
+  };
+  
 
   const web3 = new Web3(window.ethereum);
   const contract = new web3.eth.Contract(contractABI, contractAddress);
@@ -157,55 +176,12 @@ export const SmartContractProvider = ({ children }) => {
       console.error("Error purchasing discount NFT with points:", error);
     }
   };  
-   
-
-  //Production NFT
-
-  const createNFT = async (artist) => {
-    try {
-      await productionNFTContract.methods.createNFT(artist).send({ from: account });
-    } catch (error) {
-      console.error('Error creating NFT:', error);
-    }
-  };
-
-  const fractionalizeNFT = async (totalShares) => {
-    try {
-      await productionNFTContract.methods.fractionalizeNFT(totalShares).send({ from: account });
-    } catch (error) {
-      console.error('Error fractionalizing NFT:', error);
-    }
-  };
-
-  const mint1155NFT = async (to, amount) => {
-    try {
-      await productionNFTContract.methods.mint(to, amount).send({ from: account });
-    } catch (error) {
-      console.error('Error minting NFT:', error);
-    }
-  };
-
-  const setAttendee = async (attendee) => {
-    try {
-      await productionNFTContract.methods.setAttendee(attendee).send({ from: account });
-    } catch (error) {
-      console.error('Error setting attendee:', error);
-    }
-  };
-
-  const airdropNFTShares = async (participants) => {
-    try {
-      await productionNFTContract.methods.airdropNFTShares(participants).send({ from: account });
-    } catch (error) {
-      console.error('Error airdropping NFT shares:', error);
-    }
-  };
-
 
   return (
     <SmartContractContext.Provider
       value={{
         connectWeb3,
+        logoutWeb3,
         mintMembershipToken,
         fetchBalances,
         getUserNFT,
@@ -218,11 +194,7 @@ export const SmartContractProvider = ({ children }) => {
         mintDiscountNFT,
         discountNFTContract,
         purchaseDiscountNFTWithPoints,
-        createNFT,
-        fractionalizeNFT,
-        mint1155NFT,
-        setAttendee,
-        airdropNFTShares,
+     
         web3,
         earnPoints,
         exchangePointsForTokens,

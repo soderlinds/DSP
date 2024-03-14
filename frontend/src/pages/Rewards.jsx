@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { usePoints } from '../context/PointsContext'; 
-import { useSmartContract } from '../SmartContractContext';
+import { useSmartContract } from '../context/SmartContractContext';
+import { useWeb2Auth } from '../context/Web2AuthContext'; 
 import '../styles/_rewards.sass';
 
-const Rewards = ({ userId }) => {
+const Rewards = () => {
   const { account, discountNFTContract, purchaseDiscountNFTWithPoints } = useSmartContract();
   const { points, deductPoints } = usePoints();
   const [nfts, setNFTs] = useState([]);
+  const { userId } = useWeb2Auth(); 
   const [pointsBalance, setPointsBalance] = useState(0); 
 
   const identifier = account || userId;
@@ -15,13 +17,14 @@ const Rewards = ({ userId }) => {
     fetchNFTs();
   }, []);
 
+
   useEffect(() => {
     const totalPointsEarned = points
       .filter(point => point.userId === identifier)
       .reduce((total, point) => total + point.amount, 0);
     setPointsBalance(totalPointsEarned);
-    console.log(totalPointsEarned);
   }, [points, identifier]); 
+
 
   const fetchNFTs = async () => {
   try {
@@ -59,6 +62,8 @@ const Rewards = ({ userId }) => {
     }
 
     console.log('Fetched NFTs:', nftData);
+    console.log(pointsBalance);
+    console.log(identifier);
 
     setNFTs(nftData);
   } catch (error) {
@@ -78,7 +83,7 @@ const handleExchangeNFT = async (tokenId, offchainPoints) => {
 };
 
   return (
-    <div className="rewards-wrapper">
+    <div className="wrapper">
       <div>
         <div className="purchase-nfts">
           {nfts.map((nft) => (

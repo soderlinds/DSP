@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSmartContract } from '../SmartContractContext'; 
+import { useSmartContract } from '../context/SmartContractContext'; 
 
 
 const Web3LoggedInScreen = () => {

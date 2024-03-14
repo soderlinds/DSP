@@ -31,7 +31,6 @@ export const Web2AuthProvider = ({ children }) => {
     setUserData(userDataWithId);
     setUserId(newUserId);
     setUsername(userData.username);
-    setIsLoggedInWeb2(true);
     localStorage.setItem('usersData', JSON.stringify(updatedUsersData));
   };
 

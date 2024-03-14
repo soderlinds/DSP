@@ -11,7 +11,7 @@ import Admin from './pages/Admin';
 import "./styles/_app.sass";
 import Header from './components/Header';
 import { PointsProvider } from './context/PointsContext';
-import { SmartContractProvider } from './SmartContractContext';
+import { SmartContractProvider } from './context/SmartContractContext';
 import { Web2AuthProvider } from './context/Web2AuthContext';
 
 function App() {

@@ -1,18 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { usePoints } from '../context/PointsContext';
-import { useSmartContract } from '../SmartContractContext';
+import { useSmartContract } from '../context/SmartContractContext';
+import usePointsBalance from '../hooks/PointsBalance';
+import { useWeb2Auth } from '../context/Web2AuthContext'; 
 import '../styles/_scoreboard.sass';
 
-function ScoreBoard({ userId }) {
+function ScoreBoard() {
   const { getAllPoints } = usePoints();
   const { account } = useSmartContract();
+  const { userId } = useWeb2Auth(); 
   const [scoreboardData, setScoreboardData] = useState([]);
+  const [pointsBalance] = usePointsBalance(userId);
 
   useEffect(() => {
     fetchScoreboardData();
   }, [account, userId]); 
+  
 
   const identifier = account || userId;
+
+  console.log(identifier);
 
   const fetchScoreboardData = async () => {
     try {
@@ -52,6 +59,7 @@ function ScoreBoard({ userId }) {
 
   return (
     <div className="scoreboard">
+       <div className="user-points">Your points: {pointsBalance}</div>
       <h3>Scoreboard</h3>
       <div className="scoreboard-users">
         {scoreboardData.map((user, index) => (
