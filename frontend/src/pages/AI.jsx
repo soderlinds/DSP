@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useSmartContract } from '../SmartContractContext';
+import { useSmartContract } from '../context/SmartContractContext';
 import '../styles/_ai.sass';
 
 function AI() {
@@ -12,7 +12,8 @@ function AI() {
   const [answers, setAnswers] = useState(Array(questions.length).fill(''));
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [messages, setMessages] = useState([{ text: questions[0].text, fromUser: false }]);
-  const [typingIndex, setTypingIndex] = useState(null); 
+  const [typingIndex, setTypingIndex] = useState(null);
+  const [isTyping, setIsTyping] = useState(false); 
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
@@ -41,17 +42,18 @@ function AI() {
 
   const sendMessage = () => {
     const newMessages = [...messages];
-    newMessages.push({ text: answers[currentQuestionIndex], fromUser: true });
+    newMessages.push({ text: isTyping ? '...' : answers[currentQuestionIndex], fromUser: true });
     setMessages(newMessages);
-    // API call to backend
-    console.log('Sending message:', answers[currentQuestionIndex]);
-
-    setTypingIndex(newMessages.length - 1); 
+    setIsTyping(true); 
 
     if (currentQuestionIndex < questions.length - 1) {
-      newMessages.push({ text: questions[currentQuestionIndex + 1].text, fromUser: false });
-      setMessages(newMessages);
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setTimeout(() => { 
+        newMessages.push({ text: questions[currentQuestionIndex + 1].text, fromUser: false });
+        setMessages(newMessages);
+        setCurrentQuestionIndex(currentQuestionIndex + 1);
+        setIsTyping(false); 
+      }, 1000); 
+
     }
     setAnswers(Array(questions.length).fill(''));
   };

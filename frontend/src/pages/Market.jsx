@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSmartContract } from '../SmartContractContext';
+import { useSmartContract } from '../context/SmartContractContext';
 
 function Merch() {
   const { active, account, tokenBalance, buyMerch } = useSmartContract();

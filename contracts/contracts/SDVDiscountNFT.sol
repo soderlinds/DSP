@@ -23,7 +23,7 @@ contract SDVDiscountNFT is ERC1155, Ownable {
 
     string public baseURI; 
 
-    constructor(string memory _baseURI) ERC1155("") { //Should I just have string public baseURI = "";  instead?
+    constructor(string memory _baseURI) ERC1155("") Ownable(msg.sender) { //Should I just have string public baseURI = "";  instead?
         baseURI = _baseURI; 
     }
 

@@ -1,3 +1,5 @@
+@import './variables'
+
 .popup-overlay 
   position: fixed
   top: 0
@@ -8,8 +10,9 @@
   display: flex
   justify-content: center
   align-items: center
+  z-index: 10
 
-
+  
 .popup-content 
   background-color: white
   padding: 20px
@@ -22,19 +25,19 @@
 
 .close 
   position: absolute
-  top: 10px
-  right: 10px
+  top: 0.5rem
+  right: 0.5rem
   cursor: pointer
 
 
 .popup-body 
   display: flex
   flex-direction: column
-  gap: 20px
+  gap: 2rem
 
 
 .popup-footer 
-  margin-top: 20px
+  margin-top: 2rem
   display: flex
   justify-content: flex-end
 
@@ -42,19 +45,52 @@
 .register-section, .login-section 
   display: flex
   flex-direction: column
-  gap: 10px
-
-
-.register-section h2, .login-section h2 
-  font-size: 1.2rem
-  margin-bottom: 10px
-
+  gap: 1rem
+  align-items: center
 
 input[type="text"],
 input[type="email"],
-input[type="password"]
-  padding: 10px
+input[type="password"] 
+  width: calc(100% - 1rem)
+  padding: 10px 7px
+  margin-bottom: 0.2rem
   border: 1px solid #ccc
   border-radius: 5px
   font-size: 1rem
   outline: none
+  font-size: 0.9rem
+
+.popup-header
+  text-align: center
+  font-family: 'Druk'
+  font-size: 2rem
+  color: $dark_blue
+
+.popup-signin
+  text-align: center
+  font-family: 'quicksand'
+
+.sign-in-link
+  text-decoration: underline
+  cursor: pointer
+
+.action-button 
+  width: 100%
+  margin-top: 10px
+  border: 1px solid #ccc
+  border-radius: 5px
+  font-size: 1rem
+  outline: none
+  cursor: pointe
+  text-align: center
+
+  &.login 
+    background-color: $accentcolor_green
+    color: #fff
+  
+  &.web3 
+    background-color: transparent
+    color: #000
+
+.action-button:hover 
+  background-color: #f0f0f0

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useSmartContract } from '../SmartContractContext';
+import { useSmartContract } from '../context/SmartContractContext';
 import '../styles/_admin.sass';
 
 const Admin = () => {
@@ -49,9 +49,8 @@ const Admin = () => {
 
 
   return (
-    <div className="admin-wrapper">
-      <h2>Admin Page</h2>
-      <div>
+      <div className="wrapper">
+        <div>
        <h3>Mint discount NFT</h3>
          <div>
            Enter amount of points needed:

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { usePoints } from '../context/PointsContext'; 
-import { useSmartContract } from '../SmartContractContext';
+import { useSmartContract } from '../context/SmartContractContext';
 import { useWeb2Auth } from '../context/Web2AuthContext'; 
 import '../styles/_mywallet.sass';
 
@@ -85,8 +85,6 @@ function MyWallet() {
       console.error('Error exchanging points for tokens:', error);
     }
   };
-  
-  
 
   const exchangeOptions = [];
   for (let i = 1; i <= Math.floor(pointsBalance / 1000); i++) {
@@ -95,36 +93,40 @@ function MyWallet() {
 
   console.log('Identifier:', identifier);
 
-  return (
-    <div className="wrapper">
-      {userId && <p>User ID: {identifier}</p>}
-      <p>Token Balance: {tokenBalance}</p>
-      <p>Points Balance: {pointsBalance}</p>
-      <div>
-        <select value={pointsToExchange} onChange={(e) => setPointsToExchange(parseInt(e.target.value))}>
-          <option value="0">Select Points to Exchange</option>
-          {exchangeOptions.map((option) => (
-            <option key={option} value={option}>{option} Points</option>
-          ))}
-        </select>
-        <div>
-          <button onClick={handleExchange}>Exchange Points for Tokens</button>
-        </div>
-      </div>
-
-      <div className="nft-container">
-        <h3>My NFTs</h3>
-        <div className="nfts">
-          {NFTs.map((nft) => (
-            <div key={nft.id} className="nft-card">
-              <img src={nft.image} alt={`NFT ${nft.id}`} />
-              <p>{`NFT ID: ${nft.id}`}</p>
+    return (
+      <div className="wrapper">
+        {identifier && (
+          <>
+            {userId && <p>User ID: {identifier}</p>}
+            <p>Token Balance: {tokenBalance}</p>
+            <p>Points Balance: {pointsBalance}</p>
+            <div>
+              <select value={pointsToExchange} onChange={(e) => setPointsToExchange(parseInt(e.target.value))}>
+                <option value="0">Select Points to Exchange</option>
+                {exchangeOptions.map((option) => (
+                  <option key={option} value={option}>{option} Points</option>
+                ))}
+              </select>
+              <div>
+                <button onClick={handleExchange}>Exchange Points for Tokens</button>
+              </div>
             </div>
-          ))}
-        </div>
+  
+            <div className="nft-container">
+              <h3>My NFTs</h3>
+              <div className="nfts">
+                {NFTs.map((nft) => (
+                  <div key={nft.id} className="nft-card">
+                    <img src={nft.image} alt={`NFT ${nft.id}`} />
+                    <p>{`NFT ID: ${nft.id}`}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
       </div>
-    </div>
-  );
-}
-
-export default MyWallet;
+    );
+  }
+  
+  export default MyWallet;
