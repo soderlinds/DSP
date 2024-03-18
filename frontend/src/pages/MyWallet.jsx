@@ -100,7 +100,7 @@ function MyWallet() {
             {userId && <p>User ID: {identifier}</p>}
             <p>Token Balance: {tokenBalance}</p>
             <p>Points Balance: {pointsBalance}</p>
-            <div>
+            {/* <div>
               <select value={pointsToExchange} onChange={(e) => setPointsToExchange(parseInt(e.target.value))}>
                 <option value="0">Select Points to Exchange</option>
                 {exchangeOptions.map((option) => (
@@ -110,7 +110,7 @@ function MyWallet() {
               <div>
                 <button onClick={handleExchange}>Exchange Points for Tokens</button>
               </div>
-            </div>
+            </div> */}
   
             <div className="nft-container">
               <h3>My NFTs</h3>

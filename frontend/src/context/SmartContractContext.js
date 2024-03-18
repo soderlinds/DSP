@@ -1,3 +1,4 @@
+//Context now, move to backend?
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import Web3 from 'web3';
 import { contractABI, contractAddress } from '../config/contractConfig';
@@ -16,6 +17,7 @@ export const SmartContractProvider = ({ children }) => {
   const [account, setAccount] = useState('');
   const [tokenBalance, setTokenBalance] = useState(0);
   const [userNFTs, setUserNFTs] = useState('');
+  
   
   const connectWeb3 = async () => {
     try {

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useWeb2Register, useWeb2Login, useWeb2Auth } from '../context/Web2AuthContext';
-import { useSmartContract } from '../context/SmartContractContext'; 
-import '../styles/_popupscreen.sass'; 
+import { useSmartContract } from '../context/SmartContractContext';
+import '../styles/_popupscreen.sass';
 
 const PopupScreen = ({ handlePopupClose }) => {
   const { isLoggedInWeb2 } = useWeb2Auth();
@@ -19,7 +19,8 @@ const PopupScreen = ({ handlePopupClose }) => {
     username: '',
     password: ''
   });
-  const [isRegistering, setIsRegistering] = useState(false); // Track if registering or logging in
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [loginError, setLoginError] = useState(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -38,26 +39,30 @@ const PopupScreen = ({ handlePopupClose }) => {
   const handleWeb2Registration = (e) => {
     e.preventDefault();
     register(registrationFormData);
-    setIsRegistering(false); 
+    setIsRegistering(false);
   };
 
   const handleWeb2Login = (e) => {
     e.preventDefault();
     console.log("Submitting login form");
-    const loginSuccess = login(loginFormData); 
-    if (loginSuccess) {
-      handlePopupClose(); 
+    const loginSuccess = login(loginFormData);
+    if (!loginSuccess) {
+      setLoginError("Incorrect username or password. Please try again."); 
+    } else {
+      setLoginError(null); 
+      handlePopupClose();
     }
   };
 
   const handleConnectWeb3 = async (e) => {
     e.preventDefault();
-    connectWeb3(); 
-    handlePopupClose(); 
+    connectWeb3();
+    handlePopupClose();
   };
 
   const toggleRegistrationMode = () => {
     setIsRegistering(!isRegistering);
+    setLoginError(null); 
   };
 
   const handleClosePopup = () => {
@@ -69,52 +74,52 @@ const PopupScreen = ({ handlePopupClose }) => {
       <div className="popup-content" ref={popupRef}>
         <span className="close" onClick={handleClosePopup}>&times;</span>
         <div className="popup-body">
-        {isRegistering ? (
-  <div className="register-section">
-    <div className="popup-header">SDV LOYALTY GROUP</div>
-    <div className="popup-signin">REGISTER</div>
-    <form onSubmit={handleWeb2Registration}>
-      <input
-        type="text"
-        placeholder="Name"
-        value={registrationFormData.name}
-        onChange={(e) => setRegistrationFormData({ ...registrationFormData, name: e.target.value })}
-        required // Adding required attribute
-      />
-      <input
-        type="text"
-        placeholder="Username"
-        value={registrationFormData.username}
-        onChange={(e) => setRegistrationFormData({ ...registrationFormData, username: e.target.value })}
-        required 
-      />
-      <input
-        type="email"
-        placeholder="Email"
-        value={registrationFormData.email}
-        onChange={(e) => setRegistrationFormData({ ...registrationFormData, email: e.target.value })}
-        required 
-      />
-      <input
-        type="text"
-        placeholder="Phone Number"
-        value={registrationFormData.phoneNumber}
-        onChange={(e) => setRegistrationFormData({ ...registrationFormData, phoneNumber: e.target.value })}
-        required 
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={registrationFormData.password}
-        onChange={(e) => setRegistrationFormData({ ...registrationFormData, password: e.target.value })}
-        required 
-      />
-      <div>
-        <button type="submit" className="action-button login">Register</button>
-      </div>
-    </form>
-    <p>Already have an account? <span className="sign-in-link" onClick={toggleRegistrationMode}>SIGN IN</span></p>
-  </div>
+          {isRegistering ? (
+            <div className="register-section">
+              <div className="popup-header">SDV LOYALTY GROUP</div>
+              <div className="popup-signin">REGISTER</div>
+              <form onSubmit={handleWeb2Registration}>
+                <input
+                  type="text"
+                  placeholder="Name"
+                  value={registrationFormData.name}
+                  onChange={(e) => setRegistrationFormData({ ...registrationFormData, name: e.target.value })}
+                  required
+                />
+                <input
+                  type="text"
+                  placeholder="Username"
+                  value={registrationFormData.username}
+                  onChange={(e) => setRegistrationFormData({ ...registrationFormData, username: e.target.value })}
+                  required
+                />
+                <input
+                  type="email"
+                  placeholder="Email"
+                  value={registrationFormData.email}
+                  onChange={(e) => setRegistrationFormData({ ...registrationFormData, email: e.target.value })}
+                  required
+                />
+                <input
+                  type="text"
+                  placeholder="Phone Number"
+                  value={registrationFormData.phoneNumber}
+                  onChange={(e) => setRegistrationFormData({ ...registrationFormData, phoneNumber: e.target.value })}
+                  required
+                />
+                <input
+                  type="password"
+                  placeholder="Password"
+                  value={registrationFormData.password}
+                  onChange={(e) => setRegistrationFormData({ ...registrationFormData, password: e.target.value })}
+                  required
+                />
+                <div>
+                  <button type="submit" className="action-button login">Register</button>
+                </div>
+              </form>
+              <p>Already have an account? <span className="sign-in-link" onClick={toggleRegistrationMode}>SIGN IN</span></p>
+            </div>
 
           ) : (
             <div className="login-section">
@@ -134,6 +139,7 @@ const PopupScreen = ({ handlePopupClose }) => {
                   onChange={(e) => setLoginFormData({ ...loginFormData, password: e.target.value })}
                 />
                 <div>
+                {loginError && <p className="error-message">{loginError}</p>}
                   <button type="submit" className="action-button login">Sign in</button>
                 </div>
                 <div>
