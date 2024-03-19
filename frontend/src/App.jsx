@@ -6,12 +6,13 @@ import Quests from './pages/Quests';
 import AI from './pages/AI';
 import Rewards from './pages/Rewards';
 import MyWallet from './pages/MyWallet';
-import ScoreBoard from './pages/ScoreBoard';
+import LeaderBoard from './pages/LeaderBoard';
 import Admin from './pages/Admin';
 import "./styles/_app.sass";
 import Header from './components/Header';
 import { PointsProvider } from './context/PointsContext';
 import { SmartContractProvider } from './context/SmartContractContext';
+import { NFTProvider } from './context/NFTContext';
 import { Web2AuthProvider } from './context/Web2AuthContext';
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
     <PointsProvider>
       <Web2AuthProvider>
       <SmartContractProvider>
+      <NFTProvider>
           <Router>
             <Header />
             <Routes>
@@ -28,11 +30,12 @@ function App() {
               <Route path="/quests" element={<Quests />} />
               <Route path="/ai" element={<AI />} />
               <Route path="/rewards" element={<Rewards />} />
-              <Route path="/scoreboard" element={<ScoreBoard />} />
+              <Route path="/leaderboard" element={<LeaderBoard />} />
               <Route path="/mywallet" element={<MyWallet />} />
               <Route path="/admin" element={<Admin />} />
             </Routes>
           </Router>
+          </NFTProvider>
       </SmartContractProvider>
       </Web2AuthProvider>
     </PointsProvider>

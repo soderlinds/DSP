@@ -1,9 +1,9 @@
+//Context now, move to backend? Change to ethers.js?
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import Web3 from 'web3';
 import { contractABI, contractAddress } from '../config/contractConfig';
 import { membershipContractABI, membershipContractAddress } from '../config//membershipContractConfig';
 import { discountNFTContractABI, discountNFTContractAddress } from '../config/discountNFTContractConfig';
-import { productionNFTContractABI, productionNFTContractAddress } from '../config/productionNFTContractConfig';
 
 const SmartContractContext = createContext();
 
@@ -16,6 +16,7 @@ export const SmartContractProvider = ({ children }) => {
   const [account, setAccount] = useState('');
   const [tokenBalance, setTokenBalance] = useState(0);
   const [userNFTs, setUserNFTs] = useState('');
+  
   
   const connectWeb3 = async () => {
     try {
@@ -57,7 +58,7 @@ export const SmartContractProvider = ({ children }) => {
   const contract = new web3.eth.Contract(contractABI, contractAddress);
   const membershipContract = new web3.eth.Contract(membershipContractABI, membershipContractAddress);
   const discountNFTContract = new web3.eth.Contract(discountNFTContractABI, discountNFTContractAddress);
-  const productionNFTContract = new web3.eth.Contract(productionNFTContractABI, productionNFTContractAddress);
+
 
   // Membership
 
@@ -194,7 +195,6 @@ export const SmartContractProvider = ({ children }) => {
         mintDiscountNFT,
         discountNFTContract,
         purchaseDiscountNFTWithPoints,
-     
         web3,
         earnPoints,
         exchangePointsForTokens,

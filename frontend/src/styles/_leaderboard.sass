@@ -1,0 +1,110 @@
+@import './variables'
+
+$ranking-colors: #ceb379, #758a71, #6a6f8b /* Define colors for top 3 users */
+
+.scoreboard 
+  text-align: center
+  padding: 2rem
+
+  .currentuser-info
+    text-align: left
+    font-family: 'quicksand'
+    margin: 0 auto
+    display: flex
+    justify-content: flex-end
+    width: 60vw
+  
+  .currentuser-points
+    background-color: $light-background
+    padding: 1rem 2rem
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
+    border: 2px solid $accentcolor_green
+    border-radius: 1rem
+    font-weight: bold
+    color: #a0a0a0
+
+  .currentuser-ranking
+    font-weight: bold
+    olor: #a0a0a0
+
+  .currentuser
+    color: #4d4d4d 
+
+
+  .scoreboard-users 
+    position: relative
+    width: 60vw
+    gap: 1rem
+    margin: 0 auto
+    border-radius: 1rem
+    padding: 2rem
+  
+
+  .scoreboard-user 
+    position: relative
+    display: flex
+    align-items: center
+    padding: 1.5rem 1rem
+    border-radius: 0.5rem
+    border: 2px solid #ddd
+    margin-bottom: 2rem
+    background-color: $light_background
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
+
+    &:nth-child(1) 
+      border-color: #ffda09 
+
+    &:nth-child(2) 
+      border-color: #e28a16 
+
+    &:nth-child(3) 
+      border-color: #72abc5 
+
+    &:nth-child(1) .user-rank
+      font-size: 5rem
+
+    &:nth-child(2) .user-rank 
+      font-size: 4rem
+
+    &:nth-child(3) .user-rank
+      font-size: 3rem
+
+  .user-rank 
+    font-weight: bold
+    position: absolute
+    font-size: 2.5rem
+    left: 0
+    top: 50%
+    transform: translateY(-50%)
+    width: 50px
+    text-align: center
+
+  
+  .user-info 
+    font-family: 'quicksand'
+    position: absolute
+    left: 60px
+    right: 0
+    display: flex
+    justify-content: space-between
+    align-items: center
+    padding: 0 2rem
+    height: 100%
+
+    .user-id 
+      flex: 1
+      text-align: left
+    
+
+    .user-points-container 
+      font-family: 'druk'
+      font-size: 3rem
+      font-weight: bold
+      background-color: white
+      display: flex
+      align-items: center
+      justify-content: center
+      padding: 0.3rem 2rem
+      border-radius: 0.8rem
+
+
