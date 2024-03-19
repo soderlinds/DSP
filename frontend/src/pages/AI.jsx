@@ -89,7 +89,6 @@ function AI() {
               onChange={handleAnswerChange}
               onKeyDown={handleKeyPress}
               className="answer-bubble-input"
-              placeholder="Type your answer..."
             />
           )}
         </div>

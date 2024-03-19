@@ -7,17 +7,29 @@ $ranking-colors: #ceb379, #758a71, #6a6f8b /* Define colors for top 3 users */
   padding: 2rem
 
   .currentuser-info
+    text-align: left
+    font-family: 'quicksand'
     margin: 0 auto
     display: flex
     justify-content: flex-end
     width: 60vw
   
-  .user-points
+  .currentuser-points
     background-color: $light-background
     padding: 1rem 2rem
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
     border: 2px solid $accentcolor_green
     border-radius: 1rem
+    font-weight: bold
+    color: #a0a0a0
+
+  .currentuser-ranking
+    font-weight: bold
+    olor: #a0a0a0
+
+  .currentuser
+    color: #4d4d4d 
+
 
   .scoreboard-users 
     position: relative
@@ -69,6 +81,7 @@ $ranking-colors: #ceb379, #758a71, #6a6f8b /* Define colors for top 3 users */
 
   
   .user-info 
+    font-family: 'quicksand'
     position: absolute
     left: 60px
     right: 0

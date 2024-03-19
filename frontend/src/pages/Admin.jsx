@@ -3,10 +3,7 @@ import { useSmartContract } from '../context/SmartContractContext';
 import '../styles/_admin.sass';
 
 const Admin = () => {
-  const { createNFT, fractionalizeNFT, setAttendee, airdropNFTShares, mintDiscountNFT, } = useSmartContract();
-  const [artistAddress, setArtistAddress] = useState('');
-  const [totalShares, setTotalShares] = useState(0);
-  const [attendeeAddress, setAttendeeAddress] = useState('');
+  const { mintDiscountNFT, } = useSmartContract();
   const [pointsInput, setPointsInput] = useState('');
   const [initialSupplyInput, setInitialSupplyInput] = useState('');
 

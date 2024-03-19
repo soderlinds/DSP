@@ -11,7 +11,7 @@ function LeaderBoard() {
   const { userId } = useWeb2Auth();
   const [scoreboardData, setScoreboardData] = useState([]);
   const [pointsBalance] = usePointsBalance(userId);
-  const [userRanking, setUserRanking] = useState(null); // State to store current user's ranking
+  const [userRanking, setUserRanking] = useState(null); 
 
   useEffect(() => {
     fetchScoreboardData();
@@ -27,7 +27,6 @@ function LeaderBoard() {
       const nonZeroUsers = filterZeroPointsUsers(sortedUsers);
       setScoreboardData(nonZeroUsers);
 
-      // Find current user's ranking
       const currentUserRanking = nonZeroUsers.findIndex(user => user.userId === userId);
       setUserRanking(currentUserRanking !== -1 ? currentUserRanking + 1 : null);
     } catch (error) {
@@ -63,8 +62,8 @@ function LeaderBoard() {
     <div className="scoreboard">
       <div className="currentuser-info">
         {identifier && (
-          <div className="user-points">Your points: {pointsBalance}
-          {userRanking && <div className="user-ranking">Your ranking: #{userRanking}</div>}
+          <div className="currentuser-points">Your points:<span className="currentuser"> {pointsBalance}</span>
+          {/* {userRanking && <div className="currentuser-ranking">Your ranking:<span className="currentuser"> #{userRanking}</span></div>} */}
           </div>
         )}
         

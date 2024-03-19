@@ -1,72 +1,63 @@
 @import './variables'
 
-.chat-wrapper 
+.chat-wrapper
   max-width: 40rem
   margin: 0 auto
   padding: 2rem
 
-
-.chat 
+.chat
   margin-bottom: 2rem
   margin-top: 5rem
   text-align: left
 
-
-.conversation 
+.conversation
   display: flex
   flex-direction: column
   align-items: flex-start
-
 
 .message-text
   font-family: 'quicksand'
   font-size: 1.4rem
   text-align: left
 
-
-.message 
+.message
   max-width: 70%
   margin-bottom: 1rem
   padding: 0rem 1.5rem
   background-color: $white_background
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
   animation: pop-up 0.3s ease-in-out
-  
 
-@keyframes pop-up 
-  from 
+@keyframes pop-up
+  from
     opacity: 0
     transform: translateY(20px)
-  
-  to 
+
+  to
     opacity: 1
     transform: translateY(0)
-  
 
-.message.user 
+.message.user
   border-radius: 20px 20px 5px 20px
   align-self: flex-end
   background-color: #ccc
 
-
-.message.ai 
+.message.ai
   border-radius: 20px 20px 20px 5px
   align-self: flex-start
   background-color: $white_background
 
-@keyframes typing 
-  0% 
+@keyframes typing
+  0%
     opacity: 0
-  
-  50% 
+
+  50%
     opacity: 1
-  
-  100% 
+
+  100%
     opacity: 0
-  
 
-
-.answer-bubble 
+.answer-bubble
   text-align: left
   display: flex
   align-items: center
@@ -75,8 +66,7 @@
   margin-left: auto
   margin-right: auto
 
-
-.answer-bubble-input 
+.answer-bubble-input
   flex: 1
   font-size: 0.9rem
   margin-top: 3rem
@@ -86,8 +76,8 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
   border-radius: 10px
 
-
-button.contribute-button 
+  
+button.contribute-button
   background-color: $dark_blue
   font-size: 1.2rem
   font-family: 'quicksand'
@@ -95,9 +85,5 @@ button.contribute-button
   border: 2px solid black
   border-radius: 10px
 
-
-button.contribute-button:hover 
+button.contribute-button:hover
   background-color: $light_blue
-
-
-

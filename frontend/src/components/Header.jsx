@@ -13,7 +13,7 @@ const Header = () => {
 
   const identifier = account || userId;
 
-  const contractCreatorAddress = '0x964D70403c038F1F9C73adcfA6066dd626B882C5'; 
+  const contractCreatorAddress = '0x2dCb11EeD42F6199658B66BC45D24470CcE2B710'; 
   const isAdmin = account && account.toLowerCase() === contractCreatorAddress.toLowerCase();
   const isLoggedIn = identifier !== null;
 
