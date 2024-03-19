@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Market from './pages/Market';
@@ -14,6 +14,7 @@ import { PointsProvider } from './context/PointsContext';
 import { SmartContractProvider } from './context/SmartContractContext';
 import { NFTProvider } from './context/NFTContext';
 import { Web2AuthProvider } from './context/Web2AuthContext';
+
 
 function App() {
  
