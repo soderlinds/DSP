@@ -1,8 +1,7 @@
-//Context now, move to backend? Change to ethers.js?
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import Web3 from 'web3';
+import { ethers } from 'ethers';
 import { contractABI, contractAddress } from '../config/contractConfig';
-import { membershipContractABI, membershipContractAddress } from '../config//membershipContractConfig';
+import { membershipContractABI, membershipContractAddress } from '../config/membershipContractConfig';
 import { discountNFTContractABI, discountNFTContractAddress } from '../config/discountNFTContractConfig';
 
 const SmartContractContext = createContext();
@@ -15,13 +14,15 @@ export const SmartContractProvider = ({ children }) => {
   const [active, setActive] = useState(false);
   const [account, setAccount] = useState('');
   const [tokenBalance, setTokenBalance] = useState(0);
-  const [userNFTs, setUserNFTs] = useState('');
-  
-  
+  const [userNFTs, setUserNFTs] = useState([]);
+
   const connectWeb3 = async () => {
     try {
-      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
       setActive(true);
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const accounts = await provider.listAccounts();
       setAccount(accounts[0]);
     } catch (error) {
       console.error('Error loading MetaMask:', error);
@@ -42,7 +43,7 @@ export const SmartContractProvider = ({ children }) => {
     try {
       if (window.ethereum && window.ethereum.isMetaMask) {
         await window.ethereum.request({ method: 'wallet_requestPermissions', params: [{ eth_accounts: {} }] });
-        await window.ethereum.request({ method: 'eth_logout' }); 
+        await window.ethereum.request({ method: 'eth_logout' });
         setActive(false);
         setAccount('');
       } else {
@@ -52,19 +53,16 @@ export const SmartContractProvider = ({ children }) => {
       console.error('Error logging out from MetaMask:', error);
     }
   };
-  
 
-  const web3 = new Web3(window.ethereum);
-  const contract = new web3.eth.Contract(contractABI, contractAddress);
-  const membershipContract = new web3.eth.Contract(membershipContractABI, membershipContractAddress);
-  const discountNFTContract = new web3.eth.Contract(discountNFTContractABI, discountNFTContractAddress);
-
-
-  // Membership
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const contract = new ethers.Contract(contractAddress, contractABI, signer);
+  const membershipContract = new ethers.Contract(membershipContractAddress, membershipContractABI, signer);
+  const discountNFTContract = new ethers.Contract(discountNFTContractAddress, discountNFTContractABI, signer);
 
   const mintMembershipToken = async (metadataURI) => {
     try {
-      await membershipContract.methods.mint(metadataURI).send({ from: account });
+      await membershipContract.mint(metadataURI);
     } catch (error) {
       console.error("Error minting membership NFT:", error);
     }
@@ -72,15 +70,12 @@ export const SmartContractProvider = ({ children }) => {
 
   const getUserNFT = async () => {
     try {
-      const events = await membershipContract.getPastEvents('NFTMinted', {
-        filter: { owner: account }, 
-        fromBlock: 0,
-        toBlock: 'latest'
-      });
+      const filter = membershipContract.filters.NFTMinted(account, null, null);
+      const events = await membershipContract.queryFilter(filter);
   
       const userNFTs = events.map(event => {
-        const tokenId = event.returnValues.tokenId;
-        const metadataURI = event.returnValues.metadataURI;
+        const tokenId = event.args[1];
+        const metadataURI = event.args[2];
         console.log("Displaying NFT with token ID", tokenId, "and metadata URI", metadataURI);
         return { tokenId, metadataURI };
       });
@@ -92,33 +87,22 @@ export const SmartContractProvider = ({ children }) => {
     }
   };
   
-
-  useEffect(() => {
-    getUserNFT()
-      .then(nfts => setUserNFTs(nfts))
-      .catch(error => console.error('Error fetching user NFTs:', error));
-  }, []);
-  
-
-
-  // SDV Token
-
-    const fetchBalances = async () => {
-      try {
-        if (account) {
-          const balance = await contract.methods.balanceOf(account).call();
-          setTokenBalance(Number(balance));
-          console.log("Token balance:", balance);
-        }
-      } catch (error) {
-        console.error('Error fetching token balance:', error);
+ 
+  const fetchBalances = async () => {
+    try {
+      if (account) {
+        const balance = await contract.balanceOf(account);
+        setTokenBalance(Number(balance));
+        console.log("Token balance:", balance);
       }
-    };
-
+    } catch (error) {
+      console.error('Error fetching token balance:', error);
+    }
+  };
 
   const earnPoints = async (amount) => {
     try {
-      await contract.methods.earnPoints(amount).send({ from: account, gas: 300000 });
+      await contract.earnPoints(amount);
     } catch (error) {
       console.error('Error earning points:', error);
     }
@@ -126,7 +110,7 @@ export const SmartContractProvider = ({ children }) => {
 
   const exchangePointsForTokens = async (amount) => {
     try {
-      await contract.methods.exchangePointsForTokens(amount).send({ from: account, gas: 300000 });
+      await contract.exchangePointsForTokens(amount);
     } catch (error) {
       console.error('Error exchanging points for tokens:', error);
     }
@@ -134,7 +118,7 @@ export const SmartContractProvider = ({ children }) => {
 
   const airdropTokens = async (users, amounts) => {
     try {
-      await contract.methods.airdropTokens(users, amounts).send({ from: account, gas: 300000 });
+      await contract.airdropTokens(users, amounts);
     } catch (error) {
       console.error('Error airdropping tokens:', error);
     }
@@ -142,7 +126,7 @@ export const SmartContractProvider = ({ children }) => {
 
   const buyMerch = async (amount) => {
     try {
-      await contract.methods.purchaseMerchandise(amount).send({ from: account, gas: 300000 });
+      await contract.purchaseMerchandise(amount);
     } catch (error) {
       console.error('Error purchasing merchandise:', error);
     }
@@ -150,33 +134,29 @@ export const SmartContractProvider = ({ children }) => {
 
   const contributeToPerformance = async (amount) => {
     try {
-      await contract.methods.contributeToPerformance(amount).send({ from: account, gas: 300000 });
+      await contract.contributeToPerformance(amount);
     } catch (error) {
       console.error('Error contributing to artwork:', error);
     }
   };
 
-
-  //Discount NFT
-
   const mintDiscountNFT = async (initialSupply, offchainPoints) => {
     try {
-        await discountNFTContract.methods.mint(initialSupply, offchainPoints).send({ from: account, gas: 300000 });
-        console.log("Discount NFT minted successfully!");
+      await discountNFTContract.mint(initialSupply, offchainPoints);
+      console.log("Discount NFT minted successfully!");
     } catch (error) {
-        console.error("Error minting discount NFT:", error);
+      console.error("Error minting discount NFT:", error);
     }
-};
+  };
 
-  
   const purchaseDiscountNFTWithPoints = async (tokenId, amount) => {
     try {
-      await discountNFTContract.methods.purchaseNFTWithPoints(tokenId, amount).send({ from: account, gas: 300000 });
+      await discountNFTContract.purchaseNFTWithPoints(tokenId, amount);
       console.log("Discount NFT purchased successfully with off-chain points!");
     } catch (error) {
       console.error("Error purchasing discount NFT with points:", error);
     }
-  };  
+  };
 
   return (
     <SmartContractContext.Provider
@@ -195,9 +175,6 @@ export const SmartContractProvider = ({ children }) => {
         mintDiscountNFT,
         discountNFTContract,
         purchaseDiscountNFTWithPoints,
-        web3,
-        earnPoints,
-        exchangePointsForTokens,
       }}
     >
       {children}

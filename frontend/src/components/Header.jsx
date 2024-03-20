@@ -3,13 +3,15 @@ import { NavLink } from 'react-router-dom';
 import { useWeb2Auth } from '../context/Web2AuthContext';
 import { useNFTContext } from '../context/NFTContext'; 
 import { useSmartContract } from '../context/SmartContractContext';
-import ConnectButton from './ConnectButton';
+import LoginLogoutButton from '../components/LoginLogoutButton';
 import '../styles/_header.sass';
 
 const Header = () => {
   const { account } = useSmartContract();
   const { renderUserNFTs } = useNFTContext(); 
   const { userId } = useWeb2Auth();
+  
+  
 
   const identifier = account || userId;
 
@@ -33,7 +35,7 @@ const Header = () => {
           </ul>
         </div>
         <div className="connected">
-          <ConnectButton size="small" />
+         <LoginLogoutButton />
           {renderUserNFTs()}
         </div>
       </nav>

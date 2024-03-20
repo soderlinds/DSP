@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PopupScreen from './PopupScreen';
 import { useWeb2Register, useWeb2Login, useWeb2Auth } from '../context/Web2AuthContext';
 import { useSmartContract } from '../context/SmartContractContext';
-import '../styles/_connectbutton.sass';
+
 
 const ConnectButton = ({ size }) => {
   const [showPopup, setShowPopup] = useState(false);

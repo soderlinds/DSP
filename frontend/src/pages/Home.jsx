@@ -1,41 +1,55 @@
-import React, { useState, useEffect } from 'react';
-import Web2LoggedInScreen from '../components/Web2LoggedInScreen';
+import React from 'react';
 import Web3LoggedInScreen from '../components/Web3LoggedInScreen';
-import { useWeb2Auth } from '../context/Web2AuthContext';
-import { useSmartContract } from '../context/SmartContractContext';
-import ConnectButton from '../components/ConnectButton';
+import LoginLogoutButton from '../components/LoginLogoutButton';
 import { usePrivy } from '@privy-io/react-auth';
+import '../styles/_home.sass';
 
 const Homepage = () => {
-  const { isLoggedInWeb2, userId, username } = useWeb2Auth();
-  const { account } = useSmartContract();
-  const { ready, authenticated, login } = usePrivy();
-  const [showPopup, setShowPopup] = useState(false);
-  
+  const { user } = usePrivy(); 
 
-  const disableLogin = !ready || (ready && authenticated);
-  
   return (
-    <div className="container">
+    <div>
       <h1>SDV LOYALTY GROUP</h1>
-      <div className="button-wrapper">
-        {!isLoggedInWeb2 && !showPopup && !account && (
-          <ConnectButton size="big" />
+      <div className="home-wrapper">
+        {user && user.id && (
+          <Web3LoggedInScreen account={user.account} />
         )}
-        {isLoggedInWeb2 && !account && (
-          <Web2LoggedInScreen userId={userId} username={username} />
-        )}
-        {account && (
-          <Web3LoggedInScreen account={account} />
-        )}
-        {!authenticated && (
-          <button disabled={disableLogin} onClick={login}>
-            Connect
-          </button>
-        )}
+        <LoginLogoutButton userId={user ? user.id : null} />
       </div>
     </div>
   );
 };
 
 export default Homepage;
+
+
+// import React from 'react';
+// import Web2LoggedInScreen from '../components/Web2LoggedInScreen';
+// import Web3LoggedInScreen from '../components/Web3LoggedInScreen';
+// import { useWeb2Auth } from '../context/Web2AuthContext';
+// import { useSmartContract } from '../context/SmartContractContext';
+// import LoginLogoutButton from '../components/LoginLogoutButton';
+// import '../styles/_home.sass';
+
+
+// const Homepage = () => {
+//   const { isLoggedInWeb2, userId, username } = useWeb2Auth();
+//   const { account } = useSmartContract();
+
+//   return (
+//     <div>
+//       <h1>SDV LOYALTY GROUP</h1>
+//       <div className="home-wrapper">
+//         {isLoggedInWeb2 && !account && (
+//           <Web2LoggedInScreen userId={userId} username={username} />
+//         )}
+//         {account && (
+//           <Web3LoggedInScreen account={account} />
+//         )}
+//         <LoginLogoutButton />
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Homepage;

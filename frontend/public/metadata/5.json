@@ -1,0 +1,16 @@
+{
+    "name": "NFT 5",
+    "description": "10% discount on tickets",
+    "image": "/images/5.png",
+    "attributes": [
+      {
+        "trait_type": "Discount Percentage",
+        "value": "10%"
+      },
+      {
+        "trait_type": "Additional Attribute",
+        "value": "Value for NFT 5"
+      }
+    ]
+  }
+  
