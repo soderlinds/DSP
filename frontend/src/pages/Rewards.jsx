@@ -27,49 +27,43 @@ const Rewards = () => {
 
 
   const fetchNFTs = async () => {
-  try {
-    const nftData = [];
-    const mintedTokens = await discountNFTContract.getPastEvents('NFTMinted', {
-      fromBlock: 0,
-      toBlock: 'latest'
-    });
+    try {
+      const nftData = [];
 
-    for (const event of mintedTokens) {
-      const tokenURI = `metadata/${event.returnValues.tokenId}.json`;
-      const imageURI = `images/${event.returnValues.tokenId}.png`;
-
-      
-      const metadataResponse = await fetch(process.env.PUBLIC_URL + tokenURI);
-      const metadata = await metadataResponse.json();
-
-      const imageResponse = await fetch(process.env.PUBLIC_URL + imageURI);
-      const imageData = await imageResponse.blob();
-      const imageUrl = URL.createObjectURL(imageData);
-
-      const tokenId = Number(event.returnValues.tokenId);
-      const offchainPoints = Number(event.returnValues.offchainPoints);
-      const initialSupply = Number(event.returnValues.initialSupply);
-    
-
-
-      nftData.push({
-        id: tokenId,
-        image: imageUrl,
-        metadata: metadata,
-        amount: initialSupply,
-        offchainPoints: offchainPoints,
-      });
+      const events = await discountNFTContract.queryFilter('NFTMinted');
+  
+      for (const event of events) {
+        const tokenId = Number(event.args.tokenId);
+        const offchainPoints = Number(event.args.offchainPoints);
+        const initialSupply = Number(event.args.initialSupply);
+  
+        const tokenURI = `metadata/${tokenId}.json`;
+        const imageURI = `images/${tokenId}.png`;
+  
+        const metadataResponse = await fetch(process.env.PUBLIC_URL + tokenURI);
+        const metadata = await metadataResponse.json();
+  
+        const imageResponse = await fetch(process.env.PUBLIC_URL + imageURI);
+        const imageData = await imageResponse.blob();
+        const imageUrl = URL.createObjectURL(imageData);
+  
+        nftData.push({
+          id: tokenId,
+          image: imageUrl,
+          metadata: metadata,
+          amount: initialSupply,
+          offchainPoints: offchainPoints,
+        });
+      }
+  
+      console.log('Fetched NFTs:', nftData);
+  
+      setNFTs(nftData);
+    } catch (error) {
+      console.error('Error fetching NFT data:', error);
     }
-
-    console.log('Fetched NFTs:', nftData);
-    console.log(pointsBalance);
-    console.log(identifier);
-
-    setNFTs(nftData);
-  } catch (error) {
-    console.error('Error fetching NFT data:', error);
-  }
-};
+  };
+  
 
 
 const handleExchangeNFT = async (tokenId, offchainPoints) => {

@@ -14,6 +14,7 @@ function MyWallet() {
 
   const identifier = account ? account : userId;
 
+  
   useEffect(() => {
     fetchPointsBalance();
     fetchBalances();
@@ -23,15 +24,13 @@ function MyWallet() {
   const fetchNFTs = async () => {
     try {
       const nftData = [];
-      const mintedTokens = await discountNFTContract.getPastEvents('NFTPurchased', {
-        filter: { buyer: account }, 
-        fromBlock: 0,
-        toBlock: 'latest'
-      });
-  
-      for (const event of mintedTokens) {
-        const tokenURI = `metadata/${event.returnValues.tokenId}.json`;
-        const imageURI = `images/${event.returnValues.tokenId}.png`;
+    
+      const filter = discountNFTContract.filters.NFTPurchased(account);
+      const events = await discountNFTContract.queryFilter(filter);
+      
+      for (const event of events) {
+        const tokenURI = `metadata/${event.args.tokenId}.json`;
+        const imageURI = `images/${event.args.tokenId}.png`;
   
         const metadataResponse = await fetch(process.env.PUBLIC_URL + tokenURI);
         const metadata = await metadataResponse.json();
@@ -40,9 +39,9 @@ function MyWallet() {
         const imageData = await imageResponse.blob();
         const imageUrl = URL.createObjectURL(imageData);
   
-        const tokenId = Number(event.returnValues.tokenId);
-        const offchainPoints = Number(event.returnValues.offchainPoints);
-        const initialSupply = Number(event.returnValues.initialSupply);
+        const tokenId = Number(event.args.tokenId);
+        const offchainPoints = Number(event.args.offchainPoints);
+        const initialSupply = Number(event.args.initialSupply);
   
         nftData.push({
           id: tokenId,
@@ -60,7 +59,6 @@ function MyWallet() {
       console.error('Error fetching NFT data:', error);
     }
   };
-  
 
   const fetchPointsBalance = async () => {
     try {
