@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { usePoints } from '../context/PointsContext'; 
 import { useSmartContract } from '../context/SmartContractContext';
+import { useNFTContext } from '../context/NFTContext'; 
 import { usePrivy } from '@privy-io/react-auth'; 
 import '../styles/_nfts.sass';
 
@@ -9,6 +10,7 @@ function MyWallet() {
   const { points, deductPoints, addPoints } = usePoints(); 
   const { user } = usePrivy(); 
   const [pointsBalance, setPointsBalance] = useState(0);
+  const { renderUserNFTs } = useNFTContext(); 
   const [NFTs, setNFTs] = useState([]);
   const [pointsToExchange, setPointsToExchange] = useState(0);
 
@@ -111,6 +113,8 @@ function MyWallet() {
             </div> */}
   
             <div className="nft-container">
+              <h3>My membership NFT: 
+                <div className="nft">{renderUserNFTs()}</div></h3>
               <h3>My NFTs</h3>
               <div className="nfts">
                 {NFTs.map((nft) => (

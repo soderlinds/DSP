@@ -11,7 +11,7 @@ const Rewards = () => {
   const [nfts, setNFTs] = useState([]);
   const [pointsBalance, setPointsBalance] = useState(0);
 
-  const identifier = user.id;
+  const identifier = user ? user.id : null;
 
   useEffect(() => {
     fetchNFTs();

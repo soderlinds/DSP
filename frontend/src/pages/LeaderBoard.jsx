@@ -8,14 +8,14 @@ function LeaderBoard() {
   const { getAllPoints } = usePoints();
   const { user } = usePrivy();
   const [scoreboardData, setScoreboardData] = useState([]);
-  const [pointsBalance] = usePointsBalance(user.id);
+  const [pointsBalance] = usePointsBalance(user ? user.id : null);
   const [userRanking, setUserRanking] = useState(null);
 
   useEffect(() => {
     fetchScoreboardData();
-  }, [user.id]);
+  }, [user ? user.id : null]);
 
-  const identifier = user.id;
+  const identifier = user ? user.id : null; 
 
   const fetchScoreboardData = async () => {
     try {
