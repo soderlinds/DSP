@@ -3,6 +3,7 @@ import { ethers } from 'ethers';
 import { contractABI, contractAddress } from '../config/contractConfig';
 import { membershipContractABI, membershipContractAddress } from '../config/membershipContractConfig';
 import { discountNFTContractABI, discountNFTContractAddress } from '../config/discountNFTContractConfig';
+import { usePrivy, useWallets } from '@privy-io/react-auth';
 
 const SmartContractContext = createContext();
 
@@ -15,44 +16,8 @@ export const SmartContractProvider = ({ children }) => {
   const [account, setAccount] = useState('');
   const [tokenBalance, setTokenBalance] = useState(0);
   const [userNFTs, setUserNFTs] = useState([]);
-
-  const connectWeb3 = async () => {
-    try {
-      await window.ethereum.request({ method: 'eth_requestAccounts' });
-      setActive(true);
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const accounts = await provider.listAccounts();
-      setAccount(accounts[0]);
-    } catch (error) {
-      console.error('Error loading MetaMask:', error);
-    }
-  };
-
-  useEffect(() => {
-    if (window.ethereum) {
-      const accounts = window.ethereum.selectedAddress;
-      if (accounts) {
-        setActive(true);
-        setAccount(accounts);
-      }
-    }
-  }, []);
-
-  const logoutWeb3 = async () => {
-    try {
-      if (window.ethereum && window.ethereum.isMetaMask) {
-        await window.ethereum.request({ method: 'wallet_requestPermissions', params: [{ eth_accounts: {} }] });
-        await window.ethereum.request({ method: 'eth_logout' });
-        setActive(false);
-        setAccount('');
-      } else {
-        console.error('MetaMask is not installed or not detected.');
-      }
-    } catch (error) {
-      console.error('Error logging out from MetaMask:', error);
-    }
-  };
+  const { user } = usePrivy(); 
+  const {ready, wallets} = useWallets();
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
@@ -70,7 +35,7 @@ export const SmartContractProvider = ({ children }) => {
 
   const getUserNFT = async () => {
     try {
-      const filter = membershipContract.filters.NFTMinted(account, null, null);
+      const filter = membershipContract.filters.NFTMinted(user.wallet.address, null, null);
       const events = await membershipContract.queryFilter(filter);
   
       const userNFTs = events.map(event => {
@@ -91,7 +56,7 @@ export const SmartContractProvider = ({ children }) => {
   const fetchBalances = async () => {
     try {
       if (account) {
-        const balance = await contract.balanceOf(account);
+        const balance = await contract.balanceOf(user.wallet.address);
         setTokenBalance(Number(balance));
         console.log("Token balance:", balance);
       }
@@ -161,16 +126,16 @@ export const SmartContractProvider = ({ children }) => {
   return (
     <SmartContractContext.Provider
       value={{
-        connectWeb3,
-        logoutWeb3,
         mintMembershipToken,
         fetchBalances,
         getUserNFT,
         active,
         account,
         tokenBalance,
+        earnPoints,
         airdropTokens,
         buyMerch,
+        exchangePointsForTokens,
         contributeToPerformance,
         mintDiscountNFT,
         discountNFTContract,

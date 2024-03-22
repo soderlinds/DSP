@@ -8,19 +8,18 @@ import Rewards from './pages/Rewards';
 import MyWallet from './pages/MyWallet';
 import LeaderBoard from './pages/LeaderBoard';
 import Admin from './pages/Admin';
-import "./styles/_app.sass";
+import "./styles/_global.sass";
 import Header from './components/Header';
 import { PointsProvider } from './context/PointsContext';
 import { SmartContractProvider } from './context/SmartContractContext';
 import { NFTProvider } from './context/NFTContext';
-import { Web2AuthProvider } from './context/Web2AuthContext';
+
 
 
 function App() {
  
   return (
     <PointsProvider>
-      <Web2AuthProvider>
       <SmartContractProvider>
       <NFTProvider>
           <Router>
@@ -38,7 +37,6 @@ function App() {
           </Router>
           </NFTProvider>
       </SmartContractProvider>
-      </Web2AuthProvider>
     </PointsProvider>
   );
 }

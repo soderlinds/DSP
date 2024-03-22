@@ -414,6 +414,6 @@ export const membershipContractABI = [
   }
 ];
     
-export const membershipContractAddress = '0xfd48959cb8bf7ca0030c2f3612c591662157c464';
+export const membershipContractAddress = '0x48e065e2cb28c42aa6bcc9ad40d4542880ea260a';
 
 // export const membershipContractAddress = '0xa1b1590d618d940379b74479b9b238d3b0badf81';

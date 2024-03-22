@@ -1,23 +1,17 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { useWeb2Auth } from '../context/Web2AuthContext';
+import { usePrivy } from '@privy-io/react-auth';
 import { useNFTContext } from '../context/NFTContext'; 
-import { useSmartContract } from '../context/SmartContractContext';
 import LoginLogoutButton from '../components/LoginLogoutButton';
 import '../styles/_header.sass';
 
 const Header = () => {
-  const { account } = useSmartContract();
   const { renderUserNFTs } = useNFTContext(); 
-  const { userId } = useWeb2Auth();
+  const { user } = usePrivy();
   
-  
-
-  const identifier = account || userId;
-
   const contractCreatorAddress = '0x2dCb11EeD42F6199658B66BC45D24470CcE2B710'; 
-  const isAdmin = account && account.toLowerCase() === contractCreatorAddress.toLowerCase();
-  const isLoggedIn = identifier !== null;
+  const isAdmin = user && user.wallet && user.wallet.address.toLowerCase() === contractCreatorAddress.toLowerCase();
+  const isLoggedIn = !!user;
 
   return (
     <header className="header">
@@ -35,8 +29,8 @@ const Header = () => {
           </ul>
         </div>
         <div className="connected">
-         <LoginLogoutButton />
-          {renderUserNFTs()}
+          <LoginLogoutButton size="small" /> 
+          <span className="nft">{renderUserNFTs()}</span>
         </div>
       </nav>
     </header>

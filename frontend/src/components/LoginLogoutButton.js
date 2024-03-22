@@ -1,24 +1,31 @@
 import React from 'react';
 import { usePrivy } from '@privy-io/react-auth';
+import '../styles/_loginlogoutbutton.sass';
 
-const LoginLogoutButton = () => {
+const LoginLogoutButton = ({ size }) => {
     const { ready, authenticated, user, login, logout } = usePrivy();
     const disableLogin = !ready || (ready && authenticated);
-    
+
     console.log(user);
     return (
-        <>
+        <div className="connectbutton-wrapper">
             {!authenticated ? (
-                <button disabled={disableLogin} onClick={login}>
+                <button
+                    className={`connect-button ${size === 'small' ? 'small-connect-button' : ''}`}
+                    disabled={disableLogin}
+                    onClick={login}
+                >
                     Connect
                 </button>
             ) : (
-                <button onClick={logout}>Logout</button>
+                <button
+                    className={`connect-button ${size === 'small' ? 'small-connect-button' : ''}`}
+                    onClick={logout}
+                >
+                    Disconnect
+                </button>
             )}
-            {user && user.id && (
-                <p>User ID: {user.id}</p>
-            )}
-        </>
+        </div>
     );
 };
 

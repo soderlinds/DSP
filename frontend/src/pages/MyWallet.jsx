@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { usePoints } from '../context/PointsContext'; 
 import { useSmartContract } from '../context/SmartContractContext';
-import { useWeb2Auth } from '../context/Web2AuthContext'; 
-import '../styles/_mywallet.sass';
+import { usePrivy } from '@privy-io/react-auth'; 
+import '../styles/_nfts.sass';
 
 function MyWallet() {
   const { account, tokenBalance, exchangePointsForTokens, fetchBalances, discountNFTContract } = useSmartContract();
   const { points, deductPoints, addPoints } = usePoints(); 
-  const { userId } = useWeb2Auth(); 
+  const { user } = usePrivy(); 
   const [pointsBalance, setPointsBalance] = useState(0);
   const [NFTs, setNFTs] = useState([]);
   const [pointsToExchange, setPointsToExchange] = useState(0);
 
-  const identifier = account ? account : userId;
+  const identifier = user.id;
 
   
   useEffect(() => {
@@ -95,7 +95,7 @@ function MyWallet() {
       <div className="wrapper">
         {identifier && (
           <>
-            {userId && <p>User ID: {identifier}</p>}
+            {user && <p>User ID: {identifier}</p>}
             <p>Token Balance: {tokenBalance}</p>
             <p>Points Balance: {pointsBalance}</p>
             {/* <div>

@@ -1,14 +1,12 @@
 import { useState, useEffect } from 'react';
 import { usePoints } from '../context/PointsContext';
-import { useSmartContract } from '../context/SmartContractContext';
-import { useWeb2Auth } from '../context/Web2AuthContext';
+import { usePrivy } from '@privy-io/react-auth';
 
 function usePointsBalance() {
-  const { account } = useSmartContract();
   const { points, addPoints } = usePoints();
-  const { userId } = useWeb2Auth();
+  const { user } = usePrivy();
   const [pointsBalance, setPointsBalance] = useState(0);
-  const identifier = account ? account : userId;
+  const identifier = user.id;
 
   useEffect(() => {
     const totalPointsEarned = points
