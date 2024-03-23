@@ -6,6 +6,7 @@ import Quests from './pages/Quests';
 import AI from './pages/AI';
 import Rewards from './pages/Rewards';
 import MyWallet from './pages/MyWallet';
+import Farcaster from './pages/Farcaster';
 import LeaderBoard from './pages/LeaderBoard';
 import Admin from './pages/Admin';
 import "./styles/_global.sass";
@@ -31,6 +32,7 @@ function App() {
               <Route path="/ai" element={<AI />} />
               <Route path="/rewards" element={<Rewards />} />
               <Route path="/leaderboard" element={<LeaderBoard />} />
+              <Route path="/farcaster" element={<Farcaster />} />
               <Route path="/mywallet" element={<MyWallet />} />
               <Route path="/admin" element={<Admin />} />
             </Routes>

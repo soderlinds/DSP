@@ -1,5 +1,5 @@
 import React from 'react';
-import LoggedInScreen from '../components/LoggedInScreen';
+import LoggedInScreen from '../pages/LoggedInScreen';
 import LoginLogoutButton from '../components/LoginLogoutButton';
 import { usePrivy } from '@privy-io/react-auth';
 import '../styles/_home.sass';

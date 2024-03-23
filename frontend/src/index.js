@@ -1,3 +1,4 @@
+import {sepolia} from 'viem/chains';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
@@ -11,17 +12,15 @@ root.render(
     <PrivyProvider
       appId="clt2kvuvj024p28uwkazvbxdh"
       config={{
-        loginMethods: ['email', 'google', 'wallet'],
+        loginMethods: ['email', 'google', 'farcaster', 'wallet'],
         appearance: {
           theme: 'light',
-          accentColor: '#676FFF',
+          accentColor: '#112c62',
           logo: 'https://i.imghippo.com/files/RtZpN1710845783.png',
         },
+        defaultChain: sepolia,
         embeddedWallets: {
-          createOnLogin: 'off',
-        },
-        chain: {
-          name: 'baseSepolia',
+          createOnLogin: 'users-without-wallets',
         },
       }}
     >

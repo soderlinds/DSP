@@ -7,9 +7,9 @@ const LoggedInScreen = () => {
   const { user, connectWallet} = usePrivy(); 
   const {wallets} = useWallets();
  
-
+//Take away Connect to web3? Or keep an option to not have a wallet?
   const handleMintButtonClick = () => {
-    if (user.wallet) {
+    if (userNFTs.length === 0 && user.wallet) {
       handleMintNFT();
     } else {
       connectWallet();

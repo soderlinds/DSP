@@ -5,6 +5,7 @@ import { useSmartContract } from '../context/SmartContractContext';
 import '../styles/_nfts.sass';
 
 const Rewards = () => {
+  
   const { discountNFTContract, purchaseDiscountNFTWithPoints } = useSmartContract();
   const { points, deductPoints } = usePoints();
   const { user } = usePrivy(); 
