@@ -1,0 +1,8 @@
+{
+  "sepolia": {
+    "membershipContract": {
+      "address": "0x48e065e2cb28c42aa6bcc9ad40d4542880ea260a",
+      "startBlock": 5537732
+    }
+  }
+}
