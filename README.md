@@ -1,3 +1,3 @@
 # DSP
-Internship project
+Internship project, prototype
 Loyalty group token
