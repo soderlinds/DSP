@@ -1,0 +1,41 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: schema.graphql
+dataSources:
+  - kind: ethereum
+    name: membershipContract
+    network: sepolia
+    source:
+      address: "0x48e065e2cb28c42aa6bcc9ad40d4542880ea260a"
+      abi: membershipContract
+      startBlock: 5537732
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - ApprovalForAll
+        - NFTMinted
+        - OwnershipTransferred
+        - TransferBatch
+        - TransferSingle
+        - URI
+      abis:
+        - name: membershipContract
+          file: membershipContract\abis\membershipContract.json
+      eventHandlers:
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: NFTMinted(indexed address,indexed uint256,string)
+          handler: handleNFTMinted
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
+          handler: handleTransferBatch
+        - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
+          handler: handleTransferSingle
+        - event: URI(string,indexed uint256)
+          handler: handleURI
+      file: membershipContract\membershipContract.wasm

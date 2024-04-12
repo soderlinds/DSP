@@ -1,20 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import usePointsBalance from '../hooks/PointsBalance';
 import { usePrivy } from '@privy-io/react-auth'; 
+import Modal from '../components/Modal';
 import '../styles/_quests.sass';
 
 function EarnPoints() {
   const [pointsBalance, earnPoints] = usePointsBalance();
   const { user, ready, authenticated } = usePrivy(); 
-
-
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
 
   const handleEarnPoints = (amount) => {
     if (ready && authenticated && user) {
       earnPoints(amount);
-      alert(`You earned ${amount} points successfully!`);
+      setModalMessage(`You earned ${amount} points successfully!`);
+      setShowModal(true);
     } else {
-      alert('You need to be logged in to earn points!');
+      setModalMessage('You need to be logged in to earn points!');
+      setShowModal(true);
     }
   };
 
@@ -37,6 +40,7 @@ function EarnPoints() {
           <span>400</span>
         </div>
       </div>
+      {showModal && <Modal message={modalMessage} onClose={() => setShowModal(false)} />}
     </div>
   );
 }
