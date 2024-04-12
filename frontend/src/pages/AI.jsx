@@ -16,8 +16,6 @@ function AI() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(2);
   const [messages, setMessages] = useState([
     { text: questions[0].text, fromUser: false },
-    { text: questions[1].text, fromUser: false },
-    { text: questions[2].text, fromUser: false }
   ]);
   const [typingIndex, setTypingIndex] = useState(null);
   const [isTyping, setIsTyping] = useState(false);
@@ -26,6 +24,27 @@ function AI() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  useEffect(() => {
+    const timer1 = setTimeout(() => {
+      setMessages(prevMessages => [
+        ...prevMessages,
+        { text: questions[1].text, fromUser: false }
+      ]);
+    }, 1000);
+
+    const timer2 = setTimeout(() => {
+      setMessages(prevMessages => [
+        ...prevMessages,
+        { text: questions[2].text, fromUser: false }
+      ]);
+    }, 2000);
+
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -95,7 +114,6 @@ function AI() {
       </div>
     </div>
   );
-
 }
 
 export default AI;

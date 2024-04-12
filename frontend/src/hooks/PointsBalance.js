@@ -1,25 +1,29 @@
 import { useState, useEffect } from 'react';
 import { usePoints } from '../context/PointsContext';
-import { useSmartContract } from '../context/SmartContractContext';
-import { useWeb2Auth } from '../context/Web2AuthContext';
+import { usePrivy } from '@privy-io/react-auth';
 
 function usePointsBalance() {
-  const { account } = useSmartContract();
   const { points, addPoints } = usePoints();
-  const { userId } = useWeb2Auth();
+  const { user } = usePrivy();
   const [pointsBalance, setPointsBalance] = useState(0);
-  const identifier = account ? account : userId;
+  const identifier = user ? user.id : null; 
 
   useEffect(() => {
-    const totalPointsEarned = points
-      .filter(point => point.userId === identifier)
-      .reduce((total, point) => total + point.amount, 0);
-    setPointsBalance(totalPointsEarned);
+    if (identifier) {
+      const totalPointsEarned = points
+        .filter(point => point.userId === identifier)
+        .reduce((total, point) => total + point.amount, 0);
+      setPointsBalance(totalPointsEarned);
+    }
   }, [points, identifier]);
 
   const earnPoints = (amount) => {
-    addPoints(identifier, amount);
-    setPointsBalance(prevBalance => prevBalance + amount);
+    if (identifier) {
+      addPoints(identifier, amount);
+      setPointsBalance(prevBalance => prevBalance + amount);
+    } else {
+      console.error("Cannot earn points: User is null.");
+    }
   };
 
   return [pointsBalance, earnPoints];

@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { usePoints } from '../context/PointsContext'; 
+import { usePoints } from '../context/PointsContext';
+import { usePrivy } from '@privy-io/react-auth'; 
 import { useSmartContract } from '../context/SmartContractContext';
-import { useWeb2Auth } from '../context/Web2AuthContext'; 
-import '../styles/_rewards.sass';
+import '../styles/_nfts.sass';
 
 const Rewards = () => {
-  const { account, discountNFTContract, purchaseDiscountNFTWithPoints } = useSmartContract();
+  
+  const { discountNFTContract, purchaseDiscountNFTWithPoints } = useSmartContract();
   const { points, deductPoints } = usePoints();
+  const { user } = usePrivy(); 
   const [nfts, setNFTs] = useState([]);
-  const { userId } = useWeb2Auth(); 
-  const [pointsBalance, setPointsBalance] = useState(0); 
+  const [pointsBalance, setPointsBalance] = useState(0);
 
-  const identifier = account || userId;
+  const identifier = user ? user.id : null;
 
   useEffect(() => {
     fetchNFTs();
   }, []);
-
 
   useEffect(() => {
     const totalPointsEarned = points
@@ -27,60 +27,52 @@ const Rewards = () => {
 
 
   const fetchNFTs = async () => {
-  try {
-    const nftData = [];
-    const mintedTokens = await discountNFTContract.getPastEvents('NFTMinted', {
-      fromBlock: 0,
-      toBlock: 'latest'
-    });
+    try {
+      const nftData = [];
+      const events = await discountNFTContract.queryFilter('NFTMinted');
 
-    for (const event of mintedTokens) {
-      const tokenURI = `metadata/${event.returnValues.tokenId}.json`;
-      const imageURI = `images/${event.returnValues.tokenId}.png`;
+      for (const event of events) {
+        const tokenId = Number(event.args.tokenId);
+        const offchainPoints = Number(event.args.offchainPoints);
+        const initialSupply = Number(event.args.initialSupply);
 
-      
-      const metadataResponse = await fetch(process.env.PUBLIC_URL + tokenURI);
-      const metadata = await metadataResponse.json();
+        const tokenURI = `metadata/${tokenId}.json`;
+        const imageURI = `images/${tokenId}.png`;
 
-      const imageResponse = await fetch(process.env.PUBLIC_URL + imageURI);
-      const imageData = await imageResponse.blob();
-      const imageUrl = URL.createObjectURL(imageData);
+        const metadataResponse = await fetch(process.env.PUBLIC_URL + tokenURI);
+        const metadata = await metadataResponse.json();
 
-      const tokenId = Number(event.returnValues.tokenId);
-      const offchainPoints = Number(event.returnValues.offchainPoints);
-      const initialSupply = Number(event.returnValues.initialSupply);
-    
+        const imageResponse = await fetch(process.env.PUBLIC_URL + imageURI);
+        const imageData = await imageResponse.blob();
+        const imageUrl = URL.createObjectURL(imageData);
 
+        nftData.push({
+          id: tokenId,
+          image: imageUrl,
+          metadata: metadata,
+          amount: initialSupply,
+          offchainPoints: offchainPoints,
+        });
+      }
 
-      nftData.push({
-        id: tokenId,
-        image: imageUrl,
-        metadata: metadata,
-        amount: initialSupply,
-        offchainPoints: offchainPoints,
-      });
+      console.log('Fetched NFTs:', nftData);
+
+      setNFTs(nftData);
+    } catch (error) {
+      console.error('Error fetching NFT data:', error);
     }
+  };
 
-    console.log('Fetched NFTs:', nftData);
-    console.log(pointsBalance);
-    console.log(identifier);
+  const handleExchangeNFT = async (tokenId, offchainPoints) => {
+    try{
+      await deductPoints(identifier, offchainPoints);
+      await purchaseDiscountNFTWithPoints(tokenId, offchainPoints);
+      await fetchNFTs();
+    } catch (error) {
+      console.error('Error exchanging points for NFT:', error);
+    }
+  };
 
-    setNFTs(nftData);
-  } catch (error) {
-    console.error('Error fetching NFT data:', error);
-  }
-};
-
-
-const handleExchangeNFT = async (tokenId, offchainPoints) => {
-  try {
-    await deductPoints(identifier, offchainPoints);
-    await purchaseDiscountNFTWithPoints(tokenId, 1, offchainPoints);
-    await fetchNFTs();
-  } catch (error) {
-    console.error('Error exchanging points for NFT:', error);
-  }
-};
 
   return (
     <div className="wrapper">
@@ -91,7 +83,7 @@ const handleExchangeNFT = async (tokenId, offchainPoints) => {
               <img src={nft.image} alt={`NFT ${nft.id}`} />
               <p className="discount-text">{`Discount on tickets: ${nft.metadata.attributes[0].value}`}</p>
               <p className="nft-text">{`Points required: ${nft.offchainPoints}`}</p>
-              
+
               <button onClick={() => handleExchangeNFT(nft.id, nft.offchainPoints)}>Claim NFT</button>
             </div>
           ))}
@@ -102,3 +94,4 @@ const handleExchangeNFT = async (tokenId, offchainPoints) => {
 };
 
 export default Rewards;
+

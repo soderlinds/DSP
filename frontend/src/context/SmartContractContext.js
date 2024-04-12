@@ -1,9 +1,10 @@
-//Context now, move to backend? Change to ethers.js?
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import Web3 from 'web3';
+import { ethers } from 'ethers';
+import { encodeFunctionData } from 'viem';
 import { contractABI, contractAddress } from '../config/contractConfig';
-import { membershipContractABI, membershipContractAddress } from '../config//membershipContractConfig';
+import { membershipContractABI, membershipContractAddress } from '../config/membershipContractConfig';
 import { discountNFTContractABI, discountNFTContractAddress } from '../config/discountNFTContractConfig';
+import { usePrivy, useWallets } from '@privy-io/react-auth';
 
 const SmartContractContext = createContext();
 
@@ -15,72 +16,68 @@ export const SmartContractProvider = ({ children }) => {
   const [active, setActive] = useState(false);
   const [account, setAccount] = useState('');
   const [tokenBalance, setTokenBalance] = useState(0);
-  const [userNFTs, setUserNFTs] = useState('');
-  
-  
-  const connectWeb3 = async () => {
-    try {
-      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-      setActive(true);
-      setAccount(accounts[0]);
-    } catch (error) {
-      console.error('Error loading MetaMask:', error);
-    }
-  };
+  const [userNFTs, setUserNFTs] = useState([]);
+  const { user } = usePrivy();
+  const { wallets } = useWallets();
+  const wallet = wallets[0];
+
+  const externalProvider = new ethers.providers.Web3Provider(window.ethereum);
+  const externalSigner = externalProvider.getSigner();
+  const membershipContract = new ethers.Contract(membershipContractAddress, membershipContractABI, externalSigner);
+  const discountNFTContract = new ethers.Contract(discountNFTContractAddress, discountNFTContractABI, externalSigner);
 
   useEffect(() => {
-    if (window.ethereum) {
-      const accounts = window.ethereum.selectedAddress;
-      if (accounts) {
-        setActive(true);
-        setAccount(accounts);
+    const fetchData = async () => {
+      try {
+        const provider = await wallet.getEthereumProvider();
+        const contract = new ethers.Contract(contractAddress, contractABI);
+        const membershipContract = new ethers.Contract(membershipContractAddress, membershipContractABI);
+        const discountNFTContract = new ethers.Contract(discountNFTContractAddress, discountNFTContractABI);
+      } catch (error) {
+        console.error('Error setting up provider or contracts:', error);
       }
-    }
-  }, []);
+    };
 
-  const logoutWeb3 = async () => {
-    try {
-      if (window.ethereum && window.ethereum.isMetaMask) {
-        await window.ethereum.request({ method: 'wallet_requestPermissions', params: [{ eth_accounts: {} }] });
-        await window.ethereum.request({ method: 'eth_logout' }); 
-        setActive(false);
-        setAccount('');
-      } else {
-        console.error('MetaMask is not installed or not detected.');
-      }
-    } catch (error) {
-      console.error('Error logging out from MetaMask:', error);
-    }
-  };
-  
+    fetchData();
+  }, [wallet]);
 
-  const web3 = new Web3(window.ethereum);
-  const contract = new web3.eth.Contract(contractABI, contractAddress);
-  const membershipContract = new web3.eth.Contract(membershipContractABI, membershipContractAddress);
-  const discountNFTContract = new web3.eth.Contract(discountNFTContractABI, discountNFTContractAddress);
-
-
-  // Membership
 
   const mintMembershipToken = async (metadataURI) => {
     try {
-      await membershipContract.methods.mint(metadataURI).send({ from: account });
+      const provider = await wallet.getEthereumProvider();
+
+      const mintData = encodeFunctionData({
+        abi: membershipContractABI,
+        functionName: 'mint',
+        args: [metadataURI],
+      });
+  
+      const transactionRequest = {
+        to: membershipContractAddress,
+        data: mintData,
+        gas: ethers.utils.hexlify(300000),
+      };
+  
+      const transactionHash = await provider.request({
+        method: 'eth_sendTransaction',
+        params: [transactionRequest],
+      });
+  
+      console.log("Membership token minted successfully. Transaction hash:", transactionHash);
     } catch (error) {
       console.error("Error minting membership NFT:", error);
     }
   };
-
+  
+  
   const getUserNFT = async () => {
     try {
-      const events = await membershipContract.getPastEvents('NFTMinted', {
-        filter: { owner: account }, 
-        fromBlock: 0,
-        toBlock: 'latest'
-      });
+      const filter = membershipContract.filters.NFTMinted(user.wallet.address, null, null);
+      const events = await membershipContract.queryFilter(filter);
   
       const userNFTs = events.map(event => {
-        const tokenId = event.returnValues.tokenId;
-        const metadataURI = event.returnValues.metadataURI;
+        const tokenId = event.args[1];
+        const metadataURI = event.args[2];
         console.log("Displaying NFT with token ID", tokenId, "and metadata URI", metadataURI);
         return { tokenId, metadataURI };
       });
@@ -93,32 +90,27 @@ export const SmartContractProvider = ({ children }) => {
   };
   
 
-  useEffect(() => {
-    getUserNFT()
-      .then(nfts => setUserNFTs(nfts))
-      .catch(error => console.error('Error fetching user NFTs:', error));
-  }, []);
-  
+  const fetchBalances = async () => {
+    try {
+      const provider = await wallet.getEthereumProvider();
+      const contract = new ethers.Contract(contractAddress, contractABI, provider);
 
-
-  // SDV Token
-
-    const fetchBalances = async () => {
-      try {
-        if (account) {
-          const balance = await contract.methods.balanceOf(account).call();
-          setTokenBalance(Number(balance));
-          console.log("Token balance:", balance);
-        }
-      } catch (error) {
-        console.error('Error fetching token balance:', error);
+      if (account) {
+        const balance = await contract.balanceOf(user.wallet.address);
+        setTokenBalance(Number(balance));
+        console.log("Token balance:", balance);
       }
-    };
-
+    } catch (error) {
+      console.error('Error fetching token balance:', error);
+    }
+  };
 
   const earnPoints = async (amount) => {
     try {
-      await contract.methods.earnPoints(amount).send({ from: account, gas: 300000 });
+      const provider = await wallet.getEthereumProvider();
+      const contract = new ethers.Contract(contractAddress, contractABI, provider);
+
+      await contract.earnPoints(amount);
     } catch (error) {
       console.error('Error earning points:', error);
     }
@@ -126,7 +118,10 @@ export const SmartContractProvider = ({ children }) => {
 
   const exchangePointsForTokens = async (amount) => {
     try {
-      await contract.methods.exchangePointsForTokens(amount).send({ from: account, gas: 300000 });
+      const provider = await wallet.getEthereumProvider();
+      const contract = new ethers.Contract(contractAddress, contractABI, provider);
+
+      await contract.exchangePointsForTokens(amount);
     } catch (error) {
       console.error('Error exchanging points for tokens:', error);
     }
@@ -134,7 +129,10 @@ export const SmartContractProvider = ({ children }) => {
 
   const airdropTokens = async (users, amounts) => {
     try {
-      await contract.methods.airdropTokens(users, amounts).send({ from: account, gas: 300000 });
+      const provider = await wallet.getEthereumProvider();
+      const contract = new ethers.Contract(contractAddress, contractABI, provider);
+
+      await contract.airdropTokens(users, amounts);
     } catch (error) {
       console.error('Error airdropping tokens:', error);
     }
@@ -142,7 +140,10 @@ export const SmartContractProvider = ({ children }) => {
 
   const buyMerch = async (amount) => {
     try {
-      await contract.methods.purchaseMerchandise(amount).send({ from: account, gas: 300000 });
+      const provider = await wallet.getEthereumProvider();
+      const contract = new ethers.Contract(contractAddress, contractABI, provider);
+
+      await contract.purchaseMerchandise(amount);
     } catch (error) {
       console.error('Error purchasing merchandise:', error);
     }
@@ -150,54 +151,72 @@ export const SmartContractProvider = ({ children }) => {
 
   const contributeToPerformance = async (amount) => {
     try {
-      await contract.methods.contributeToPerformance(amount).send({ from: account, gas: 300000 });
+      const provider = await wallet.getEthereumProvider();
+      const contract = new ethers.Contract(contractAddress, contractABI, provider);
+
+      await contract.contributeToPerformance(amount);
     } catch (error) {
       console.error('Error contributing to artwork:', error);
     }
   };
 
-
-  //Discount NFT
-
   const mintDiscountNFT = async (initialSupply, offchainPoints) => {
     try {
-        await discountNFTContract.methods.mint(initialSupply, offchainPoints).send({ from: account, gas: 300000 });
-        console.log("Discount NFT minted successfully!");
-    } catch (error) {
-        console.error("Error minting discount NFT:", error);
-    }
-};
+      const provider = await wallet.getEthereumProvider();
+      const discountNFTContract = new ethers.Contract(discountNFTContractAddress, discountNFTContractABI, provider);
 
-  
+      await discountNFTContract.mint(initialSupply, offchainPoints);
+      console.log("Discount NFT minted successfully!");
+    } catch (error) {
+      console.error("Error minting discount NFT:", error);
+    }
+  };
+
   const purchaseDiscountNFTWithPoints = async (tokenId, amount) => {
     try {
-      await discountNFTContract.methods.purchaseNFTWithPoints(tokenId, amount).send({ from: account, gas: 300000 });
-      console.log("Discount NFT purchased successfully with off-chain points!");
+      const provider = await wallet.getEthereumProvider();
+  
+      const purchaseData = encodeFunctionData({
+        abi: discountNFTContractABI,
+        functionName: 'purchaseNFTWithPoints',
+        args: [tokenId, amount],
+      });
+  
+      const transactionRequest = {
+        to: discountNFTContractAddress,
+        data: purchaseData,
+        gas: ethers.utils.hexlify(300000), 
+      };
+  
+      const transactionHash = await provider.request({
+        method: 'eth_sendTransaction',
+        params: [transactionRequest],
+      });
+  
+      console.log("Discount NFT purchased successfully with off-chain points. Transaction hash:", transactionHash);
     } catch (error) {
       console.error("Error purchasing discount NFT with points:", error);
     }
-  };  
+  };
+  
 
   return (
     <SmartContractContext.Provider
       value={{
-        connectWeb3,
-        logoutWeb3,
         mintMembershipToken,
         fetchBalances,
         getUserNFT,
         active,
         account,
         tokenBalance,
+        earnPoints,
         airdropTokens,
         buyMerch,
+        exchangePointsForTokens,
         contributeToPerformance,
         mintDiscountNFT,
-        discountNFTContract,
         purchaseDiscountNFTWithPoints,
-        web3,
-        earnPoints,
-        exchangePointsForTokens,
+        discountNFTContract,
       }}
     >
       {children}

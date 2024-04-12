@@ -16,10 +16,6 @@ body
 .content
    margin: 0 auto
 
-.header 
-  color: fff
-  padding: 2rem
-
 p 
   font-size: 0.9rem
 
@@ -46,15 +42,17 @@ h4
 button
   padding: 8px
   margin-top: 5px
-  background-color: grey
+  background-color: $dark_blue
   color: white
-  border: none
   font-size: 0.8rem
   cursor: pointer
   transition: background-color 0.3s ease
+  font-family: 'quicksand'
+  border: 2px solid black
+  border-radius: 10px
 
   &:hover
-    background-color: $dark_blue
+    background-color: $light_blue
 
   &:disabled
     opacity: 0.5

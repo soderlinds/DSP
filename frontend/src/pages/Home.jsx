@@ -1,28 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import Web2LoggedInScreen from '../components/Web2LoggedInScreen';
-import Web3LoggedInScreen from '../components/Web3LoggedInScreen';
-import { useWeb2Auth } from '../context/Web2AuthContext';
-import { useSmartContract } from '../context/SmartContractContext';
-import ConnectButton from '../components/ConnectButton';
-
+import React from 'react';
+import LoggedInScreen from '../pages/LoggedInScreen';
+import LoginLogoutButton from '../components/LoginLogoutButton';
+import { usePrivy } from '@privy-io/react-auth';
+import '../styles/_home.sass';
 
 const Homepage = () => {
-  const { isLoggedInWeb2, userId, username } = useWeb2Auth();
-  const { account } = useSmartContract();
-  const [showPopup, setShowPopup] = useState(false);
+  const { user, authenticated } = usePrivy(); 
 
   return (
-    <div className="container">
+    <div>
       <h1>SDV LOYALTY GROUP</h1>
-      <div className="button-wrapper">
-      {!isLoggedInWeb2 && !showPopup && !account && ( 
-         <ConnectButton size="big" />
-      )}
-        {isLoggedInWeb2 && !account && (
-          <Web2LoggedInScreen userId={userId} username={username} />
-        )}
-        {account && (
-          <Web3LoggedInScreen account={account} />
+      <div className="home-wrapper">
+        {user && authenticated ? ( 
+          <LoggedInScreen user={user} />
+        ) : (
+          <LoginLogoutButton /> 
         )}
       </div>
     </div>

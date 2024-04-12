@@ -1,6 +1,4 @@
-@import './variables'
-
-.purchase-nfts 
+.owned-nfts
   display: flex
   flex-wrap: wrap
 
@@ -8,25 +6,41 @@
   max-width: 10rem
   display: flex
   flex-direction: column
-  border: 2px solid #ffffff
-  border-radius: 12px
+  border: 1px solid #ffffff
+  border-radius: 1.2rem
   overflow: hidden
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1)
   background-color: #fff
-  margin: 16px
+  margin: 1rem
   transition: transform 0.3s ease-in-out
 
-  img
-    max-width: 100%
-    border-radius: 8px
-    margin-bottom: 8px
+img
+  max-width: 100%
+  border-radius: 0.8rem
+  margin-bottom: 0.8rem
+
+.nft-text
+  font-size: 1rem
+  margin-left: 0.5rem
+
+.token-info
+  font-size: 0.7rem
+
+.nfts
+  display: flex
+  flex-direction: row
+
+  @import './variables'
+
+.purchase-nfts
+  display: flex
+  flex-wrap: wrap
 
   .discount-text, .nft-text
     font-size: 13px
     margin-left: 3px
     font-family: 'quicksand'
-    color: #4d4d4d 
+    color: #4d4d4d
 
   .discount-text
     margin-bottom: -7px
-

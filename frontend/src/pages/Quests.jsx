@@ -1,25 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import usePointsBalance from '../hooks/PointsBalance';
-import { useSmartContract } from '../context/SmartContractContext';
-import { useWeb2Auth } from '../context/Web2AuthContext'; 
-import '../styles/_quests.sass'; 
-
+import { usePrivy } from '@privy-io/react-auth'; 
+import Modal from '../components/Modal';
+import '../styles/_quests.sass';
 
 function EarnPoints() {
-  const { account} = useSmartContract();; 
-  const { userId } = useWeb2Auth(); 
   const [pointsBalance, earnPoints] = usePointsBalance();
-
-  const identifier = account || userId;
+  const { user, ready, authenticated } = usePrivy(); 
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
 
   const handleEarnPoints = (amount) => {
-    if (identifier) {
+    if (ready && authenticated && user) {
       earnPoints(amount);
-      alert(`You earned ${amount} points successfully!`);
+      setModalMessage(`You earned ${amount} points successfully!`);
+      setShowModal(true);
     } else {
-      alert('You need to be logged in to earn points!');
+      setModalMessage('You need to be logged in to earn points!');
+      setShowModal(true);
     }
   };
+
+  console.log(user);
 
   return (
     <div className="wrapper">
@@ -38,6 +40,7 @@ function EarnPoints() {
           <span>400</span>
         </div>
       </div>
+      {showModal && <Modal message={modalMessage} onClose={() => setShowModal(false)} />}
     </div>
   );
 }
